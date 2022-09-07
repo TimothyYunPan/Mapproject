@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from 'styled-components';
-
+import {countryListType} from "../WorldMap"
 
 const SVG = styled.svg`
   height:650px;
@@ -46,12 +46,18 @@ const Path:React.FC<Pathtype> = styled.path`
 
 
 
-function MapSVG({countryList}:{countryList:{countryId:string}[]}){
-  countryList.forEach(country => {
-    console.log(country)
-    let a = country.countryId;
-    document.getElementById(a)?.setAttribute("fill", "rgb(77, 128, 230)");
-  });
+function MapSVG({countryList, mapState}:{countryList:countryListType[], mapState:number} ){
+  if(mapState === 1){
+    countryList.forEach(country => {
+      console.log(country)
+      if(country.visited){
+        let a = country.countryId;
+        document.getElementById(a)?.setAttribute("fill", "rgb(77, 128, 230)");
+      }
+    });
+
+  }
+  
   
   return(
   <SVG id="_圖層_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650"><defs></defs>
