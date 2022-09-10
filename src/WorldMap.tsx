@@ -17,7 +17,7 @@ const storage = getStorage(app)
 
 // async function writeUserMap1Data(country:string) {
 //   console.log("write")
-//   await setDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
+//   await setDoc(doc(db, "user", uid, "visitedCountries", country), {
 //     visited:true
 //   });
 //   // await setDoc(doc(db, "user/7LkdfIpKjPiFsrPDlsaM"), {
@@ -26,14 +26,14 @@ const storage = getStorage(app)
 // }
 // async function deleteUserMap1Data(country:string){
 //   console.log("delete")
-//   await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
+//   await updateDoc(doc(db, "user", uid, "visitedCountries", country), {
 //     visited: deleteField()
 //   });
 // }
 
 // async function updateUserMap1Data(country:string){
 //   // console.log("delete")
-//   await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
+//   await updateDoc(doc(db, "user", uid, "visitedCountries", country), {
 //     visited: false
 //   });
 // }
@@ -41,7 +41,7 @@ const storage = getStorage(app)
 // async function writeUserMap2Data(addFriendState:any) {
 //   console.log(addFriendState)
 //   console.log("write")
-//   await setDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "friendsLocatedCountries", addFriendState.country), {
+//   await setDoc(doc(db, "user", uid, "friendsLocatedCountries", addFriendState.country), {
 //       friends:[
 //         { 
 //           name: addFriendState.name,
@@ -344,6 +344,8 @@ function WorldMap(){
   console.log(countryId)
   const imageListRef = ref(storage, "images/")
   const [friendsList, setFriendsList] = useState([])
+  const [friendList, setFriendList] = useState([])
+  console.log(friendList)
   const [havefriendList, setHaveFriendList] = useState([])
   console.log(havefriendList)
   const [isAddingFriend, setIsAddingFriend] = useState<boolean>(false)
@@ -376,7 +378,7 @@ function WorldMap(){
     getUserMap1Data()
     // getUserMap2Data()
     setMapState(2)
-    getUserMap2FriendListData()
+    getUserMap2Data()
     listAll(imageListRef).then((response)=>{
       const urlArr = []
       response.items.forEach((item)=>{
@@ -386,12 +388,12 @@ function WorldMap(){
         })
       })
     })
-  },[uid])
+  },[uid,friendList])
   
 //why??
   async function writeUserMap1Data(country:string) {
     console.log(country)
-    await setDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
+    await setDoc(doc(db, "user", uid, "visitedCountries", country), {
       visited:true
     });
     // console.log("我有寫啦")
@@ -402,20 +404,20 @@ function WorldMap(){
 //
   // async function deleteUserMap1Data(country:string){
   //   console.log("delete")
-  //   await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
+  //   await updateDoc(doc(db, "user", uid, "visitedCountries", country), {
   //     visited: deleteField()
   //   });
   // }
   
   async function updateUserMap1Data(country:string){
     // console.log("delete")
-    await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
+    await updateDoc(doc(db, "user", uid, "visitedCountries", country), {
       visited: false
     });
   }
 
   async function getUserMap1Data(){
-    const q = collection(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries");
+    const q = collection(db, "user", uid, "visitedCountries");
     const querySnapshot = await getDocs(q);
     let newCountryList:any[]=[]
     querySnapshot.forEach((country)=>{
@@ -426,60 +428,70 @@ function WorldMap(){
       setCountryList(newCountryList)
     })
   }
-  async function getUserMap2FriendListData(){
-    const q = collection(db, "user", "5Ch2PkVdhfngwXkX0y0h", "friendsLocatedCountries");
+  async function getUserMap2Data(){
+    const q = collection(db, "user", uid, "friendsLocatedCountries");
     const querySnapshot = await getDocs(q);
     let newHaveFriendList:any[]=[]
+    let newFriendsList:any = []
     querySnapshot.forEach((country)=>{
-      let t = {countryId: country.id, haveFriend:country.data().haveFriend}
-      newHaveFriendList.push(t)
+      let newHaveFriendObj = {countryId: country.id, haveFriend:country.data().haveFriend}
+      newHaveFriendList.push(newHaveFriendObj)
       setHaveFriendList(newHaveFriendList)
+      country.data().friends.forEach((friend)=>{
+        let newFriendObj = {
+          countryId: country.id,
+          name: friend.name,
+          // country: "",
+          city: friend.city,
+          country: friend.country,
+          insta: friend.insta,
+          imgUrl: friend.imgUrl,
+          notes: friend.notes,
+        }
+        newFriendsList.push(newFriendObj)
+      })
+      setFriendsList(newFriendsList)
     })
+
+  }
+
+  function getUserMap2FriendData(id){
+    const nf = []
+    console.log(id)
+
+    friendsList.forEach((friend)=>{
+      console.log(friend)
+      if(friend.countryId === id){
+        nf.push(friend)
+      }
+    })
+    console.log(nf)
+    setFriendList(nf)
   }
   
+
   
-  async function getUserMap2Data(id){
-    const q = doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "friendsLocatedCountries", id);
-    console.log("我是拿資料")
-    const querySnapshot = await getDoc(q);
+  // async function getUserMap2Data(id){
+  //   const q = doc(db, "user", uid, "friendsLocatedCountries", id);
+  //   console.log("我是拿資料")
+  //   const querySnapshot = await getDoc(q);
 
-    if(querySnapshot.exists()){
-      setFriendsList(querySnapshot.data().friends)
-      // setHaveFriendList(querySnapshot.data().haveFriend)
-      // console.log(querySnapshot.data())
+  //   if(querySnapshot.exists()){
+  //     setFriendsList(querySnapshot.data().friends)
+  //     // setHaveFriendList(querySnapshot.data().haveFriend)
+  //     // console.log(querySnapshot.data())
       
-    }else{
-      setFriendsList([])
-    }
-    
-    // let friendData:any[]=[]
-
-    // querySnapshot.forEach((country)=>{
-    //   let b = country.data()
-      
-    //   // let t = {
-    //   //   countryId: country.id, 
-
-    //   //   countryName: country.data().friend[0].country,
-    //   //   city: country.data().friend[0].city,
-    //   //   insta: country.data().friend[0].insta,
-    //   //   name: country.data().friend[0].name,
-    //   //   notes: country.data().friend[0].notes,
-
-    //   // }
-    //   // console.log(t)
-    //   friendData.push(b)
-    //   console.log(friendData)
-    //   // setFriendsList(friendData)
-
-    // })
-  }
+  //   }else{
+  //     setFriendsList([])
+  //   }
+  // }
 
 
   async function updateUserMap2Data(url:string){
     // console.log("delete")
-    let newFriendsList = []
+    let newFriendList = []
     const newFriend = {
+      countryId: countryId,
       name: addFriendState.name,
       // country: "",
       city: addFriendState.city,
@@ -488,8 +500,11 @@ function WorldMap(){
       imgUrl: url,
       notes: addFriendState.notes,
     }
-    newFriendsList = [...friendsList, newFriend]
-    await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "friendsLocatedCountries", countryId), {friends:newFriendsList});
+    newFriendList = [...friendList, newFriend]
+    await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), {friends:newFriendList});
+    setFriendList(newFriendList)
+    // console.log(addFriendState)
+    console.log("write")
   }
 
 
@@ -519,9 +534,12 @@ function WorldMap(){
   const sentNewFriendInfo = () => {
     if(imageUpload == null) {
       const url = ""
-      if(friendsList.length === 0){
+      if(friendList.length === 0){
+        console.log("我是write")
         writeUserMap2Data(url)
       }else{
+        console.log("我是update")
+
         updateUserMap2Data(url)
       }
     }else{
@@ -529,7 +547,7 @@ function WorldMap(){
     uploadBytes(imageRef,imageUpload).then((snapshot)=>{
       getDownloadURL(snapshot.ref).then((url)=>{
         // writeUserMap2Data(url)
-        if(friendsList.length === 0){
+        if(friendList.length === 0){
           writeUserMap2Data(url)
         }else{
           updateUserMap2Data(url)
@@ -549,7 +567,7 @@ function WorldMap(){
   // }
 
   function writeUserMap2Data(url:any) {
-    
+    let newFriendList = []
     const data = {
       friends:[
         { 
@@ -565,9 +583,26 @@ function WorldMap(){
       ],
       haveFriend:"true"
     }
-    setDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "friendsLocatedCountries", countryId), data)  
+    setDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), data)  
+    const data2 = {
+      countryId: countryId,
+      name: addFriendState.name,
+      // country: "",
+      city: addFriendState.city,
+      country: countryName,
+      insta: addFriendState.insta,
+      imgUrl: url,
+      notes: addFriendState.notes,
+    }
+    newFriendList.push(data2)
+    setFriendList(newFriendList)
     // console.log(addFriendState)
     console.log("write")
+    let newHaveFriendList:any[]=[]
+    let newHaveFriendObj = {countryId: countryId, haveFriend:true}
+      newHaveFriendList.push(newHaveFriendObj)
+      setHaveFriendList(newHaveFriendList)
+    
   }
 
 
@@ -581,13 +616,14 @@ function WorldMap(){
         <ChangeMapBtn onClick={()=>{setMapState(3)}}>my Map</ChangeMapBtn>
         <LoginBtn onClick={()=>{setMapState(4)}}>Login</LoginBtn>
         {mapState && mapState === 1 ?(
+        <>
         <Map onMouseOver={(e) => { 
           hoverAddCountryName(e)
           }} 
           onMouseLeave={(e)=> { setIsHovering(false)}}
           onClick={(e) => { 
             const target = e.target as HTMLInputElement;
-            if(target.tagName === "svg"){
+            if(target.tagName !== "path"){
               return
             }
             // setUseTarget(target.id)
@@ -638,8 +674,9 @@ function WorldMap(){
           }}>
           {isHovering ? (<ShowName mousePlace={mousePlace}>{countryName}</ShowName>) : (<></>)}
           <MapSVG countryList={countryList} mapState={mapState} haveFriendList={havefriendList}/>
-          <CountryCheckList writeUserMap1Data={writeUserMap1Data} countryCollection={countryCollection} setCountryList={setCountryList} setCountryCollection={setCountryCollection} countryList={countryList}></CountryCheckList>
         </Map>
+        <CountryCheckList writeUserMap1Data={writeUserMap1Data} countryCollection={countryCollection} setCountryList={setCountryList} setCountryCollection={setCountryCollection} countryList={countryList}></CountryCheckList>
+        </>
         ): mapState === 2 ? (
         <Map onMouseOver={(e) => { 
           hoverAddCountryName(e)
@@ -653,7 +690,7 @@ function WorldMap(){
             }
             setCountryId(e.target.id)
             setIsShowingFriends(true)
-            getUserMap2Data(e.target.id)
+            getUserMap2FriendData(e.target.id)
             setIsHovering(false)
           }}>
           <MapSVG countryList={countryList} mapState={mapState} haveFriendList={havefriendList} />
@@ -661,7 +698,7 @@ function WorldMap(){
             <FriendBg>
               <FriendBox> 
                 <FriendMiddleBox>
-                {friendsList.map((friend:{imgUrl:string,name:string,city:string,insta:string,notes:string})=>(
+                {friendList.map((friend:{imgUrl:string,name:string,city:string,insta:string,notes:string})=>(
                   <FriendInsideBox>
                     <FriendProfilePic src={friend.imgUrl}></FriendProfilePic>
                     <FriendSet>
@@ -691,7 +728,7 @@ function WorldMap(){
                 
                     </AddFriendSet>
                   ))}
-                  <AddFriendSentBtn onClick={()=>{ sentNewFriendInfo(); setIsAddingFriend(false); alert("Congrats for making a new friend")}}>SEND</AddFriendSentBtn>
+                  <AddFriendSentBtn onClick={()=>{ sentNewFriendInfo(); setIsAddingFriend(true); alert("Congrats for making a new friend")}}>SEND</AddFriendSentBtn>
                   <CloseBtn onClick={()=>{setIsAddingFriend(false)}}>X</CloseBtn>
                 </AddFriendBox>
                 :<></>}

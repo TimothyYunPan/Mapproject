@@ -49,9 +49,7 @@ const Path:React.FC<Pathtype> = styled.path`
 function MapSVG({countryList, mapState, haveFriendList}:{countryList:countryListType[], mapState:number, haveFriendList:any} ){
   useEffect(()=>{
     console.log(mapState)
-    console.log("%%%%%%%")
     if(mapState === 1){
-      console.log("ooo")
       // console.log(countryList)
       countryList.forEach(country => {
         console.log(country)
@@ -65,7 +63,6 @@ function MapSVG({countryList, mapState, haveFriendList}:{countryList:countryList
       });
     }else if(mapState === 2){
       haveFriendList.forEach(country => {
-        console.log("qqqq")
         if(country.haveFriend){
           let countryId = country.countryId;
           document.getElementById(countryId)!.style.fill = "rgb(79,157,157)";
