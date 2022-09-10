@@ -1,54 +1,63 @@
 import React, { useEffect, useState } from "react";
 import styled from 'styled-components';
 import { GlobalStyleComponent } from "styled-components";
-import Countries from "./utils/Countries";
-import Regions from "./utils/Regions";
+import countries from "./utils/countries";
 import MapSVG from "./components/MapSVG";
+import Login from "./components/Login";
 import { initializeApp } from "firebase/app";
 import { doc, setDoc, collection, getFirestore, getDoc, getDocs, deleteField, updateDoc } from "firebase/firestore";
 import { EventType } from "@testing-library/react";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getStorage, ref, uploadBytes, getDownloadURL, listAll} from "firebase/storage"
+import app from "./utils/firebaseConfig";
+import { db } from "./utils/firebaseConfig";
+import CountryCheckList from "./components/CountryCheckList";
+const storage = getStorage(app)
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBEcaedfGj9JVZGz4J_g5QQgk2NKh_UnEo",
-  authDomain: "maphub-b1531.firebaseapp.com",
-  projectId: "maphub-b1531",
-  storageBucket: "maphub-b1531.appspot.com",
-  messagingSenderId: "150673021987",
-  appId: "1:150673021987:web:dad10a269041fb123e6596",
-  measurementId: "G-1Q438SJ1WH"
-};
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
 
-const db = getFirestore(app);
+// async function writeUserMap1Data(country:string) {
+//   console.log("write")
+//   await setDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
+//     visited:true
+//   });
+//   // await setDoc(doc(db, "user/7LkdfIpKjPiFsrPDlsaM"), {
+//   //   country
+//   // });
+// }
+// async function deleteUserMap1Data(country:string){
+//   console.log("delete")
+//   await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
+//     visited: deleteField()
+//   });
+// }
 
-async function writeUserData(country:string) {
-  console.log("write")
-  await setDoc(doc(db, "user", "7LkdfIpKjPiFsrPDlsaM", "visitedCountries", country), {
-    visited:true
-  });
-  // await setDoc(doc(db, "user/7LkdfIpKjPiFsrPDlsaM"), {
-  //   country
-  // });
-}
-async function deleteUserMap1Data(country:string){
-  console.log("delete")
-  await updateDoc(doc(db, "user", "7LkdfIpKjPiFsrPDlsaM", "visitedCountries", country), {
-    visited: deleteField()
-  });
-}
+// async function updateUserMap1Data(country:string){
+//   // console.log("delete")
+//   await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
+//     visited: false
+//   });
+// }
 
-async function updateUserMap1Data(country:string){
-  // console.log("delete")
-  await updateDoc(doc(db, "user", "7LkdfIpKjPiFsrPDlsaM", "visitedCountries", country), {
-    visited: false
-  });
-}
+// async function writeUserMap2Data(addFriendState:any) {
+//   console.log(addFriendState)
+//   console.log("write")
+//   await setDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "friendsLocatedCountries", addFriendState.country), {
+//       friends:[
+//         { 
+//           name: addFriendState.name,
+//           country: "",
+//           city: "",
+//           insta: addFriendState.insta,
+//           imageUrl: "",
+//           notes: addFriendState.notes
+//         }
+//       ]
+
+//   });
+//   // await setDoc(doc(db, "user/7LkdfIpKjPiFsrPDlsaM"), {
+//   //   country
+//   // });
+// }
 
 
 const Wrapper = styled.div`
@@ -60,57 +69,9 @@ const Wrapper = styled.div`
   /* justify-content: center; */
 `
 
-const CountrySelectSet = styled.div`
-  margin-top: 20px;
-  width: 90%;
-
-`
-
-const CountryRegions = styled.div`
-  margin-left: 20px;
-  width: 100%;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  
-
-`
-const CountryRegion = styled.p`
-  color: #666;
-  font-size: 16px;
-  margin:0 20px
-`
-const CountrySelectListSet = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-`
-const CountrySelectList = styled.div`
-  display: flex;
-  
-
-`
-const CountrySelectCheck = styled.input`
-  margin: 2px 10px;
-
-`
-const CountrySelectName = styled.div`
-margin-right: 20px;
-
-`
-const CountryText = styled.p`
-  color: #666;
-
-
-`
-const CountryVisitedCount = styled.input`
-  width: 40px;
-  margin: 0 10px;
-
-`
-
 
 const Map = styled.div`
+  position: relative;
   /* height:100%;
   width: 100%; */
   /* height: 200px; */
@@ -121,6 +82,12 @@ const ChangeMapBtn = styled.button`
   width: 80px;
   
 `
+const LoginBtn = styled.button`
+  height: 20px;
+  width: 80px;
+  margin-top: 20px;
+`
+
 
 const ShowName = styled.div<{
   mousePlace:{
@@ -147,83 +114,400 @@ export interface countryListType {
   countryId: string,
   visited: boolean
 }
+//map2
 
+const FriendBg = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0%, 0%, 0%, 0.05)
+  /* background: lidnear-gradient(to right, #2BC0E4 0%, #EAECC6 100%); */
+
+  /* opacity: 0.5; */
+  
+`
+
+const FriendBox = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  width: 800px;
+  height: 500px;
+  border: 1px solid black;
+  display: flex;
+  /* overflow: scroll; */
+
+  /* z-index: 100; */
+  /* box-shadow: 0 0 0 10000px rgba(0,0,0,0.5) */
+  
+`
+const AddFriendBtn = styled.div`
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  /* transform: translate(-50%,-50%); */
+  height: 50px;
+  width: 50px;
+  border: 1px solid black;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 24px;
+  line-height: 46px;
+  cursor: pointer;
+  /* z-index: 100; */
+
+`
+const CloseBtn = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 1%;
+  /* margin: 10px; */
+  /* transform: translate(-50%,-50%); */
+  height: 50px;
+  width: 50px;
+  /* border: 1px solid black; */
+  /* border-radius: 50%; */
+  text-align: center;
+  font-size: 24px;
+  line-height: 46px;
+  cursor: pointer;
+  /* z-index: 100; */
+
+`
+const AddFriendBox = styled.div`
+  position: absolute;
+  /* top: 10%; */
+  right: -240px;
+  /* height: 100%; */
+  width: 200px;
+  height: 500px;
+
+  border: 1px solid black;
+  /* border-radius: 2%; */
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  z-index: 1000;
+  /* box-shadow: 0 0 0 10000px rgba(0,0,0,0.5) */
+
+`
+
+const AddFriendSet = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  
+`
+const AddFriendFormLabel = styled.label`
+  width: 110px;
+  line-height: 19px;
+  font-size: 16px;
+  color: #3f3a3a;
+  display: block; 
+
+`
+
+const AddFriendFormInput = styled.input`
+  width: 100%;
+  
+`
+
+const AddFriendFormTextarea = styled.textarea`
+  width: 100%;
+  height: 100px;
+  resize: none;
+  
+`
+const FriendMiddleBox = styled.div`
+  display: flex;
+  overflow: scroll;
+
+`
+
+const FriendInsideBox = styled.div`
+  /* position: absolute; */
+  /* top: 10%; */
+  /* right: -240px; */
+  /* height: 100%; */
+  width: 200px;
+  height: 450px;
+  margin: 20px;
+  border: 1px solid black;
+  /* border-radius: 2%; */
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  
+  /* z-index: 1000; */
+  /* box-shadow: 0 0 0 10000px rgba(0,0,0,0.5) */
+
+`
+
+const FriendSet = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  
+`
+const FriendFormdiv = styled.div`
+  width: 110px;
+  line-height: 19px;
+  font-size: 16px;
+  color: #3f3a3a;
+  display: block; 
+
+`
+
+const FriendFormInfo = styled.input`
+  width: 50%;
+  
+`
+
+const FriendFormTextarea = styled.textarea`
+  width: 100%;
+  height: 100px;
+  resize: none;
+  
+`
+
+const FriendProfilePic = styled.img`
+  height: 80px;
+  width: 80px;
+  border: 1px solid black;
+  border-radius: 50%;
+
+`
+
+
+const AddFriendSentBtn = styled.button`
+  margin-top: 24px;
+  text-align: center;
+  width:100%;
+  cursor: pointer;
+`
+
+const addFriendFormGroups = [
+  {label: 'Name', key: 'name' },
+  {label: 'City', key: 'city' },
+  {label: 'Insta', key: 'insta' },
+  {label: 'Notes', key: 'notes' },
+
+  
+]
+
+
+
+const AddFriendProfilePic = styled.img`
+  height: 80px;
+  width: 80px;
+  border: 1px solid black;
+  border-radius: 50%;
+
+`
+
+// const AddCityInput = styled.input`
+//   width: 90%
+  
+// `
+
+// const AddSocialMediaInput = styled.input`
+  
+// `
+// const AddNoteInput = styled.input`
+  
+// `
 
 
 function WorldMap(){
-  const [mapState, setMapState] = useState<number>(1)
+  const [mapState, setMapState] = useState<number>(0)
+  console.log(mapState)
   const [isHovering, setIsHovering]= useState<boolean>(false)
   // const [isClicked, setIsClicked]= useState<boolean>(false)
-  const [name, setName] = useState<string>("")
+  const [countryName, setCountryName] = useState<string>("")
+  console.log(countryName)
   // const [useTarget, setUseTarget] = useState<any>("")
   const [isColored,setIsColored] = useState<boolean>(false)
   const [countryList, setCountryList] = useState<countryListType[]>([])
-  console.log(countryList)
+  const [isShowingFriends, setIsShowingFriends] = useState<boolean>(false)
+  // console.log(countryList)
   const [countryCollection, setCountryCollection] = useState<string[]>([])
+  // console.log(countryCollection)
+  const [imageUpload, setImageUpload] = useState(null)
+  const [imageList, setImageList] = useState([])
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  console.log(isLoggedIn)
+  // console.log(imageList)
+  const [countryId, setCountryId] = useState<string>("")
+  console.log(countryId)
+  const imageListRef = ref(storage, "images/")
+  const [friendsList, setFriendsList] = useState([])
+  const [havefriendList, setHaveFriendList] = useState([])
+  console.log(havefriendList)
+  const [isAddingFriend, setIsAddingFriend] = useState<boolean>(false)
+  console.log(friendsList)
+  const [uid, setUid] = useState<string>("")
+  console.log(uid)
   // const [visitedCountries, setVisitedCountries] = useState<boolean>(false)
   const [ mousePlace, setMousePlace] = useState<{
     x?: number | undefined;
     y?: number | undefined;
   }>({})
 
+  type AddFriendType = {
+    name: string;
+    // country: string;
+    city: string,
+    insta: string;
+    notes: any;
+  }
+  const initialAddFriendState ={
+    name: '',
+    // country: '',
+    city: '',
+    insta: '',
+    notes: '',
+  }
+  const [addFriendState, setAddFriendState] = useState<AddFriendType>(initialAddFriendState)
+
   useEffect(()=>{
     getUserMap1Data()
-
-  },[])
+    // getUserMap2Data()
+    setMapState(2)
+    getUserMap2FriendListData()
+    listAll(imageListRef).then((response)=>{
+      const urlArr = []
+      response.items.forEach((item)=>{
+        getDownloadURL(item).then((url)=>{
+          urlArr.push(url)
+          setImageList(urlArr)
+        })
+      })
+    })
+  },[uid])
   
+//why??
+  async function writeUserMap1Data(country:string) {
+    console.log(country)
+    await setDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
+      visited:true
+    });
+    // console.log("我有寫啦")
+    // await setDoc(doc(db, "user/7LkdfIpKjPiFsrPDlsaM"), {
+    //   country
+    // });
+  }
+//
+  // async function deleteUserMap1Data(country:string){
+  //   console.log("delete")
+  //   await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
+  //     visited: deleteField()
+  //   });
+  // }
+  
+  async function updateUserMap1Data(country:string){
+    // console.log("delete")
+    await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
+      visited: false
+    });
+  }
+
   async function getUserMap1Data(){
-    const q = collection(db, "user", "7LkdfIpKjPiFsrPDlsaM", "visitedCountries");
+    const q = collection(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries");
     const querySnapshot = await getDocs(q);
     let newCountryList:any[]=[]
     querySnapshot.forEach((country)=>{
-      console.log(country.data())
+      // console.log(country.data())
       // console.log(country.id, '=>' ,country.data())
       let t = {countryId: country.id, visited:country.data().visited}
       newCountryList.push(t)
       setCountryList(newCountryList)
     })
-    
-
+  }
+  async function getUserMap2FriendListData(){
+    const q = collection(db, "user", "5Ch2PkVdhfngwXkX0y0h", "friendsLocatedCountries");
+    const querySnapshot = await getDocs(q);
+    let newHaveFriendList:any[]=[]
+    querySnapshot.forEach((country)=>{
+      let t = {countryId: country.id, haveFriend:country.data().haveFriend}
+      newHaveFriendList.push(t)
+      setHaveFriendList(newHaveFriendList)
+    })
   }
   
-  // async function getUserMap2Data(){
-  //   const q = collection(db, "user", "7LkdfIpKjPiFsrPDlsaM", "friendsLocatedCountries");
-  //   const querySnapshot = await getDocs(q);
-  //   let countryData:any[]=[]
-  //   querySnapshot.forEach((country)=>{
-  //     // console.log(country.id, '=>' ,country.data())
-  //     let t = {countryId: country.id, visited:country.data().visited}
-  //     countryData.push(t)
-  //     setCountryList(countryData)
+  
+  async function getUserMap2Data(id){
+    const q = doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "friendsLocatedCountries", id);
+    console.log("我是拿資料")
+    const querySnapshot = await getDoc(q);
 
-  //   })
-  // }
+    if(querySnapshot.exists()){
+      setFriendsList(querySnapshot.data().friends)
+      // setHaveFriendList(querySnapshot.data().haveFriend)
+      // console.log(querySnapshot.data())
+      
+    }else{
+      setFriendsList([])
+    }
+    
+    // let friendData:any[]=[]
 
-  function getCountriesCollection(regionCode:string){
-    let countryCollectionArr:string[] = []
-    Countries.forEach(countryObj => {
-      if (countryObj.region === regionCode){
-        countryCollectionArr.push(countryObj.name)
-      }
-    });
-    setCountryCollection(countryCollectionArr)
+    // querySnapshot.forEach((country)=>{
+    //   let b = country.data()
+      
+    //   // let t = {
+    //   //   countryId: country.id, 
+
+    //   //   countryName: country.data().friend[0].country,
+    //   //   city: country.data().friend[0].city,
+    //   //   insta: country.data().friend[0].insta,
+    //   //   name: country.data().friend[0].name,
+    //   //   notes: country.data().friend[0].notes,
+
+    //   // }
+    //   // console.log(t)
+    //   friendData.push(b)
+    //   console.log(friendData)
+    //   // setFriendsList(friendData)
+
+    // })
   }
 
-  function editCheckedToMap(target:HTMLInputElement){
-    // console.log(e.target.value)
-    let targetValue = target.value;
-    Countries.forEach(countryObj => {
-      if(countryObj.name === targetValue){
-        let code = countryObj.code
-        targetValue = code
-      }
-    })
-    {target.checked ? (writeUserData(targetValue)): (updateUserMap1Data(targetValue))}
+
+  async function updateUserMap2Data(url:string){
+    // console.log("delete")
+    let newFriendsList = []
+    const newFriend = {
+      name: addFriendState.name,
+      // country: "",
+      city: addFriendState.city,
+      country: countryName,
+      insta: addFriendState.insta,
+      imgUrl: url,
+      notes: addFriendState.notes,
+    }
+    newFriendsList = [...friendsList, newFriend]
+    await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "friendsLocatedCountries", countryId), {friends:newFriendsList});
   }
+
+
+
+
+  function hoverAddCountryName(e:React.MouseEvent<HTMLDivElement, MouseEvent>){
+    const target = e.target as HTMLInputElement; 
+    const result = countries.filter(function(obj){return obj.code == target.id })
+    setMousePlace(getMousePos(e))
+    setCountryName(result[0].name)
+    setIsHovering(true)
+  }
+
+
   // function deleteCheckedToMap(target:HTMLInputElement){
   //   // console.log(123)
   //   let targetValue = target.value;
-  //   Countries.forEach(countryObj => {
+  //   countries.forEach(countryObj => {
   //     if(countryObj.name === targetValue){
   //       let code = countryObj.code
   //       targetValue = code
@@ -231,30 +515,75 @@ function WorldMap(){
   //   })
   //   if(target.checked){deleteUserMap1Data(targetValue)}
   // }
+  // console.log(imageUpload)
+  const sentNewFriendInfo = () => {
+    if(imageUpload == null) {
+      const url = ""
+      if(friendsList.length === 0){
+        writeUserMap2Data(url)
+      }else{
+        updateUserMap2Data(url)
+      }
+    }else{
+    const imageRef = ref(storage,`images/${imageUpload.name}`)
+    uploadBytes(imageRef,imageUpload).then((snapshot)=>{
+      getDownloadURL(snapshot.ref).then((url)=>{
+        // writeUserMap2Data(url)
+        if(friendsList.length === 0){
+          writeUserMap2Data(url)
+        }else{
+          updateUserMap2Data(url)
+        }
+      })
+    })}
+  }
+  // function uploadImage(){
+  //   if(imageUpload == null) return;
+  //   const imageRef = ref(storage,`images/${imageUpload.name}`)
+  //   uploadBytes(imageRef,imageUpload).then((snapshot)=>{
+  //     getDownloadURL(snapshot.ref).then((url)=>{
 
-  console.log(Regions)
+  //       setImageList((prev)=>[...prev, url])
+  //     })
+  //   })
+  // }
+
+  function writeUserMap2Data(url:any) {
+    
+    const data = {
+      friends:[
+        { 
+          name: addFriendState.name,
+          // country: "",
+          city: addFriendState.city,
+          country: countryName,
+          insta: addFriendState.insta,
+          imgUrl: url,
+          notes: addFriendState.notes,
+          
+        }
+      ],
+      haveFriend:"true"
+    }
+    setDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "friendsLocatedCountries", countryId), data)  
+    // console.log(addFriendState)
+    console.log("write")
+  }
+
+
   return(
     <>
       <Wrapper>
         <ChangeMapBtn onClick={()=>{
           setMapState(1);
-          // const countryInfo = countryList.map((country:any)=>{
-          //   if(countryList && country.visited){
-              
-          //   }
-          // })
-          // console.log(countryList)
             }}>Visited </ChangeMapBtn><br/>
         <ChangeMapBtn onClick={()=>{setMapState(2)}}>Friends </ChangeMapBtn><br/>
         <ChangeMapBtn onClick={()=>{setMapState(3)}}>my Map</ChangeMapBtn>
-        {mapState === 1 ?(
+        <LoginBtn onClick={()=>{setMapState(4)}}>Login</LoginBtn>
+        {mapState && mapState === 1 ?(
         <Map onMouseOver={(e) => { 
-          const target = e.target as HTMLInputElement; 
-          const result = Countries.filter(function(obj){return obj.code == target.id })
-          setMousePlace(getMousePos(e))
-          setName(result[0].name)
-          // setHover(true)
-          setIsHovering(true)}} 
+          hoverAddCountryName(e)
+          }} 
           onMouseLeave={(e)=> { setIsHovering(false)}}
           onClick={(e) => { 
             const target = e.target as HTMLInputElement;
@@ -262,73 +591,129 @@ function WorldMap(){
               return
             }
             // setUseTarget(target.id)
-            // const result = Countries.filter(function(obj){return obj.code == target.id })
+            // const result = countries.filter(function(obj){return obj.code == target.id })
             // setIsClicked(true)
             let ColorChange = "rgb(77, 128, 230)"
             let ColorOrigin = "rgb(206, 226, 245)"
             // target.style.fill = "#4D80E6"
-            console.log(target.style.fill)
-            console.log(ColorOrigin)
-            console.log(ColorChange)
+            // console.log(target.style)
+            // console.log(target.style.fill)
+            // console.log(ColorOrigin)
+            // console.log(ColorChange)
             if (target.style.fill == "") {
               target.style.fill = ColorChange
-              writeUserData(target.id)
+              console.log(target.id)
+              writeUserMap1Data(target.id)
+              console.log('空去過')
+              countryList.push({countryId: target.id, visited: true})
+              const newCountryList = [...countryList]
+              setCountryList(newCountryList)
+
 
             } else if(target.style.fill === ColorOrigin){
               target.style.fill = ColorChange
-              writeUserData(target.id)
+              writeUserMap1Data(target.id)
+              console.log('去過')
+              countryList.push({countryId: target.id, visited: true})
+              const newCountryList = [...countryList]
+              setCountryList(newCountryList)
+
               
             } else if (target.style.fill === ColorChange) {
+              // console.log(123, target.style)
               target.style.fill = ColorOrigin
               updateUserMap1Data(target.id)
+              const newCountryList = countryList.map(object =>{
+                // console.log(targetValue)
+                // console.log(object.countryId)
+                if(object.countryId === target.id){
+                  return{...object, visited: false}
+                }
+                return object
+                })
+              setCountryList(newCountryList)
+              console.log('沒去過')
             }
             
           }}>
-          {isHovering ? (<ShowName mousePlace={mousePlace}>{name}</ShowName>) : (<></>)}
-          {/* <ShowName>{name}</ShowName> */}
-
-          <MapSVG countryList={countryList} mapState={mapState}/>
+          {isHovering ? (<ShowName mousePlace={mousePlace}>{countryName}</ShowName>) : (<></>)}
+          <MapSVG countryList={countryList} mapState={mapState} haveFriendList={havefriendList}/>
+          <CountryCheckList writeUserMap1Data={writeUserMap1Data} countryCollection={countryCollection} setCountryList={setCountryList} setCountryCollection={setCountryCollection} countryList={countryList}></CountryCheckList>
         </Map>
         ): mapState === 2 ? (
-        <Map>
-          <MapSVG countryList={countryList} mapState={mapState}/>
+        <Map onMouseOver={(e) => { 
+          hoverAddCountryName(e)
+          }} 
+          onMouseLeave={(e)=> { setIsHovering(false)}}
+          onClick ={(e)=>{
+            const target = e.target as HTMLInputElement;
+            console.log(target.tagName)
+            if(target.tagName !== "path" ){
+              return
+            }
+            setCountryId(e.target.id)
+            setIsShowingFriends(true)
+            getUserMap2Data(e.target.id)
+            setIsHovering(false)
+          }}>
+          <MapSVG countryList={countryList} mapState={mapState} haveFriendList={havefriendList} />
+          {isShowingFriends && isShowingFriends === true ?  
+            <FriendBg>
+              <FriendBox> 
+                <FriendMiddleBox>
+                {friendsList.map((friend:{imgUrl:string,name:string,city:string,insta:string,notes:string})=>(
+                  <FriendInsideBox>
+                    <FriendProfilePic src={friend.imgUrl}></FriendProfilePic>
+                    <FriendSet>
+                      <FriendFormdiv>{friend.name}</FriendFormdiv>
+                      <FriendFormdiv>{friend.city}</FriendFormdiv>
+                      <FriendFormdiv>{friend.insta}</FriendFormdiv>
+                      <FriendFormdiv>{friend.notes}</FriendFormdiv>
+                    </FriendSet>
+                  </FriendInsideBox>
+                  
+                ))}
+                </FriendMiddleBox>
+                <CloseBtn onClick={()=>{setIsShowingFriends(false);setIsAddingFriend(false)}}>X</CloseBtn>
+                <AddFriendBtn onClick={()=>{setIsAddingFriend(true)}}>+</AddFriendBtn>
+                {isAddingFriend && isAddingFriend ? 
+                <AddFriendBox>
+                  <AddFriendProfilePic src={imageList[0]}></AddFriendProfilePic>
+                  <input type="file" onChange={(e)=>{setImageUpload(e.target.files[0])}}></input>
+                  {addFriendFormGroups.map(({label,key})=>(
+                    <AddFriendSet key={key}>
+                      <AddFriendFormLabel>{label}</AddFriendFormLabel>
+                      {key === "notes" ? (
+                      <AddFriendFormTextarea onChange={(e)=> setAddFriendState({...addFriendState, [key]:e.target.value})}/>
+                      ):(
+                      <AddFriendFormInput onChange={(e)=> setAddFriendState({...addFriendState, [key]:e.target.value})}/>
+                      )}
+                
+                    </AddFriendSet>
+                  ))}
+                  <AddFriendSentBtn onClick={()=>{ sentNewFriendInfo(); setIsAddingFriend(false); alert("Congrats for making a new friend")}}>SEND</AddFriendSentBtn>
+                  <CloseBtn onClick={()=>{setIsAddingFriend(false)}}>X</CloseBtn>
+                </AddFriendBox>
+                :<></>}
+                
+              </FriendBox>
+            </FriendBg>
+          : <></>
+          }
+          {isHovering ? (<ShowName mousePlace={mousePlace}>{countryName}</ShowName>) : (<></>)}
         </Map>
         ): mapState === 3 ?(
         <Map>
-          <MapSVG countryList={countryList} mapState={mapState}/>
+          <MapSVG countryList={countryList} mapState={mapState} haveFriendList={havefriendList}/>
         </Map>
-        ):
+        ): mapState === 4 ?(
+          <>
+            <Login setUid={setUid} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}></Login>
+          </>
+        ): 
         <></>
         }
-        <CountrySelectSet>
-          <CountryRegions>
-            {Regions.map((region) =>{
-              return(
-              <CountryRegion onClick={()=>{
-                getCountriesCollection(region.code)
-               
-
-              }}>{region.name}</CountryRegion>
-              )
-            })}
-            
-          </CountryRegions>
-          <CountrySelectListSet>
-            {countryCollection.map((country)=>{
-              return(
-              
-              <CountrySelectList key={country}>
-                <CountrySelectCheck type="checkbox" value={country} onChange={(e)=>{ editCheckedToMap(e.target)
-                  }}></CountrySelectCheck>
-                <CountrySelectName>{country}</CountrySelectName>
-                <CountryText>visited times</CountryText>
-                <CountryVisitedCount></CountryVisitedCount>
-              </CountrySelectList>
-              )
-            })}
-            
-          </CountrySelectListSet>
-        </CountrySelectSet>
+        
       </Wrapper>
     </>
   )

@@ -1,5 +1,5 @@
 
-const Countries = [
+const countries = [
 	{
 		"name": "Afghanistan",
 		"code": "AF",
@@ -4006,4 +4006,4 @@ const Countries = [
    	}
 ];
 
-export default Countries
+export default countries
