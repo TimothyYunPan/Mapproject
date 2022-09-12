@@ -5,7 +5,7 @@ import countries from "./utils/countries";
 import MapSVG from "./components/MapSVG";
 import Login from "./components/Login";
 import { initializeApp } from "firebase/app";
-import { doc, setDoc, collection, getFirestore, getDoc, getDocs, deleteField, updateDoc } from "firebase/firestore";
+import { doc, setDoc, collection, getFirestore, getDoc, getDocs, deleteField, updateDoc, DocumentData } from "firebase/firestore";
 import { EventType } from "@testing-library/react";
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll} from "firebase/storage"
 import app from "./utils/firebaseConfig";
@@ -17,7 +17,7 @@ const storage = getStorage(app)
 
 // async function writeUserMap1Data(country:string) {
 //   console.log("write")
-//   await setDoc(doc(db, "user", uid, "visitedCountries", country), {
+//   await setDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
 //     visited:true
 //   });
 //   // await setDoc(doc(db, "user/7LkdfIpKjPiFsrPDlsaM"), {
@@ -26,14 +26,14 @@ const storage = getStorage(app)
 // }
 // async function deleteUserMap1Data(country:string){
 //   console.log("delete")
-//   await updateDoc(doc(db, "user", uid, "visitedCountries", country), {
+//   await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
 //     visited: deleteField()
 //   });
 // }
 
 // async function updateUserMap1Data(country:string){
 //   // console.log("delete")
-//   await updateDoc(doc(db, "user", uid, "visitedCountries", country), {
+//   await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
 //     visited: false
 //   });
 // }
@@ -41,7 +41,7 @@ const storage = getStorage(app)
 // async function writeUserMap2Data(addFriendState:any) {
 //   console.log(addFriendState)
 //   console.log("write")
-//   await setDoc(doc(db, "user", uid, "friendsLocatedCountries", addFriendState.country), {
+//   await setDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "friendsLocatedCountries", addFriendState.country), {
 //       friends:[
 //         { 
 //           name: addFriendState.name,
@@ -87,19 +87,20 @@ const LoginBtn = styled.button`
   width: 80px;
   margin-top: 20px;
 `
-
+type mousePlaceType = {
+  x?: number | undefined;
+  y?: number | undefined;
+}
 
 const ShowName = styled.div<{
-  mousePlace:{
-    x?: number | undefined;
-    y?: number | undefined;
-  }}>`
+  mousePlace:mousePlaceType}>`
   /* width: 50px; */
   /* height: 50px; */
   font-size:16px;
   position: absolute;
+  cursor:pointer;
 
-  top:  ${(props) => props.mousePlace.y}px;
+  top:  ${(props) => props.mousePlace.y-160}px;
   left: ${(props) => props.mousePlace.x}px;
   /* top:0; */
   /* left:0 */
@@ -307,6 +308,70 @@ const AddFriendProfilePic = styled.img`
   border-radius: 50%;
 
 `
+const randomColor= Math.floor(Math.random()*16777215).toString(16)
+// const Point = styled.div<{svgScreenPosition:{}}>`
+//   position: absolute;
+//   top: ${(props)=>{return (props.svgScreenPosition.y) + "px"}};
+//   left: ${(props)=>{return (props.svgScreenPosition.x) + "px" }};
+//   height: 7px;
+//   width: 7px;
+//   cursor: pointer;
+//   border-radius: 50%;
+//   background-color: blue
+
+
+// `
+const PointSet = styled.div`
+  position: absolute;
+  top: ${(props)=>{return (props.pointInfo.y-161) + "px"}};
+  left: ${(props)=>{return (props.pointInfo.x-4) + "px" }};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* border: 1px solid black; */
+
+`
+const Point = styled.div`
+  /* position: absolute; */
+  height: 7px;
+  width: 7px;
+  cursor: pointer;
+  border-radius: 50%;
+  background-color: blue
+
+
+`
+const PointSole = styled.div`
+  background-color:grey;
+  height: 20px;
+  width: 1.5px;
+  /* position: absolute; */
+  
+  
+`
+
+const PointNotes = styled.div`
+  width: 100px;
+  /* height: 100px; */
+  position: absolute;
+  
+
+  top: ${(props)=>{return (props.pointInfo.y-220) + "px"}};
+  left: ${(props)=>{return (props.pointInfo.x-50) + "px" }};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* border: 1px solid black; */
+
+
+`
+const PointNotesTextArea = styled.textarea`
+  resize: none;
+  width: 90%;
+  height:auto
+  
+
+`
 
 // const AddCityInput = styled.input`
 //   width: 90%
@@ -339,24 +404,39 @@ function WorldMap(){
   const [imageList, setImageList] = useState([])
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   console.log(isLoggedIn)
-  // console.log(imageList)
   const [countryId, setCountryId] = useState<string>("")
   console.log(countryId)
   const imageListRef = ref(storage, "images/")
+  const [svgPosition, setSvgPosition] = useState<{}>({})
+  const [svgScreenPosition, setSvgScreenPosition] = useState<{}>({})
+  // console.log(svgPosition)
   const [friendsList, setFriendsList] = useState([])
   const [friendList, setFriendList] = useState([])
   console.log(friendList)
   const [havefriendList, setHaveFriendList] = useState([])
-  console.log(havefriendList)
+  const [isShowingPoint, setIsShowingPoint] = useState<boolean>(false)
+  // console.log(havefriendList)
   const [isAddingFriend, setIsAddingFriend] = useState<boolean>(false)
-  console.log(friendsList)
   const [uid, setUid] = useState<string>("")
   console.log(uid)
+  const [mousePos, setMousePos] = useState({})
+  // console.log(mousePos)
+  type pointListType = {
+    top: number,
+    left: number,
+    imgUrl: string,
+    notes: string
+  }
+
+  const [pointList, setPointList] = useState<pointListType[]>([])
+  console.log(pointList)
+  
   // const [visitedCountries, setVisitedCountries] = useState<boolean>(false)
   const [ mousePlace, setMousePlace] = useState<{
     x?: number | undefined;
     y?: number | undefined;
   }>({})
+  // console.log(mousePlace)
 
   type AddFriendType = {
     name: string;
@@ -377,8 +457,9 @@ function WorldMap(){
   useEffect(()=>{
     getUserMap1Data()
     // getUserMap2Data()
-    setMapState(2)
+    // setMapState(3)
     getUserMap2Data()
+    getUserMap3Data()
     listAll(imageListRef).then((response)=>{
       const urlArr = []
       response.items.forEach((item)=>{
@@ -388,12 +469,12 @@ function WorldMap(){
         })
       })
     })
-  },[uid,friendList])
+  },[uid,friendList,isShowingPoint])
   
-//why??
+
   async function writeUserMap1Data(country:string) {
     console.log(country)
-    await setDoc(doc(db, "user", uid, "visitedCountries", country), {
+    await setDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
       visited:true
     });
     // console.log("我有寫啦")
@@ -401,27 +482,44 @@ function WorldMap(){
     //   country
     // });
   }
-//
+
+  async function writeUserMap3Data(country:string,newObj) {
+    await setDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "custimizedMapCountries", country), {
+      List : [{
+        y: newObj.y,
+        x: newObj.x,
+        imgUrl: "",
+        notes: ""
+    }]
+      
+    });
+    // console.log("我有寫啦")
+    // await setDoc(doc(db, "user/7LkdfIpKjPiFsrPDlsaM"), {
+    //   country
+    // });
+  }
+
   // async function deleteUserMap1Data(country:string){
   //   console.log("delete")
-  //   await updateDoc(doc(db, "user", uid, "visitedCountries", country), {
+  //   await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
   //     visited: deleteField()
   //   });
   // }
   
   async function updateUserMap1Data(country:string){
     // console.log("delete")
-    await updateDoc(doc(db, "user", uid, "visitedCountries", country), {
+    await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
       visited: false
     });
   }
 
   async function getUserMap1Data(){
-    const q = collection(db, "user", uid, "visitedCountries");
+    const q = collection(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries");
     const querySnapshot = await getDocs(q);
     let newCountryList:any[]=[]
+    console.log(querySnapshot)
     querySnapshot.forEach((country)=>{
-      // console.log(country.data())
+      console.log(country.data())
       // console.log(country.id, '=>' ,country.data())
       let t = {countryId: country.id, visited:country.data().visited}
       newCountryList.push(t)
@@ -429,7 +527,7 @@ function WorldMap(){
     })
   }
   async function getUserMap2Data(){
-    const q = collection(db, "user", uid, "friendsLocatedCountries");
+    const q = collection(db, "user", "5Ch2PkVdhfngwXkX0y0h", "friendsLocatedCountries");
     const querySnapshot = await getDocs(q);
     let newHaveFriendList:any[]=[]
     let newFriendsList:any = []
@@ -454,9 +552,51 @@ function WorldMap(){
     })
 
   }
+  async function getUserMap3Data(){
+    const q = collection(db, "user", "5Ch2PkVdhfngwXkX0y0h", "custimizedMapCountries");
+    const querySnapshot = await getDocs(q);
+    let newPointList:any[]=[]
+    console.log(querySnapshot)
+    querySnapshot.forEach((country)=>{
+      console.log(country)
+
+      console.log(country.data().List)
+      country.data().List.forEach((point)=>{
+        let newPointObj = {
+          countryId: country.id,
+          imUrl: point.imgUrl,
+          notes: point.notes,
+          x: point.x,
+          y: point.y,
+        }
+        newPointList.push(newPointObj)
+        // console.log(newPointObj)
+        
+      }
+      )
+      console.log(newPointList)
+      setPointList(newPointList)
+    })
+
+  }
+
+  // function getSvgP(e){
+  //   const svg = document.getElementById("CtySVG")
+  //   if(svg){
+  //   const pt = svg.createSVGPoint();
+  //   pt.x = e.clientX;
+  //   pt.y = e.clientY;
+  //   console.log(pt.x,pt.y)
+  //   const svgP = pt.matrixTransform( svg.getScreenCTM().inverse() );
+  //   console.log(svgP)
+  //   setSvgPosition(svgP)
+  //   return svgP
+  //   }
+
+  // }
 
   function getUserMap2FriendData(id){
-    const nf = []
+    const nf:any = []
     console.log(id)
 
     friendsList.forEach((friend)=>{
@@ -472,7 +612,7 @@ function WorldMap(){
 
   
   // async function getUserMap2Data(id){
-  //   const q = doc(db, "user", uid, "friendsLocatedCountries", id);
+  //   const q = doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "friendsLocatedCountries", id);
   //   console.log("我是拿資料")
   //   const querySnapshot = await getDoc(q);
 
@@ -501,7 +641,7 @@ function WorldMap(){
       notes: addFriendState.notes,
     }
     newFriendList = [...friendList, newFriend]
-    await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), {friends:newFriendList});
+    await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "friendsLocatedCountries", countryId), {friends:newFriendList});
     setFriendList(newFriendList)
     // console.log(addFriendState)
     console.log("write")
@@ -583,7 +723,7 @@ function WorldMap(){
       ],
       haveFriend:"true"
     }
-    setDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), data)  
+    setDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "friendsLocatedCountries", countryId), data)  
     const data2 = {
       countryId: countryId,
       name: addFriendState.name,
@@ -611,9 +751,10 @@ function WorldMap(){
       <Wrapper>
         <ChangeMapBtn onClick={()=>{
           setMapState(1);
+          setIsShowingPoint(false)
             }}>Visited </ChangeMapBtn><br/>
         <ChangeMapBtn onClick={()=>{setMapState(2)}}>Friends </ChangeMapBtn><br/>
-        <ChangeMapBtn onClick={()=>{setMapState(3)}}>my Map</ChangeMapBtn>
+        <ChangeMapBtn onClick={()=>{setMapState(3);setIsShowingPoint(true)}}>my Map</ChangeMapBtn>
         <LoginBtn onClick={()=>{setMapState(4)}}>Login</LoginBtn>
         {mapState && mapState === 1 ?(
         <>
@@ -672,8 +813,50 @@ function WorldMap(){
             }
             
           }}>
+            
           {isHovering ? (<ShowName mousePlace={mousePlace}>{countryName}</ShowName>) : (<></>)}
-          <MapSVG countryList={countryList} mapState={mapState} haveFriendList={havefriendList}/>
+          
+          <MapSVG countryList={countryList} mapState={mapState} haveFriendList={havefriendList} />
+          {isShowingPoint && isShowingPoint ?
+          <>
+          {pointList.map((pointInfo,index)=>{
+            console.log(pointInfo)
+            return(
+            <>
+            <PointSet key={index} pointInfo={pointInfo} onClick={(e)=>{e.stopPropagation()}}>
+              <Point pointInfo={pointInfo} onClick={(e)=>{e.stopPropagation()}}></Point>
+              <PointSole pointInfo={pointInfo}></PointSole>
+            </PointSet>
+            <PointNotes pointInfo={pointInfo}>
+              <PointNotesTextArea onClick={(e)=>{e.stopPropagation()}}>{pointInfo.notes}</PointNotesTextArea>
+              <button onClick={(e)=>{e.stopPropagation()}}>Edit</button>
+              <button onClick={(e)=>{e.stopPropagation(); 
+                let newObj = {
+                  countryId: countryId,
+                  x:mousePos.x,
+                  y:mousePos.y,
+                  imgUrl:"",
+                  notes:""
+                }
+                setPointList(pre=>{
+                  
+                  pre[index]={...pre[index], imgUrl:"AAAA",
+                  notes:"AAA"}
+                  const newArr=[...pre]
+                  return newArr;
+
+
+                })
+              
+                writeUserMap3Data(countryId,newObj)
+              }}>Done</button>
+            </PointNotes>
+
+            </>
+          )})}
+          
+          </>: <></>}
+          <button onClick={()=>{setIsShowingPoint(true)}}>重疊起來</button>
         </Map>
         <CountryCheckList writeUserMap1Data={writeUserMap1Data} countryCollection={countryCollection} setCountryList={setCountryList} setCountryCollection={setCountryCollection} countryList={countryList}></CountryCheckList>
         </>
@@ -693,7 +876,7 @@ function WorldMap(){
             getUserMap2FriendData(e.target.id)
             setIsHovering(false)
           }}>
-          <MapSVG countryList={countryList} mapState={mapState} haveFriendList={havefriendList} />
+          <MapSVG countryList={countryList} mapState={mapState} haveFriendList={havefriendList}/>
           {isShowingFriends && isShowingFriends === true ?  
             <FriendBg>
               <FriendBox> 
@@ -740,8 +923,82 @@ function WorldMap(){
           {isHovering ? (<ShowName mousePlace={mousePlace}>{countryName}</ShowName>) : (<></>)}
         </Map>
         ): mapState === 3 ?(
-        <Map>
-          <MapSVG countryList={countryList} mapState={mapState} haveFriendList={havefriendList}/>
+        <Map onMouseOver={(e) => { 
+          hoverAddCountryName(e)
+          }} 
+          onMouseLeave={(e)=> { setIsHovering(false)}}
+          onClick={(e)=>{
+            const target = e.target as HTMLInputElement;
+            if(target.tagName !== "path"){
+              return
+            }
+            
+            setCountryId(target.id)
+
+            // let a = getSvgP(e)
+            // const svg = document.getElementById("CtySVG")
+            // if(svg){
+            // const screenP = a.matrixTransform( svg.getScreenCTM())
+            // console.log(screenP)
+            // setSvgScreenPosition(screenP)
+            // }
+            let mousePosition = getMousePos(e)
+            setMousePos(mousePosition)
+            let a = mousePosition
+            let newObj = {
+              countryId: target.id,
+              imgUrl:"",
+              notes:"",
+              x:a.x,
+              y:a.y
+            }
+            setPointList([...pointList, newObj])
+          }}
+          >
+          {isShowingPoint && isShowingPoint ?
+          <>
+          {pointList.map((pointInfo,index)=>{
+            console.log(pointInfo)
+            return(
+            <>
+            <PointSet key={index} pointInfo={pointInfo} onClick={(e)=>{e.stopPropagation()}}>
+              <Point pointInfo={pointInfo} onClick={(e)=>{e.stopPropagation()}}></Point>
+              <PointSole pointInfo={pointInfo}></PointSole>
+            </PointSet>
+            <PointNotes pointInfo={pointInfo}>
+              <PointNotesTextArea onClick={(e)=>{e.stopPropagation()}}>{pointInfo.notes}</PointNotesTextArea>
+              <button onClick={(e)=>{e.stopPropagation()}}>Edit</button>
+              <button onClick={(e)=>{e.stopPropagation(); 
+                let newObj = {
+                  countryId: countryId,
+                  x:mousePos.x,
+                  y:mousePos.y,
+                  imgUrl:"",
+                  notes:""
+                }
+                setPointList(pre=>{
+                  
+                  pre[index]={...pre[index], imgUrl:"AAAA",
+                  notes:"AAA"}
+                  const newArr=[...pre]
+                  return newArr;
+
+
+                })
+              
+                writeUserMap3Data(countryId,newObj)
+              }}>Done</button>
+            </PointNotes>
+
+            </>
+          )})}
+          
+          </>: <></>}
+          
+          
+          <MapSVG countryList={countryList} mapState={mapState} haveFriendList={havefriendList} />
+          {isHovering ? (<ShowName mousePlace={mousePlace}>{countryName}</ShowName>) : (<></>)}
+
         </Map>
         ): mapState === 4 ?(
           <>
