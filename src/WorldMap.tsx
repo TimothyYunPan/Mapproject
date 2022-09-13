@@ -100,13 +100,13 @@ const ShowName = styled.div<{
   position: absolute;
   cursor:pointer;
 
-  top:  ${(props) => props.mousePlace.y-160}px;
+  top:  ${(props) => props.mousePlace.y as number-160}px;
   left: ${(props) => props.mousePlace.x}px;
   /* top:0; */
   /* left:0 */
   transform:translate(-50%,-150%)
 `
-function getMousePos(event:any) {
+function getMousePos(event:React.MouseEvent<HTMLDivElement, MouseEvent>) {
   const e = event || window.event;
   return {'x':e.clientX,'y':e.clientY}
 }
@@ -321,7 +321,7 @@ const randomColor= Math.floor(Math.random()*16777215).toString(16)
 
 
 // `
-const PointSet = styled.div`
+const PointSet = styled.div<{pointInfo:pointListType}>`
   position: absolute;
   top: ${(props)=>{return (props.pointInfo.y-161) + "px"}};
   left: ${(props)=>{return (props.pointInfo.x-4) + "px" }};
@@ -350,7 +350,7 @@ const PointSole = styled.div`
   
 `
 
-const PointNotes = styled.div`
+const PointNotes = styled.div<{pointInfo:pointListType}>`
   width: 100px;
   /* height: 100px; */
   position: absolute;
@@ -384,6 +384,32 @@ const PointNotesTextArea = styled.textarea`
 // const AddNoteInput = styled.input`
   
 // `
+type pointListType = {
+  countryId: string,
+  y: number,
+  x: number,
+  imgUrl: string,
+  notes: string
+}
+
+export type haveFriendListType = {
+  countryId: string;
+  haveFriend: boolean;
+}
+type friendListType = {
+  countryId: string;
+  name: string;
+  city: string;
+  country: string;
+  insta: string;
+  imgUrl: string;
+  notes: string;
+}
+type mousePosType ={
+  x: number | null;
+  y: number | null;
+}
+
 
 
 function WorldMap(){
@@ -400,8 +426,9 @@ function WorldMap(){
   // console.log(countryList)
   const [countryCollection, setCountryCollection] = useState<string[]>([])
   // console.log(countryCollection)
-  const [imageUpload, setImageUpload] = useState(null)
-  const [imageList, setImageList] = useState([])
+  const [imageUpload, setImageUpload] = useState<File|null>(null)
+  const [imageList, setImageList] = useState<string[]>([])
+  // console.log(imageList)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   console.log(isLoggedIn)
   const [countryId, setCountryId] = useState<string>("")
@@ -410,40 +437,36 @@ function WorldMap(){
   const [svgPosition, setSvgPosition] = useState<{}>({})
   const [svgScreenPosition, setSvgScreenPosition] = useState<{}>({})
   // console.log(svgPosition)
-  const [friendsList, setFriendsList] = useState([])
-  const [friendList, setFriendList] = useState([])
+  const [friendsList, setFriendsList] = useState<friendListType[]>([])
+  const [friendList, setFriendList] = useState<friendListType[]>([])
   console.log(friendList)
-  const [havefriendList, setHaveFriendList] = useState([])
+
+  const [haveFriendList, setHaveFriendList] = useState<haveFriendListType[]>([])
   const [isShowingPoint, setIsShowingPoint] = useState<boolean>(false)
-  // console.log(havefriendList)
+  // console.log(haveFriendList)
   const [isAddingFriend, setIsAddingFriend] = useState<boolean>(false)
   const [uid, setUid] = useState<string>("")
   console.log(uid)
-  const [mousePos, setMousePos] = useState({})
+  const [mousePos, setMousePos] = useState<mousePosType>({x:null,y:null})
   // console.log(mousePos)
-  type pointListType = {
-    top: number,
-    left: number,
-    imgUrl: string,
-    notes: string
-  }
+ 
 
   const [pointList, setPointList] = useState<pointListType[]>([])
   console.log(pointList)
   
   // const [visitedCountries, setVisitedCountries] = useState<boolean>(false)
   const [ mousePlace, setMousePlace] = useState<{
-    x?: number | undefined;
-    y?: number | undefined;
-  }>({})
-  // console.log(mousePlace)
+    x: number | undefined;
+    y: number | undefined;
+  }>({ x:0, y:0 })
+  console.log(mousePlace)
 
   type AddFriendType = {
     name: string;
     // country: string;
     city: string,
     insta: string;
-    notes: any;
+    notes: string;
   }
   const initialAddFriendState ={
     name: '',
@@ -461,7 +484,7 @@ function WorldMap(){
     getUserMap2Data()
     getUserMap3Data()
     listAll(imageListRef).then((response)=>{
-      const urlArr = []
+      const urlArr:string[] = []
       response.items.forEach((item)=>{
         getDownloadURL(item).then((url)=>{
           urlArr.push(url)
@@ -483,7 +506,7 @@ function WorldMap(){
     // });
   }
 
-  async function writeUserMap3Data(country:string,newObj) {
+  async function writeUserMap3Data(country:string,newObj:pointListType) {
     await setDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "custimizedMapCountries", country), {
       List : [{
         y: newObj.y,
@@ -516,7 +539,7 @@ function WorldMap(){
   async function getUserMap1Data(){
     const q = collection(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries");
     const querySnapshot = await getDocs(q);
-    let newCountryList:any[]=[]
+    let newCountryList:countryListType[]=[]
     console.log(querySnapshot)
     querySnapshot.forEach((country)=>{
       console.log(country.data())
@@ -529,13 +552,13 @@ function WorldMap(){
   async function getUserMap2Data(){
     const q = collection(db, "user", "5Ch2PkVdhfngwXkX0y0h", "friendsLocatedCountries");
     const querySnapshot = await getDocs(q);
-    let newHaveFriendList:any[]=[]
-    let newFriendsList:any = []
+    let newHaveFriendList:haveFriendListType[]=[]
+    let newFriendsList:friendListType[] = []
     querySnapshot.forEach((country)=>{
       let newHaveFriendObj = {countryId: country.id, haveFriend:country.data().haveFriend}
       newHaveFriendList.push(newHaveFriendObj)
       setHaveFriendList(newHaveFriendList)
-      country.data().friends.forEach((friend)=>{
+      country.data().friends.forEach((friend:friendListType)=>{
         let newFriendObj = {
           countryId: country.id,
           name: friend.name,
@@ -555,16 +578,16 @@ function WorldMap(){
   async function getUserMap3Data(){
     const q = collection(db, "user", "5Ch2PkVdhfngwXkX0y0h", "custimizedMapCountries");
     const querySnapshot = await getDocs(q);
-    let newPointList:any[]=[]
+    let newPointList:pointListType[]=[]
     console.log(querySnapshot)
     querySnapshot.forEach((country)=>{
       console.log(country)
 
       console.log(country.data().List)
-      country.data().List.forEach((point)=>{
+      country.data().List.forEach((point:pointListType)=>{
         let newPointObj = {
           countryId: country.id,
-          imUrl: point.imgUrl,
+          imgUrl: point.imgUrl,
           notes: point.notes,
           x: point.x,
           y: point.y,
@@ -595,8 +618,8 @@ function WorldMap(){
 
   // }
 
-  function getUserMap2FriendData(id){
-    const nf:any = []
+  function getUserMap2FriendData(id:string){
+    const nf:friendListType[] = []
     console.log(id)
 
     friendsList.forEach((friend)=>{
@@ -706,7 +729,7 @@ function WorldMap(){
   //   })
   // }
 
-  function writeUserMap2Data(url:any) {
+  function writeUserMap2Data(url:string) {
     let newFriendList = []
     const data = {
       friends:[
@@ -738,7 +761,7 @@ function WorldMap(){
     setFriendList(newFriendList)
     // console.log(addFriendState)
     console.log("write")
-    let newHaveFriendList:any[]=[]
+    let newHaveFriendList = []
     let newHaveFriendObj = {countryId: countryId, haveFriend:true}
       newHaveFriendList.push(newHaveFriendObj)
       setHaveFriendList(newHaveFriendList)
@@ -816,7 +839,7 @@ function WorldMap(){
             
           {isHovering ? (<ShowName mousePlace={mousePlace}>{countryName}</ShowName>) : (<></>)}
           
-          <MapSVG countryList={countryList} mapState={mapState} haveFriendList={havefriendList} />
+          <MapSVG countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
           {isShowingPoint && isShowingPoint ?
           <>
           {pointList.map((pointInfo,index)=>{
@@ -824,17 +847,17 @@ function WorldMap(){
             return(
             <>
             <PointSet key={index} pointInfo={pointInfo} onClick={(e)=>{e.stopPropagation()}}>
-              <Point pointInfo={pointInfo} onClick={(e)=>{e.stopPropagation()}}></Point>
-              <PointSole pointInfo={pointInfo}></PointSole>
+              <Point onClick={(e)=>{e.stopPropagation()}}></Point>
+              <PointSole ></PointSole>
             </PointSet>
             <PointNotes pointInfo={pointInfo}>
               <PointNotesTextArea onClick={(e)=>{e.stopPropagation()}}>{pointInfo.notes}</PointNotesTextArea>
               <button onClick={(e)=>{e.stopPropagation()}}>Edit</button>
               <button onClick={(e)=>{e.stopPropagation(); 
-                let newObj = {
+                let newObj:pointListType = {
                   countryId: countryId,
-                  x:mousePos.x,
-                  y:mousePos.y,
+                  x:mousePos.x as number,
+                  y:mousePos.y as number,
                   imgUrl:"",
                   notes:""
                 }
@@ -871,12 +894,12 @@ function WorldMap(){
             if(target.tagName !== "path" ){
               return
             }
-            setCountryId(e.target.id)
+            setCountryId(target.id)
             setIsShowingFriends(true)
-            getUserMap2FriendData(e.target.id)
+            getUserMap2FriendData(target.id)
             setIsHovering(false)
           }}>
-          <MapSVG countryList={countryList} mapState={mapState} haveFriendList={havefriendList}/>
+          <MapSVG countryList={countryList} mapState={mapState} haveFriendList={haveFriendList}/>
           {isShowingFriends && isShowingFriends === true ?  
             <FriendBg>
               <FriendBox> 
@@ -899,7 +922,7 @@ function WorldMap(){
                 {isAddingFriend && isAddingFriend ? 
                 <AddFriendBox>
                   <AddFriendProfilePic src={imageList[0]}></AddFriendProfilePic>
-                  <input type="file" onChange={(e)=>{setImageUpload(e.target.files[0])}}></input>
+                  <input type="file" onChange={(e)=>{setImageUpload(e.target.files![0])}}></input>
                   {addFriendFormGroups.map(({label,key})=>(
                     <AddFriendSet key={key}>
                       <AddFriendFormLabel>{label}</AddFriendFormLabel>
@@ -911,7 +934,7 @@ function WorldMap(){
                 
                     </AddFriendSet>
                   ))}
-                  <AddFriendSentBtn onClick={()=>{ sentNewFriendInfo(); setIsAddingFriend(true); alert("Congrats for making a new friend")}}>SEND</AddFriendSentBtn>
+                  <AddFriendSentBtn onClick={()=>{ sentNewFriendInfo(); setIsAddingFriend(false); alert("Congrats for making a new friend")}}>SEND</AddFriendSentBtn>
                   <CloseBtn onClick={()=>{setIsAddingFriend(false)}}>X</CloseBtn>
                 </AddFriendBox>
                 :<></>}
@@ -962,17 +985,17 @@ function WorldMap(){
             return(
             <>
             <PointSet key={index} pointInfo={pointInfo} onClick={(e)=>{e.stopPropagation()}}>
-              <Point pointInfo={pointInfo} onClick={(e)=>{e.stopPropagation()}}></Point>
-              <PointSole pointInfo={pointInfo}></PointSole>
+              <Point onClick={(e)=>{e.stopPropagation()}}></Point>
+              <PointSole></PointSole>
             </PointSet>
             <PointNotes pointInfo={pointInfo}>
               <PointNotesTextArea onClick={(e)=>{e.stopPropagation()}}>{pointInfo.notes}</PointNotesTextArea>
               <button onClick={(e)=>{e.stopPropagation()}}>Edit</button>
               <button onClick={(e)=>{e.stopPropagation(); 
-                let newObj = {
+                let newObj:pointListType = {
                   countryId: countryId,
-                  x:mousePos.x,
-                  y:mousePos.y,
+                  x:mousePos.x as number,
+                  y:mousePos.y as number,
                   imgUrl:"",
                   notes:""
                 }
@@ -996,7 +1019,7 @@ function WorldMap(){
           </>: <></>}
           
           
-          <MapSVG countryList={countryList} mapState={mapState} haveFriendList={havefriendList} />
+          <MapSVG countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
           {isHovering ? (<ShowName mousePlace={mousePlace}>{countryName}</ShowName>) : (<></>)}
 
         </Map>

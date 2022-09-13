@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from 'styled-components';
-import {countryListType} from "../WorldMap"
+import {countryListType, haveFriendListType} from "../WorldMap"
 
 const SVG = styled.svg`
   height:650px;
@@ -24,7 +24,7 @@ interface Pathtype {
 
 
 
-const Path:React.FC<Pathtype> = styled.path<Pathtype>`
+const Path = styled.path<Pathtype>`
   position: relative;
   cursor: pointer;
   transition: all 0.5s;
@@ -46,7 +46,7 @@ const Path:React.FC<Pathtype> = styled.path<Pathtype>`
 `
 
 
-function MapSVG({countryList, mapState, haveFriendList }:{countryList:countryListType[], mapState:number, haveFriendList:any} ){
+function MapSVG({countryList, mapState, haveFriendList}:{countryList:countryListType[], mapState:number, haveFriendList:haveFriendListType[]} ){
   useEffect(()=>{
     console.log(mapState)
     if(mapState === 1){

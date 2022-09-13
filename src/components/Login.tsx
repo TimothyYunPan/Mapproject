@@ -326,7 +326,13 @@ const ProfileFbLogInWord = styled.p`
   font-size: 14px;
 `;
 
-function Login({setUid,isLoggedIn,setIsLoggedIn}:{setUid:string; isLoggedIn:boolean; setIsLoggedIn:Dispatch<SetStateAction<boolean>>}) {
+type LoginType = {
+  setUid:Dispatch<SetStateAction<string>>;
+  isLoggedIn:boolean; 
+  setIsLoggedIn:Dispatch<SetStateAction<boolean>>
+}
+
+function Login({setUid,isLoggedIn,setIsLoggedIn}:LoginType) {
   const [profile, setProfile] = useState();
   const [loginStatus, setLoginStatus] = useState("login");
   console.log(loginStatus)

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, useEffect, useState } from "react";
 import styled from 'styled-components';
 import regions from "../utils/regions";
 import countries from "../utils/countries";
 import { doc, setDoc, collection, getFirestore, getDoc, getDocs, deleteField, updateDoc } from "firebase/firestore";
 import { db } from "../utils/firebaseConfig";
+import { countryListType } from "../WorldMap";
 
 
 const CountrySelectSet = styled.div`
@@ -57,7 +58,15 @@ const CountryVisitedCount = styled.input`
 
 `
 
-function CountryCheckList({countryCollection,setCountryList,setCountryCollection,countryList,writeUserMap1Data}:{countryCollection:string[];setCountryList:Dispatch<SetStateAction<any[]>>} ){
+type CountryCheckListType = {
+  countryCollection:string[],
+  countryList: countryListType[],
+  setCountryList: React.Dispatch<React.SetStateAction<countryListType[]>>,
+  setCountryCollection: React.Dispatch<React.SetStateAction<string[]>>,
+  writeUserMap1Data: (country: string)=> Promise<void>
+}
+
+function CountryCheckList({countryCollection,setCountryList,setCountryCollection,countryList,writeUserMap1Data}:CountryCheckListType){
   
   function getCountriesCollection(regionCode:string){
     let countryCollectionArr:string[] = []
@@ -88,7 +97,7 @@ function CountryCheckList({countryCollection,setCountryList,setCountryCollection
       
     }else{
       updateUserMap1Data(targetValue)
-      const newCountryList = countryList.map(object =>{
+      const newCountryList = countryList.map((object:countryListType) =>{
         // console.log(targetValue)
         // console.log(object.countryId)
         if(object.countryId === targetValue){
@@ -132,7 +141,7 @@ function CountryCheckList({countryCollection,setCountryList,setCountryCollection
         
       </CountryRegions>
       <CountrySelectListSet>
-        {countryCollection.map((country)=>{
+        {countryCollection.map((country:string)=>{
           return(
           <CountrySelectList key={country}>
             <CountrySelectCheck type="checkbox" value={country} onChange={(e)=>{ editCheckedToMap(e.target)
