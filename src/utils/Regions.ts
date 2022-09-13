@@ -1,12 +1,11 @@
 
-const Regions = [
-	{ "name": "Africa", "code": "AF" },
-	{ "name": "North America", "code": "NA" },
-	{ "name": "Oceania", "code": "OC" },
-	{ "name": "Antarctica", "code": "AN" },
+const regions = [
 	{ "name": "Asia", "code": "AS" },
-	{ "name": "Europe", "code": "EU" },
+	{ "name": "North America", "code": "NA" },
 	{ "name": "South America", "code": "SA" },
+	{ "name": "Europe", "code": "EU" },
+	{ "name": "Oceania", "code": "OC" },
+	{ "name": "Africa", "code": "AF" },
 ];
 
-export default Regions
+export default regions
