@@ -1,12 +1,13 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { doc, setDoc, collection } from "firebase/firestore";
+import { db } from "../utils/firebaseConfig";
 import app from "../utils/firebaseConfig";
 
 // import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
-
+import { countryListType } from "../WorldMap";
 // import getJwtToken from '../../utils/getJwtToken';
-
 
 const auth = getAuth(app);
 
@@ -98,8 +99,6 @@ const MemberInfoIcon = styled.div`
     display: none;
   }
 `;
-
-
 
 const MemberInfoText = styled.p`
   font-size: 20px;
@@ -327,17 +326,18 @@ const ProfileFbLogInWord = styled.p`
 `;
 
 type LoginType = {
-  setUid:Dispatch<SetStateAction<string>>;
-  isLoggedIn:boolean; 
-  setIsLoggedIn:Dispatch<SetStateAction<boolean>>
-}
+  setUid: Dispatch<SetStateAction<string>>;
+  isLoggedIn: boolean;
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
+  countryList: countryListType[];
+};
 
-function Login({setUid,isLoggedIn,setIsLoggedIn}:LoginType) {
+function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList }: LoginType) {
   const [profile, setProfile] = useState();
   const [loginStatus, setLoginStatus] = useState("login");
-  console.log(loginStatus)
+  // console.log(loginStatus);
 
-  console.log(isLoggedIn)
+  // console.log(isLoggedIn);
   const [memberRole, setMemberRole] = useState("金屬會員");
   // const [ memberInfo, setMemberInfo ] = useState([])
   const [memberName, setMemberName] = useState("Welcome back");
@@ -351,7 +351,6 @@ function Login({setUid,isLoggedIn,setIsLoggedIn}:LoginType) {
     // const persisState = localStorage.getItem("user") || "";
     // if (persisState) {
     //   setIsLoggedIn(true);
-
     //   // const a = memberInfo
     //   const memberInfo = JSON.parse(localStorage.getItem("user"));
     //   console.log(memberInfo);
@@ -359,15 +358,19 @@ function Login({setUid,isLoggedIn,setIsLoggedIn}:LoginType) {
     //   setMemberEmail(memberInfo.data.user.email);
     //   setMemberRole(memberInfo.data.user.role);
     // }
- 
-  },[])
-  function onSubmit(){
-    if(loginStatus === 'register'){
+  }, []);
+  function onSubmit() {
+    if (loginStatus === "register") {
       // const auth = getAuth();
       createUserWithEmailAndPassword(auth, accountInputValue, passwordInputValue)
         .then((userCredential) => {
-          // Signed in 
+          // Signed in
           const user = userCredential.user;
+          console.log(userCredential.user.uid);
+          console.log("登入囉");
+          console.log(user.uid);
+          setUid(user.uid);
+          writeUserMap1Data(user.uid);
 
           // ...
         })
@@ -376,44 +379,57 @@ function Login({setUid,isLoggedIn,setIsLoggedIn}:LoginType) {
           const errorMessage = error.message;
           // ..
         });
-    }else if(loginStatus === 'login'){
+    } else if (loginStatus === "login") {
       // const auth = getAuth();
       signInWithEmailAndPassword(auth, accountInputValue, passwordInputValue)
         .then((userCredential) => {
-          // Signed in 
+          // Signed in
           const user = userCredential.user;
-          setUid(user.uid)
-          console.log("登入囉")
-          setIsLoggedIn(true)
-          
+          setUid(user.uid);
+          console.log("登入囉");
+          console.log(user.uid);
+          setIsLoggedIn(true);
+
           // ...
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-        });      
-
+        });
     }
   }
-  function LogOut(){
-    signOut(auth).then(() => {
-      setUid("")
-      // Sign-out successful.
-    }).catch((error) => {
-      // An error happened.
+  function LogOut() {
+    signOut(auth)
+      .then(() => {
+        setUid("");
+        // Sign-out successful.
+      })
+      .catch((error) => {
+        // An error happened.
+      });
+  }
+  async function writeUserMap1Data(uid: string) {
+    console.log("哈哈哈");
+    console.log(uid);
+
+    countryList.map(async (country) => {
+      await setDoc(doc(db, "user", uid, "visitedCountries", country.countryId), {
+        visited: true,
+      });
     });
+
+    console.log("我有寫啦");
+    // await setDoc(doc(db, "user/7LkdfIpKjPiFsrPDlsaM"), {
+    //   country
+    // });
   }
   // console.log(memberInfo)
   // console.log(memberRole);
   return (
     <Wrapper>
       <ProfilePanel>
-        {isLoggedIn === false && loginStatus === "login" && (
-          <ProfileTitle>Welcome back</ProfileTitle>
-        )}
-        {isLoggedIn === false && loginStatus === "register" && (
-          <ProfileTitle>You're new around here</ProfileTitle>
-        )}
+        {isLoggedIn === false && loginStatus === "login" && <ProfileTitle>Welcome back</ProfileTitle>}
+        {isLoggedIn === false && loginStatus === "register" && <ProfileTitle>You're new around here</ProfileTitle>}
         {isLoggedIn === true && <ProfileTitle>{memberName}</ProfileTitle>}
         {isLoggedIn === true && (
           <ProfileUserInfo>
@@ -426,27 +442,18 @@ function Login({setUid,isLoggedIn,setIsLoggedIn}:LoginType) {
             {loginStatus === "register" && (
               <ProfileInputSet>
                 <AccountWord>Name</AccountWord>
-                <ProfileInput
-                  value={nameInputValue}
-                  onChange={(e) => setNameInputValue(e.target.value)}
-                />
+                <ProfileInput value={nameInputValue} onChange={(e) => setNameInputValue(e.target.value)} />
                 {/* {console.log(nameInputValue)} */}
               </ProfileInputSet>
             )}
             <ProfileInputSet>
               <AccountWord>Email</AccountWord>
-              <ProfileInput
-                value={accountInputValue}
-                onChange={(e) => setAccountInputValue(e.target.value)}
-              />
+              <ProfileInput value={accountInputValue} onChange={(e) => setAccountInputValue(e.target.value)} />
               {/* {console.log(accountInputValue)} */}
             </ProfileInputSet>
             <ProfileInputSet>
               <AccountWord>Password</AccountWord>
-              <ProfileInput
-                value={passwordInputValue}
-                onChange={(e) => setPasswordInputValue(e.target.value)}
-              />
+              <ProfileInput value={passwordInputValue} onChange={(e) => setPasswordInputValue(e.target.value)} />
               {/* {console.log(passwordInputValue)} */}
             </ProfileInputSet>
 
@@ -459,8 +466,7 @@ function Login({setUid,isLoggedIn,setIsLoggedIn}:LoginType) {
                 <ProfileNoAcount
                   onClick={() => {
                     setLoginStatus("register");
-                  }}
-                >
+                  }}>
                   sign up?
                 </ProfileNoAcount>
               )}
@@ -468,20 +474,24 @@ function Login({setUid,isLoggedIn,setIsLoggedIn}:LoginType) {
                 <ProfileWithAcount
                   onClick={() => {
                     setLoginStatus("login");
-                    
-                  }}
-                >
+                  }}>
                   log in?
                 </ProfileWithAcount>
               )}
             </ProfileCheckSet>
             {loginStatus === "login" && (
-              <ProfileLoginBtn onClick={()=>{onSubmit()}}>
+              <ProfileLoginBtn
+                onClick={() => {
+                  onSubmit();
+                }}>
                 LOGIN
               </ProfileLoginBtn>
             )}
             {loginStatus === "register" && (
-              <ProfileRegisterBtn onClick={()=>{onSubmit()}}>
+              <ProfileRegisterBtn
+                onClick={() => {
+                  onSubmit();
+                }}>
                 SIGN UP
               </ProfileRegisterBtn>
             )}
@@ -501,15 +511,14 @@ function Login({setUid,isLoggedIn,setIsLoggedIn}:LoginType) {
             onClick={() => {
               setIsLoggedIn(false);
               // localStorage.clear();
-              LogOut()
-            }}
-          >
+              LogOut();
+            }}>
             LOG OUT
           </ProfileLogoutBtn>
         )}
       </ProfilePanel>
 
-        {/* {isLoggedIn === true && (
+      {/* {isLoggedIn === true && (
           <InfoPanel>
             <ProfileLogoutBtn2
               onClick={() => {
@@ -520,7 +529,6 @@ function Login({setUid,isLoggedIn,setIsLoggedIn}:LoginType) {
             </ProfileLogoutBtn2>
           </InfoPanel>
         )} */}
-      
     </Wrapper>
   );
 }
