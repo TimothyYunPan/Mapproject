@@ -512,54 +512,6 @@ const countries = [
     flag: "https://restcountries.eu/data/iot.svg",
   },
   {
-    name: "United States Minor Outlying Islands",
-    code: "UM",
-    capital: "",
-    region: "NA",
-    currency: {
-      code: "USD",
-      name: "United States Dollar",
-      symbol: "$",
-    },
-    language: {
-      code: "en",
-      name: "English",
-    },
-    flag: "https://restcountries.eu/data/umi.svg",
-  },
-  {
-    name: "Virgin Islands (British)",
-    code: "VG",
-    capital: "Road Town",
-    region: "NA",
-    currency: {
-      code: "USD",
-      name: "United States dollar",
-      symbol: "$",
-    },
-    language: {
-      code: "en",
-      name: "English",
-    },
-    flag: "https://restcountries.eu/data/vgb.svg",
-  },
-  {
-    name: "Virgin Islands (U.S.)",
-    code: "VI",
-    capital: "Charlotte Amalie",
-    region: "NA",
-    currency: {
-      code: "USD",
-      name: "United States dollar",
-      symbol: "$",
-    },
-    language: {
-      code: "en",
-      name: "English",
-    },
-    flag: "https://restcountries.eu/data/vir.svg",
-  },
-  {
     name: "Brunei Darussalam",
     code: "BN",
     capital: "Bandar Seri Begawan",
@@ -1706,7 +1658,7 @@ const countries = [
     flag: "https://restcountries.eu/data/civ.svg",
   },
   {
-    name: "Iran (Islamic Republic of)",
+    name: "Iran",
     code: "IR",
     capital: "Tehran",
     region: "AS",
@@ -2956,7 +2908,7 @@ const countries = [
     flag: "https://restcountries.eu/data/rou.svg",
   },
   {
-    name: "Russian",
+    name: "Russia",
     code: "RU",
     capital: "Moscow",
     region: "EU",
@@ -3808,7 +3760,7 @@ const countries = [
     flag: "https://restcountries.eu/data/are.svg",
   },
   {
-    name: "United Kingdom of Great Britain and Northern Ireland",
+    name: "United Kingdom",
     code: "GB",
     capital: "London",
     region: "EU",
@@ -3872,6 +3824,54 @@ const countries = [
       name: "Uzbek",
     },
     flag: "https://restcountries.eu/data/uzb.svg",
+  },
+  {
+    name: "US Minor Outlying Islands",
+    code: "UM",
+    capital: "",
+    region: "NA",
+    currency: {
+      code: "USD",
+      name: "United States Dollar",
+      symbol: "$",
+    },
+    language: {
+      code: "en",
+      name: "English",
+    },
+    flag: "https://restcountries.eu/data/umi.svg",
+  },
+  {
+    name: "Virgin Islands (British)",
+    code: "VG",
+    capital: "Road Town",
+    region: "NA",
+    currency: {
+      code: "USD",
+      name: "United States dollar",
+      symbol: "$",
+    },
+    language: {
+      code: "en",
+      name: "English",
+    },
+    flag: "https://restcountries.eu/data/vgb.svg",
+  },
+  {
+    name: "Virgin Islands (U.S.)",
+    code: "VI",
+    capital: "Charlotte Amalie",
+    region: "NA",
+    currency: {
+      code: "USD",
+      name: "United States dollar",
+      symbol: "$",
+    },
+    language: {
+      code: "en",
+      name: "English",
+    },
+    flag: "https://restcountries.eu/data/vir.svg",
   },
   {
     name: "Vanuatu",

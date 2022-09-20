@@ -6,25 +6,37 @@ import app from "../utils/firebaseConfig";
 
 // import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
-import { countryListType } from "../WorldMap";
+import { countryListType } from "../App";
 // import getJwtToken from '../../utils/getJwtToken';
 
 const auth = getAuth(app);
 
 const Wrapper = styled.div`
-  background-color: white;
-  ${"" /* height: 540px; */} padding: 40px 20px;
+  position: fixed;
+  background-color: rgba(255, 255, 255, 0.8);
+  width: 100vw;
+  height: 100vh;
+  /* padding: 100px 20px; */
+  top: 0%;
+  left: 0%;
+  /* transform: translate(-50%, -50%); */
+  z-index: 200;
+`;
 
+const LogginPopUp = styled.div`
   display: flex;
+
   ${"" /* flex-direction: column; */} justify-content: center;
   align-items: center;
   text-align: center;
-  min-height: calc(100vh - 255px);
+  height: 100vh;
+  /* min-height: calc(100vh - 255px); */
   @media (max-width: 1279px) {
     min-height: calc(100vh - 148px);
     flex-direction: column;
   }
 `;
+
 const ProfilePanel = styled.div`
   width: 400px;
   ${"" /* height: 520px; */} padding: 40px;
@@ -34,6 +46,8 @@ const ProfilePanel = styled.div`
   background-color: rgba(255, 255, 255, 0.05);
   border: solid 1px black;
   border-radius: 8px;
+  background-color: inherit;
+
   @media (max-width: 1279px) {
     color: black;
     box-sizing: border-box;
@@ -59,7 +73,7 @@ const InfoPanel = styled.div`
 
   @media (max-width: 1279px) {
     margin-left: 0px;
-    color: black;
+    color: white;
     box-sizing: border-box;
     padding: 32px 40px 0;
     display: flex;
@@ -330,9 +344,14 @@ type LoginType = {
   isLoggedIn: boolean;
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
   countryList: countryListType[];
+  setCountryList: Dispatch<SetStateAction<countryListType[]>>;
+  toLogIn: boolean;
+  setToLogIn: React.Dispatch<React.SetStateAction<boolean>>;
+  uid: string;
+  setMapState: React.Dispatch<React.SetStateAction<number>>;
 };
 
-function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList }: LoginType) {
+function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList, toLogIn, setToLogIn, uid, setMapState }: LoginType) {
   const [profile, setProfile] = useState();
   const [loginStatus, setLoginStatus] = useState("login");
   // console.log(loginStatus);
@@ -369,6 +388,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList }: LoginType) {
           console.log(userCredential.user.uid);
           console.log("登入囉");
           console.log(user.uid);
+          setToLogIn(false);
           setUid(user.uid);
           writeUserMap1Data(user.uid);
 
@@ -387,9 +407,9 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList }: LoginType) {
           const user = userCredential.user;
           setUid(user.uid);
           console.log("登入囉");
+          setToLogIn(false);
           console.log(user.uid);
-          setIsLoggedIn(true);
-
+          // setIsLoggedIn(true);
           // ...
         })
         .catch((error) => {
@@ -427,78 +447,79 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList }: LoginType) {
   // console.log(memberRole);
   return (
     <Wrapper>
-      <ProfilePanel>
-        {isLoggedIn === false && loginStatus === "login" && <ProfileTitle>Welcome back</ProfileTitle>}
-        {isLoggedIn === false && loginStatus === "register" && <ProfileTitle>You're new around here</ProfileTitle>}
-        {isLoggedIn === true && <ProfileTitle>{memberName}</ProfileTitle>}
-        {isLoggedIn === true && (
-          <ProfileUserInfo>
-            <ProfileUserInfoImg />
-          </ProfileUserInfo>
-        )}
+      <LogginPopUp>
+        <ProfilePanel>
+          {isLoggedIn === false && loginStatus === "login" && <ProfileTitle>Welcome back</ProfileTitle>}
+          {isLoggedIn === false && loginStatus === "register" && <ProfileTitle>You're new around here</ProfileTitle>}
+          {isLoggedIn === true && <ProfileTitle>{memberName}</ProfileTitle>}
+          {isLoggedIn === true && (
+            <ProfileUserInfo>
+              <ProfileUserInfoImg />
+            </ProfileUserInfo>
+          )}
 
-        {isLoggedIn === false && (
-          <ProfileLogInSet>
-            {loginStatus === "register" && (
+          {isLoggedIn === false && (
+            <ProfileLogInSet>
+              {loginStatus === "register" && (
+                <ProfileInputSet>
+                  <AccountWord>Name</AccountWord>
+                  <ProfileInput value={nameInputValue} onChange={(e) => setNameInputValue(e.target.value)} />
+                  {/* {console.log(nameInputValue)} */}
+                </ProfileInputSet>
+              )}
               <ProfileInputSet>
-                <AccountWord>Name</AccountWord>
-                <ProfileInput value={nameInputValue} onChange={(e) => setNameInputValue(e.target.value)} />
-                {/* {console.log(nameInputValue)} */}
+                <AccountWord>Email</AccountWord>
+                <ProfileInput value={accountInputValue} onChange={(e) => setAccountInputValue(e.target.value)} />
+                {/* {console.log(accountInputValue)} */}
               </ProfileInputSet>
-            )}
-            <ProfileInputSet>
-              <AccountWord>Email</AccountWord>
-              <ProfileInput value={accountInputValue} onChange={(e) => setAccountInputValue(e.target.value)} />
-              {/* {console.log(accountInputValue)} */}
-            </ProfileInputSet>
-            <ProfileInputSet>
-              <AccountWord>Password</AccountWord>
-              <ProfileInput value={passwordInputValue} onChange={(e) => setPasswordInputValue(e.target.value)} />
-              {/* {console.log(passwordInputValue)} */}
-            </ProfileInputSet>
+              <ProfileInputSet>
+                <AccountWord>Password</AccountWord>
+                <ProfileInput value={passwordInputValue} onChange={(e) => setPasswordInputValue(e.target.value)} />
+                {/* {console.log(passwordInputValue)} */}
+              </ProfileInputSet>
 
-            <ProfileCheckSet>
-              <ProfileCheckboxSet>
-                <ProfileStayInput type="checkbox" />
-                <ProfileStayWord>Stay Logged In</ProfileStayWord>
-              </ProfileCheckboxSet>
+              <ProfileCheckSet>
+                <ProfileCheckboxSet>
+                  <ProfileStayInput type="checkbox" />
+                  <ProfileStayWord>Stay Logged In</ProfileStayWord>
+                </ProfileCheckboxSet>
+                {loginStatus === "login" && (
+                  <ProfileNoAcount
+                    onClick={() => {
+                      setLoginStatus("register");
+                    }}>
+                    sign up?
+                  </ProfileNoAcount>
+                )}
+                {loginStatus === "register" && (
+                  <ProfileWithAcount
+                    onClick={() => {
+                      setLoginStatus("login");
+                    }}>
+                    log in?
+                  </ProfileWithAcount>
+                )}
+              </ProfileCheckSet>
               {loginStatus === "login" && (
-                <ProfileNoAcount
+                <ProfileLoginBtn
                   onClick={() => {
-                    setLoginStatus("register");
+                    onSubmit();
                   }}>
-                  sign up?
-                </ProfileNoAcount>
+                  LOGIN
+                </ProfileLoginBtn>
               )}
               {loginStatus === "register" && (
-                <ProfileWithAcount
+                <ProfileRegisterBtn
                   onClick={() => {
-                    setLoginStatus("login");
+                    onSubmit();
                   }}>
-                  log in?
-                </ProfileWithAcount>
+                  SIGN UP
+                </ProfileRegisterBtn>
               )}
-            </ProfileCheckSet>
-            {loginStatus === "login" && (
-              <ProfileLoginBtn
-                onClick={() => {
-                  onSubmit();
-                }}>
-                LOGIN
-              </ProfileLoginBtn>
-            )}
-            {loginStatus === "register" && (
-              <ProfileRegisterBtn
-                onClick={() => {
-                  onSubmit();
-                }}>
-                SIGN UP
-              </ProfileRegisterBtn>
-            )}
-          </ProfileLogInSet>
-        )}
+            </ProfileLogInSet>
+          )}
 
-        {/* <ProfileMoreInfo>
+          {/* <ProfileMoreInfo>
           <ProfileMoreInfoLine />
           {isLoggedIn === true && (
             <ProfileMoreInfoText>{memberEmail}</ProfileMoreInfoText>
@@ -506,19 +527,21 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList }: LoginType) {
           <ProfileMoreInfoLine />
         </ProfileMoreInfo> */}
 
-        {isLoggedIn === true && (
-          <ProfileLogoutBtn
-            onClick={() => {
-              setIsLoggedIn(false);
-              // localStorage.clear();
-              LogOut();
-            }}>
-            LOG OUT
-          </ProfileLogoutBtn>
-        )}
-      </ProfilePanel>
+          {isLoggedIn === true && (
+            <ProfileLogoutBtn
+              onClick={() => {
+                setIsLoggedIn(false);
+                // localStorage.clear();
+                LogOut();
+                setMapState(-1);
+                setCountryList([]);
+              }}>
+              LOG OUT
+            </ProfileLogoutBtn>
+          )}
+        </ProfilePanel>
 
-      {/* {isLoggedIn === true && (
+        {/* {isLoggedIn === true && (
           <InfoPanel>
             <ProfileLogoutBtn2
               onClick={() => {
@@ -529,6 +552,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList }: LoginType) {
             </ProfileLogoutBtn2>
           </InfoPanel>
         )} */}
+      </LogginPopUp>
     </Wrapper>
   );
 }

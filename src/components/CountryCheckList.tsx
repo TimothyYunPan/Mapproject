@@ -4,29 +4,38 @@ import regions from "../utils/regions";
 import countries from "../utils/countries";
 import { doc, setDoc, collection, getFirestore, getDoc, getDocs, deleteField, updateDoc } from "firebase/firestore";
 import { db } from "../utils/firebaseConfig";
-import { countryListType } from "../WorldMap";
+import { countryListType } from "../App";
 
 const CountrySelectSet = styled.div`
+  position: absolute;
+  bottom: 0px;
   margin-top: 20px;
-  width: 90%;
+  width: 20%;
+  color: rgb(232, 233, 234);
 `;
-
 const CountryRegions = styled.div`
   margin-left: 20px;
-  width: 100%;
   height: 50px;
   display: flex;
   align-items: center;
 `;
 const CountryRegion = styled.p`
-  color: #666;
+  /* width: 200px; */
+  color: rgb(232, 233, 234);
   font-size: 16px;
-  margin: 0 20px;
+  margin: 0 10%;
+  cursor: pointer;
+  white-space: nowrap;
+  /* padding: 0 20px; */
 `;
 const CountrySelectListSet = styled.div`
+  margin-left: 30px;
   width: 100%;
   display: flex;
   flex-direction: column;
+  max-height: 510px;
+  overflow: scroll;
+  /* justify-content: flex-end; */
 `;
 const CountrySelectList = styled.div`
   display: flex;
@@ -36,6 +45,7 @@ const CountrySelectCheck = styled.input`
 `;
 
 const CountrySelectName = styled.div`
+  /* width: 100px; */
   margin-right: 20px;
 `;
 const CountryText = styled.p`
@@ -109,6 +119,23 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
 
   return (
     <CountrySelectSet>
+      <CountrySelectListSet>
+        {countryCollection.map((country: string) => {
+          return (
+            <CountrySelectList key={country}>
+              <CountrySelectCheck
+                type="checkbox"
+                value={country}
+                onChange={(e) => {
+                  editCheckedToMap(e.target);
+                }}></CountrySelectCheck>
+              <CountrySelectName>{country}</CountrySelectName>
+              {/* <CountryText>visited times</CountryText> */}
+              {/* <CountryVisitedCount></CountryVisitedCount> */}
+            </CountrySelectList>
+          );
+        })}
+      </CountrySelectListSet>
       <CountryRegions>
         {regions.map((region) => {
           return (
@@ -121,23 +148,6 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
           );
         })}
       </CountryRegions>
-      <CountrySelectListSet>
-        {countryCollection.map((country: string) => {
-          return (
-            <CountrySelectList key={country}>
-              <CountrySelectCheck
-                type="checkbox"
-                value={country}
-                onChange={(e) => {
-                  editCheckedToMap(e.target);
-                }}></CountrySelectCheck>
-              <CountrySelectName>{country}</CountrySelectName>
-              <CountryText>visited times</CountryText>
-              <CountryVisitedCount></CountryVisitedCount>
-            </CountrySelectList>
-          );
-        })}
-      </CountrySelectListSet>
     </CountrySelectSet>
   );
 }

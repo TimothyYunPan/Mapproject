@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { countryListType, haveFriendListType } from "../WorldMap";
-
-const SVG = styled.svg`
+import { haveFriendListType } from "../WorldMap";
+import { countryListType } from "../App";
+const SVG = styled.svg<{ mapState: number }>`
   height: 650px;
   width: 100%;
-  fill: #cee2f5;
-  stroke: #231815;
-  stroke-linecap: round;
+  fill: ${(props) => (props.mapState === 1 ? "rgb(148, 149, 154)" : props.mapState === 2 ? "rgb(211,211,211)" : "transparent")};
+  stroke: white;
+  /* stroke-linecap: round; */
   stroke-linejoin: round;
-  stroke-width: 0.1px;
-  /* border: 1px solid black */
+  stroke-width: 0.4px;
   /* preserveAspectRatio="xMidYMid slice" */
 `;
 
@@ -29,7 +28,7 @@ const Path = styled.path<Pathtype>`
 
   /* transition: translateY 0.3s; */
   &:hover {
-    fill: ${(props) => (props.mapState === 1 ? "#4D80E6" : props.mapState === 2 ? "#5CADAD" : "#fff")};
+    fill: ${(props) => (props.mapState === 1 ? "rgb(236,174,72)" : props.mapState === 2 ? "#5CADAD" : "rgb(211,211,211)")};
 
     /* fill:#4D80E6; */
     /* filter:drop-shadow(2px 2px 6px #000a); */
@@ -41,10 +40,15 @@ const Path = styled.path<Pathtype>`
     /* stroke-opacity:	0.8 */
   }
 `;
+{
+  /* <div>
+  svg
+  <div></div>
+</div> */
+}
 
 function MapSVG({ countryList, mapState, haveFriendList }: { countryList: countryListType[]; mapState: number; haveFriendList: haveFriendListType[] }) {
   useEffect(() => {
-    // console.log(mapState);
     if (mapState === 1) {
       // console.log(countryList)
       countryList.forEach((country) => {
@@ -53,10 +57,10 @@ function MapSVG({ countryList, mapState, haveFriendList }: { countryList: countr
           // console.log(countryId);
           // console.log(document.getElementById(countryId))
           if (!document.getElementById(countryId)) return;
-          document.getElementById(countryId)!.style.fill = "rgb(77, 128, 230)";
+          document.getElementById(countryId)!.style.fill = "rgb(236,174,72)";
         } else {
           let countryId = country.countryId;
-          document.getElementById(countryId)!.style.fill = "rgb(206, 226, 245)";
+          document.getElementById(countryId)!.style.fill = "rgb(232, 233, 234)";
         }
       });
     } else if (mapState === 2) {
@@ -96,7 +100,7 @@ function MapSVG({ countryList, mapState, haveFriendList }: { countryList: countr
   // alert(position.x + ", " + position.y);
   // }
   return (
-    <SVG id="CtySVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650">
+    <SVG mapState={mapState} id="CtySVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650">
       <defs></defs>
 
       <Path mapState={mapState} id="AD" title="Andorra" className="land" d="M480.487,331.376L480.41,331.401L480.152,331.556L480.005,331.61L479.871,331.637L479.766,331.626L479.708,331.535L479.714,331.396L479.69,331.272L479.67,331.205L479.708,331.024L479.794,330.927L479.913,330.847L480.101,330.876L480.499,330.992L480.582,331.101L480.583,331.173L480.51,331.292z" />
@@ -105,6 +109,7 @@ function MapSVG({ countryList, mapState, haveFriendList }: { countryList: countr
         id="AE"
         title="United Arab Emirates"
         className="land"
+        stroke-linecap="round"
         d="M633.699,388.616l0.184,0.251l0.026,1.701l0.042,0.121l-0.098,0.018l-0.11,0.129l-0.129,0.199l-0.177,0.103l-0.142,0.116l-0.134,0.144l-0.12,0.031l-0.155,-0.183l-0.107,-0.187l0.026,-0.041l0.075,-0.013l0.028,-0.097l-0.045,-0.14l-0.105,-0.053l-0.132,-0.004l-0.127,0.063l-0.135,0.124l-0.076,0.133l-0.011,0.267l0.035,0.3l-0.001,0.146l-0.074,0.181l-0.026,0.266l0.053,0.206l0.048,0.123l0.005,0.104l-0.126,0.328l0.109,0.062l0.361,0.023l0.106,0.222l0.072,0.152l-0.02,0.09l-0.256,0.067l-0.322,0.074l-0.231,-0.021l-0.418,0.1l-0.223,0.154l0.065,0.096l0.077,0.074l0.035,0.203l-0.065,0.288l-0.118,0.279l-0.147,0.348l-0.17,0.399l-0.233,0.6l-0.197,0.471l-0.021,0.339l0.005,0.221l-0.022,0.441l-0.187,0.243l-0.042,0.007l-0.223,-0.029l-0.075,-0.01l-0.213,-0.028l-0.33,-0.043l-0.429,-0.057l-0.507,-0.066l-0.565,-0.075l-0.604,-0.08l-0.625,-0.082l-0.624,-0.082l-0.605,-0.08l-0.565,-0.074l-0.507,-0.067l-0.428,-0.057l-0.33,-0.043l-0.213,-0.028l-0.075,-0.01l-0.236,-0.031l-0.127,-0.164l-0.154,-0.198l-0.155,-0.199l-0.154,-0.199l-0.154,-0.199l-0.154,-0.199l-0.154,-0.199l-0.154,-0.199l-0.154,-0.199l-0.154,-0.2l-0.154,-0.199l-0.155,-0.2l-0.154,-0.2l-0.154,-0.2l-0.154,-0.2l-0.154,-0.2l-0.154,-0.2l-0.104,-0.134l-0.057,-0.151l-0.011,-0.396v-0.087l0.104,-0.16l0.05,0.114l0.116,0.155l0.197,-0.038l0.092,0.026l0.068,0.549l0.145,0.195l0.176,0.078l0.597,0.043l0.371,-0.074l0.731,-0.358l0.384,-0.129l1.062,0.022l0.851,0.149l1.325,0.088l0.257,-0.023l0.715,-0.288l0.438,-0.254l0.261,-0.073l0.172,-0.246l0.113,-0.32l0.101,-0.209l0.129,-0.1l0.122,-0.178l0.099,-0.289l0.246,-0.292l0.986,-0.711l0.576,-0.602l0.051,-0.195l0.313,-0.292l0.251,-0.32l1.175,-0.916l0.235,-0.379l0.139,-0.425l0.017,-0.03l0.101,-0.018l0.144,0.064l0.015,0.318l-0.053,0.3l-0.006,0.318l-0.021,0.172l0.109,0.141l0.186,0.061l0.081,-0.007L633.699,388.616zM633.653,389.899l0.017,-0.133l-0.029,-0.069l-0.12,-0.009l-0.05,0.115l-0.017,0.165l0.083,0.014L633.653,389.899zM628.557,392.337l-0.025,0.06l-0.079,-0.005l-0.198,-0.054l-0.064,-0.086l0.124,-0.103l0.055,-0.005l0.079,0.108L628.557,392.337zM625.376,392.901l-0.208,0.017l-0.188,-0.116l0.397,-0.155l0.107,-0.07l0.116,-0.143l0.093,0.123l-0.103,0.193l-0.073,0.083L625.376,392.901zM623.368,392.81l-0.047,0.022l-0.05,-0.165l0.003,-0.052l0.129,-0.075l0.079,0.135L623.368,392.81zM627.047,393.15l0.001,0.104l-0.285,-0.03l-0.076,0.054l-0.234,-0.03l-0.229,-0.075l0.155,-0.125l0.404,-0.147l0.168,0.134L627.047,393.15z"
       />
       <Path
