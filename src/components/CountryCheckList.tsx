@@ -77,6 +77,7 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
 
   function editCheckedToMap(target: HTMLInputElement) {
     // console.log(e.target.value)
+    // const [isShowingCountries, setIsShowingCountries] = useState<boolean>(false);
     let targetValue = target.value;
     countries.forEach((countryObj) => {
       if (countryObj.name === targetValue) {
@@ -125,6 +126,7 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
             <CountrySelectList key={country}>
               <CountrySelectCheck
                 type="checkbox"
+                style={{ accentColor: "rgb(236,174,72)" }}
                 value={country}
                 onChange={(e) => {
                   editCheckedToMap(e.target);
@@ -142,6 +144,12 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
             <CountryRegion
               onClick={() => {
                 getCountriesCollection(region.code);
+                // if(isShowingCountries){
+                //   setIsShowingCountries(false)
+                // }else{
+                //   setIsShowingCountries(true)
+                // getCountriesCollection(region.code);
+                // }
               }}>
               {region.name}
             </CountryRegion>

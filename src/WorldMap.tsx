@@ -5,7 +5,7 @@ import countries from "./utils/countries";
 import MapSVG from "./components/MapSVG";
 import Login from "./components/Login";
 import { initializeApp } from "firebase/app";
-import { doc, setDoc, collection, getFirestore, getDoc, getDocs, deleteField, updateDoc, DocumentData, query, where } from "firebase/firestore";
+import { doc, setDoc, collection, getFirestore, getDoc, getDocs, deleteField, updateDoc, DocumentData, query, where, deleteDoc, arrayRemove } from "firebase/firestore";
 import { EventType } from "@testing-library/react";
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage";
 import app from "./utils/firebaseConfig";
@@ -15,6 +15,10 @@ import CountryCheckList from "./components/CountryCheckList";
 import userEvent from "@testing-library/user-event";
 import Header from "./components/Header";
 import { countryListType } from "./App";
+import trashCan from "./components/trashCan.png";
+import trashCanHover from "./components/trashCanHover.png";
+import edit from "./components/edit.png";
+import editHover from "./components/editHover.png";
 
 const storage = getStorage(app);
 
@@ -60,9 +64,11 @@ const Wrapper = styled.div<{ mapState: number }>`
   height: 100vh;
   width: 100%;
   display: flex;
+  /* align-items: center; */
   flex-direction: column;
   /* background-image: url(https://images.unsplash.com/photo-1476673160081-cf065607f449?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1772&q=80); */
   background-color: rgb(42, 61, 78);
+  overflow: scroll;
   /* background-color: ${(props) => (props.mapState === 1 ? "rgb(42, 61, 78)" : "white")}; */
   /* background-image: url(https://www.sow.org.tw/sites/sow/files/u11282/wallpaper-2675683.jpg);
   background-repeat: no-repeat;
@@ -86,12 +92,11 @@ const Map = styled.div`
   /* background-color: inherit; */
   margin-top: 80px;
   /* opacity: 0.; */
-
+  /* height: 100px; */
   /* background-image: url(https://images.unsplash.com/photo-1530053969600-caed2596d242?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80); */
 
   /* height:100%;
   width: 100%; */
-  /* height: 200px; */
 `;
 const HomePage = styled.div`
   /* position: absolute; */
@@ -174,13 +179,22 @@ function getMousePos(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
 //map2
 
+const MapCover = styled.div`
+  height: 100%;
+  width: 100%;
+  /* background-color: rgb(42, 61, 78); */
+  /* background-color: #fff; */
+  /* backdrop-filter: blur(70px); */
+`;
+
 const FriendBg = styled.div`
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0%, 0%, 0%, 0.05);
+  background-color: inherit;
+  /* backdrop-filter: blur(70px); */
   /* background: lidnear-gradient(to right, #2BC0E4 0%, #EAECC6 100%); */
 
   /* opacity: 0.5; */
@@ -193,10 +207,13 @@ const FriendBox = styled.div`
   transform: translate(-50%, -50%);
   width: 800px;
   height: 500px;
-  border: 1px solid black;
+  border: 1px solid white;
+  background-color: rgba(225, 225, 225, 0.5);
+  /* background-color: rgba(42, 61, 78, 0.7); */
+  border-radius: 20px;
   display: flex;
+  color: white;
   /* overflow: scroll; */
-
   /* z-index: 100; */
   /* box-shadow: 0 0 0 10000px rgba(0,0,0,0.5) */
 `;
@@ -206,8 +223,9 @@ const FriendNum = styled.div`
   height: 20px;
   position: absolute;
   right: 20px;
-  top: 600px;
+  bottom: 15px;
   z-index: 150;
+  color: white;
   /* background-color: black; */
 `;
 
@@ -218,12 +236,13 @@ const AddFriendBtn = styled.div`
   /* transform: translate(-50%,-50%); */
   height: 50px;
   width: 50px;
-  border: 1px solid black;
+  border: 1px solid white;
   border-radius: 50%;
   text-align: center;
   font-size: 24px;
   line-height: 46px;
   cursor: pointer;
+  color: white;
   /* z-index: 100; */
 `;
 const CloseBtn = styled.div`
@@ -249,13 +268,16 @@ const AddFriendBox = styled.div`
   /* height: 100%; */
   width: 200px;
   height: 500px;
-
-  border: 1px solid black;
+  border-radius: 20px;
+  border: 1px solid white;
   /* border-radius: 2%; */
   display: flex;
   flex-direction: column;
   padding: 20px;
   z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  color: white;
   /* box-shadow: 0 0 0 10000px rgba(0,0,0,0.5) */
 `;
 
@@ -268,18 +290,29 @@ const AddFriendFormLabel = styled.label`
   width: 110px;
   line-height: 19px;
   font-size: 16px;
-  color: #3f3a3a;
+  /* color: #3f3a3a; */
   display: block;
+  color: white;
+  margin-bottom: 6px;
 `;
 
 const AddFriendFormInput = styled.input`
   width: 100%;
+  height: 30px;
+  border-radius: 2px;
+  background-color: transparent;
+  border: 1px solid white;
+  color: white;
 `;
 
 const AddFriendFormTextarea = styled.textarea`
   width: 100%;
   height: 100px;
   resize: none;
+  border-radius: 2px;
+  background-color: transparent;
+  border: 1px solid white;
+  color: white;
 `;
 const FriendMiddleBox = styled.div`
   display: flex;
@@ -287,18 +320,21 @@ const FriendMiddleBox = styled.div`
 `;
 
 const FriendInsideBox = styled.div`
-  /* position: absolute; */
+  background-color: rgba(42, 61, 78);
+
+  position: relative;
   /* top: 10%; */
   /* right: -240px; */
   /* height: 100%; */
+  align-items: center;
   width: 200px;
-  height: 450px;
+  /* height: 450px; */
   margin: 20px;
-  border: 1px solid black;
+  border: 1px solid white;
   /* border-radius: 2%; */
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 20px 10px 45px 10px;
 
   /* z-index: 1000; */
   /* box-shadow: 0 0 0 10000px rgba(0,0,0,0.5) */
@@ -310,11 +346,32 @@ const FriendSet = styled.div`
   margin-top: 10px;
 `;
 const FriendFormdiv = styled.div`
-  width: 110px;
+  width: 150px;
+  height: 40px;
   line-height: 19px;
   font-size: 16px;
-  color: #3f3a3a;
+  margin-bottom: 8px;
+  /* color: rgb(42, 61, 78); */
   display: block;
+  color: white;
+  overflow: scroll;
+  :nth-last-child(1) {
+    height: 150px;
+  }
+  /* text-shadow: -1px -1px 0 rgb(42, 61, 78), 0px 0px 0 #000, 0px 0px 0 #000, 0px 0px 0 #000; */
+`;
+const FriendFormTitle = styled.h2`
+  width: 159px;
+  height: 50px;
+  padding-top: 20px;
+  /* line-height: 65px; */
+  font-size: 20px;
+  margin-bottom: 20px;
+  margin: 0 auto;
+  text-align: center;
+  overflow: scroll;
+
+  /* text-shadow: -1px -1px 0 rgb(42, 61, 78), 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; */
 `;
 
 const FriendFormInfo = styled.input`
@@ -327,19 +384,56 @@ const FriendFormTextarea = styled.textarea`
   resize: none;
 `;
 
+const EditFriendBtn = styled.div`
+  width: 20px;
+  height: 20px;
+  bottom: 20px;
+  right: 45px;
+  background-image: url(${edit});
+  background-size: cover;
+  position: absolute;
+  cursor: pointer;
+
+  :hover {
+    background-image: url(${editHover});
+    width: 24px;
+    height: 24px;
+    bottom: 15px;
+  }
+`;
+const DeleteFriendBtn = styled.div`
+  width: 20px;
+  height: 20px;
+  bottom: 20px;
+  right: 15px;
+  background-image: url(${trashCan});
+  background-size: cover;
+  position: absolute;
+  cursor: pointer;
+
+  :hover {
+    background-image: url(${trashCanHover});
+  }
+`;
+
 const FriendProfilePic = styled.img`
   height: 80px;
   width: 80px;
-  border: 1px solid black;
+  border: 1px solid white;
   border-radius: 50%;
   object-fit: cover;
 `;
 
-const AddFriendSentBtn = styled.button`
-  margin-top: 24px;
+const AddFriendSentBtn = styled.div`
+  margin-top: 20px;
   text-align: center;
   width: 100%;
   cursor: pointer;
+  font-size: 14px;
+  border: 1px solid white;
+  line-height: 23px;
+  height: 25px;
+  border-radius: 10px;
 `;
 
 const addFriendFormGroups = [
@@ -352,12 +446,14 @@ const addFriendFormGroups = [
 const AddFriendProfilePic = styled.img`
   height: 80px;
   width: 80px;
-  border: 1px solid black;
+  border: 1px solid white;
   border-radius: 50%;
   cursor: pointer;
 `;
 
-const AddFriendPicLabel = styled.label``;
+const AddFriendPicLabel = styled.label`
+  justify-content: center;
+`;
 const AddFriendPicInput = styled.input`
   display: none;
 `;
@@ -404,32 +500,38 @@ const PointSole = styled.div`
 
 const PointNotes = styled.div`
   width: 300px;
-  height: 500px;
+  height: 550px;
   /* height: 100px; */
   position: absolute;
-  border: 1px solid black;
-  top: 0;
-  right: 0;
+  border: 1px solid white;
+  top: 60px;
+  right: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-radius: 20px;
   /* border: 1px solid black; */
 `;
 
 // const PointInfoBox =
 
-const PointNotesTitle = styled.h2``;
+const PointNotesTitle = styled.h2`
+  margin: 20px 0;
+  color: white;
+`;
 
 const PointNotesTextArea = styled.textarea`
   resize: none;
   margin-top: 20px;
   width: 90%;
-  height: 80%;
+  height: 70%;
 `;
 const PointNote = styled.div`
   margin-top: 45px;
   /* text-align: left; */
   width: 90%;
+  color: white;
+  margin-bottom: 45px;
 `;
 
 const PointNotesTextImg = styled.img`
@@ -541,11 +643,11 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   const [svgScreenPosition, setSvgScreenPosition] = useState<{}>({});
   // console.log(svgPosition)
   const [friendsList, setFriendsList] = useState<friendListType[]>([]);
-  // console.log(friendsList);
+  console.log(friendsList);
   const [friendList, setFriendList] = useState<friendListType[]>([]);
-  // console.log(friendList);
+  console.log(friendList);
   const [haveFriendList, setHaveFriendList] = useState<haveFriendListType[]>([]);
-  // console.log(haveFriendList);
+  console.log(haveFriendList);
   const [isAddingFriend, setIsAddingFriend] = useState<boolean>(false);
   // console.log(uid);
   const [pointNotes, setPointNotes] = useState<string>("");
@@ -560,6 +662,8 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   const [map3Data, setMap3Data] = useState<pointListType[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [pointList, setPointList] = useState<pointListType[]>([]);
+  const [userName, setUserName] = useState<string>("");
+  console.log(userName);
   console.log(pointList);
   // const [pointList1, setPointList1] = useState<pointListType[]>([]);
   // console.log(pointList1);
@@ -597,6 +701,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     getUserMap1Data(userUid);
     getUserMap2Data(userUid);
     getUserMap3Data(userUid);
+    getUserName(userUid);
   }
 
   useEffect(() => {
@@ -740,6 +845,16 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     await updateDoc(doc(db, "user", uid, "visitedCountries", country), {
       visited: false,
     });
+  }
+  async function getUserName(userUid: string) {
+    const docRef = doc(db, "user", userUid);
+    const docSnap = await getDoc(docRef);
+    console.log(docSnap.data());
+    if (docSnap.exists()) {
+      setUserName(docSnap.data().userName);
+    } else {
+      console.log("No such document!");
+    }
   }
 
   async function getUserMap1Data(userUid: string) {
@@ -1003,7 +1118,71 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   //     })
   //   })
   // }
+  async function deleteFriend(index: number) {
+    console.log(friendList[index]);
 
+    let newFriendsList = friendsList.filter((friend) => {
+      return friend !== friendList[index];
+    });
+    console.log(newFriendsList);
+    setFriendsList(newFriendsList);
+    let newFriendList = friendList.filter((friend, i) => {
+      return i !== index;
+    });
+    setFriendList(newFriendList);
+    let newHaveFriendNum = friendList.length - 1;
+    // setHaveFriendList()
+
+    let newHaveFriendList = haveFriendList.map((obj) => {
+      console.log(obj.countryId === countryId);
+      if (obj.countryId === countryId) {
+        obj.haveFriend = obj.haveFriend - 1;
+      }
+      return obj;
+    });
+    // console.log(newHaveFriendList);
+    // setHaveFriendList(newHaveFriendList);
+
+    let newNewHaveFriendList = [];
+    newNewHaveFriendList = newHaveFriendList.filter((obj) => {
+      return obj.haveFriend !== 0;
+    });
+    setHaveFriendList(newNewHaveFriendList);
+
+    // let newHaveFriendList = haveFriendList
+    //   .reduce((acc,curr) => {
+    //     let index = acc.findIndex(country => country.Id = countryId)
+    //     acc[index].friend -= 1
+    //     (acc[index].friend !== 0)
+    //     console.log(obj.countryId === countryId);
+    //     if (obj.countryId === countryId) {
+    //       obj.haveFriend = obj.haveFriend - 1;
+    //     }
+    //     return obj;
+    //   })
+    //   .filter((obj) => {
+    //     return obj.haveFriend !== 0;
+    //   });
+    // console.log(newFriendList);
+
+    console.log(newHaveFriendList);
+    // console.log(newNewHaveFriendList);
+
+    // let newHaveFriendList = haveFriendList.filter((obj) => obj.countryId === countryId);
+    // console.log(newHaveFriendList[0].haveFriend - 1);
+    // console.log(newHaveFriendList);
+    // setHaveFriendList(newHaveFriendList);
+
+    if (newFriendList.length) {
+      await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), { friends: newFriendList, haveFriend: newHaveFriendNum });
+    } else {
+      await deleteDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId));
+    }
+    // await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), {
+    //   friends: arrayRemove(friendList[index]),
+    //   haveFriend: friendList.length - 1,
+    // });
+  }
   function writeUserMap2Data(url: string) {
     let newFriendList = [];
     const data = {
@@ -1149,132 +1328,151 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                 }}>
                 重疊起來
               </button> */}
-              <FriendNum>You've visited {countryList.length} countries</FriendNum>
             </Map>
-
+            <FriendNum>You've visited {countryList.length} countries / area</FriendNum>
             <CountryCheckList writeUserMap1Data={writeUserMap1Data} countryCollection={countryCollection} setCountryList={setCountryList} setCountryCollection={setCountryCollection} countryList={countryList}></CountryCheckList>
           </>
         ) : mapState === 2 ? (
-          <Map
-            onMouseOver={(e) => {
-              hoverAddCountryName(e);
-            }}
-            onMouseLeave={(e) => {
-              setIsHovering(false);
-            }}
-            onClick={(e) => {
-              const target = e.target as HTMLInputElement;
-              // console.log(target.tagName);
-              if (target.tagName !== "path") {
-                return;
-              }
-              setCountryId(target.id);
-              setIsShowingFriends(true);
-              getUserMap2Friends(target.id);
-              setIsHovering(false);
-            }}>
-            <MapSVG countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
-            {isShowingFriends && isShowingFriends === true ? (
-              <FriendBg>
-                <FriendBox>
-                  <FriendMiddleBox>
-                    {friendList.map((friend: { imgUrl: string; name: string; city: string; insta: string; notes: string }) => (
-                      <FriendInsideBox>
-                        <FriendProfilePic src={friend.imgUrl}></FriendProfilePic>
-                        <FriendSet>
-                          <FriendFormdiv>{friend.name}</FriendFormdiv>
-                          <FriendFormdiv>{friend.city}</FriendFormdiv>
-                          <FriendFormdiv>{friend.insta}</FriendFormdiv>
-                          <FriendFormdiv>{friend.notes}</FriendFormdiv>
-                        </FriendSet>
-                      </FriendInsideBox>
-                    ))}
-                  </FriendMiddleBox>
-                  <CloseBtn
-                    onClick={() => {
-                      setIsShowingFriends(false);
-                      setIsAddingFriend(false);
-                    }}>
-                    X
-                  </CloseBtn>
-                  <AddFriendBtn
-                    onClick={() => {
-                      setIsAddingFriend(true);
-                      setImageUpload(null);
-                    }}>
-                    +
-                  </AddFriendBtn>
-                  {isAddingFriend && isAddingFriend ? (
-                    <AddFriendBox>
-                      <AddFriendPicLabel htmlFor="addFriendPic">
-                        <AddFriendProfilePic src={previewFriendImgUrl}></AddFriendProfilePic>
-                      </AddFriendPicLabel>
+          <>
+            <Map
+              onMouseOver={(e) => {
+                hoverAddCountryName(e);
+              }}
+              onMouseLeave={(e) => {
+                setIsHovering(false);
+              }}
+              onClick={(e) => {
+                const target = e.target as HTMLInputElement;
+                // console.log(target.tagName);
+                if (target.tagName !== "path") {
+                  return;
+                }
+                setCountryId(target.id);
+                setIsShowingFriends(true);
+                getUserMap2Friends(target.id);
+                setIsHovering(false);
+              }}>
+              <MapCover>
+                <MapSVG countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
+              </MapCover>
+              {isShowingFriends && isShowingFriends === true ? (
+                <FriendBg>
+                  <FriendBox>
+                    <FriendMiddleBox>
+                      {friendList.map((friend: { imgUrl: string; name: string; city: string; insta: string; notes: string }, index) => (
+                        <FriendInsideBox>
+                          <DeleteFriendBtn
+                            onClick={(e) => {
+                              deleteFriend(index);
+                            }}></DeleteFriendBtn>
+                          <EditFriendBtn></EditFriendBtn>
+                          <FriendProfilePic src={friend.imgUrl}></FriendProfilePic>
+                          <FriendFormTitle>{friend.name}</FriendFormTitle>
 
-                      <AddFriendPicInput
-                        id="addFriendPic"
-                        type="file"
-                        onChange={(e) => {
-                          setImageUpload(e.target.files![0]);
-                        }}></AddFriendPicInput>
-                      {addFriendFormGroups.map(({ label, key }) => (
-                        <AddFriendSet key={key}>
-                          <AddFriendFormLabel>{label}</AddFriendFormLabel>
-                          {key === "notes" ? (
-                            <AddFriendFormTextarea
-                              onChange={(e) =>
-                                setAddFriendState({
-                                  ...addFriendState,
-                                  [key]: e.target.value,
-                                })
-                              }
-                            />
-                          ) : (
-                            <AddFriendFormInput
-                              onChange={(e) =>
-                                setAddFriendState({
-                                  ...addFriendState,
-                                  [key]: e.target.value,
-                                })
-                              }
-                            />
-                          )}
-                        </AddFriendSet>
+                          <FriendSet>
+                            <FriendFormdiv>
+                              City: <br />
+                              {friend.city}
+                            </FriendFormdiv>
+                            <FriendFormdiv>
+                              Instagram: <br />
+                              {friend.insta}
+                            </FriendFormdiv>
+                            <FriendFormdiv>
+                              Notes: <br />
+                              {friend.notes}
+                            </FriendFormdiv>
+                          </FriendSet>
+                        </FriendInsideBox>
                       ))}
-                      <AddFriendSentBtn
-                        onClick={() => {
-                          sentNewFriendInfo();
-                          setIsAddingFriend(false);
-                          alert("Congrats for making a new friend");
-                          setAddFriendState({
-                            name: "",
-                            // country: '',
-                            city: "",
-                            insta: "",
-                            notes: "",
-                          });
-                        }}>
-                        SEND
-                      </AddFriendSentBtn>
-                      <CloseBtn
-                        onClick={() => {
-                          setIsAddingFriend(false);
-                        }}>
-                        X
-                      </CloseBtn>
-                    </AddFriendBox>
-                  ) : (
-                    <></>
-                  )}
-                </FriendBox>
-              </FriendBg>
-            ) : (
-              <></>
-            )}
+                    </FriendMiddleBox>
+                    <CloseBtn
+                      onClick={() => {
+                        setIsShowingFriends(false);
+                        setIsAddingFriend(false);
+                      }}>
+                      X
+                    </CloseBtn>
+                    <AddFriendBtn
+                      onClick={() => {
+                        setIsAddingFriend(true);
+                        setImageUpload(null);
+                      }}>
+                      +
+                    </AddFriendBtn>
+                    {isAddingFriend && isAddingFriend ? (
+                      <AddFriendBox>
+                        <AddFriendPicLabel htmlFor="addFriendPic">
+                          <AddFriendProfilePic src={previewFriendImgUrl}></AddFriendProfilePic>
+                        </AddFriendPicLabel>
+
+                        <AddFriendPicInput
+                          id="addFriendPic"
+                          type="file"
+                          onChange={(e) => {
+                            setImageUpload(e.target.files![0]);
+                          }}></AddFriendPicInput>
+                        {addFriendFormGroups.map(({ label, key }) => (
+                          <AddFriendSet key={key}>
+                            <AddFriendFormLabel>{label}</AddFriendFormLabel>
+                            {key === "notes" ? (
+                              <AddFriendFormTextarea
+                                onChange={(e) =>
+                                  setAddFriendState({
+                                    ...addFriendState,
+                                    [key]: e.target.value,
+                                  })
+                                }
+                              />
+                            ) : (
+                              <AddFriendFormInput
+                                onChange={(e) =>
+                                  setAddFriendState({
+                                    ...addFriendState,
+                                    [key]: e.target.value,
+                                  })
+                                }
+                              />
+                            )}
+                          </AddFriendSet>
+                        ))}
+                        <AddFriendSentBtn
+                          onClick={() => {
+                            sentNewFriendInfo();
+                            setIsAddingFriend(false);
+                            alert("Congrats for making a new friend");
+                            setAddFriendState({
+                              name: "",
+                              // country: '',
+                              city: "",
+                              insta: "",
+                              notes: "",
+                            });
+                          }}>
+                          Add as my new friend
+                        </AddFriendSentBtn>
+                        <CloseBtn
+                          onClick={() => {
+                            setIsAddingFriend(false);
+                          }}>
+                          X
+                        </CloseBtn>
+                      </AddFriendBox>
+                    ) : (
+                      <></>
+                    )}
+                  </FriendBox>
+                </FriendBg>
+              ) : (
+                <></>
+              )}
+
+              {isHovering ? <ShowName mousePlace={mousePlace}>{countryName}</ShowName> : <></>}
+            </Map>
             <FriendNum>
               You've made {friendsList.length} friends located in {haveFriendList.length} countries
             </FriendNum>
-            {isHovering ? <ShowName mousePlace={mousePlace}>{countryName}</ShowName> : <></>}
-          </Map>
+          </>
         ) : mapState === 3 ? (
           <Map
             onMouseOver={(e) => {

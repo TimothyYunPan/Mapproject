@@ -38,15 +38,15 @@ const LogginPopUp = styled.div`
 `;
 
 const ProfilePanel = styled.div`
-  width: 400px;
+  width: 330px;
   ${"" /* height: 520px; */} padding: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: solid 1px black;
-  border-radius: 8px;
-  background-color: inherit;
+  /* background-color: rgba(255, 255, 255, 0.05); */
+  border: solid 1px white;
+  border-radius: 2px;
+  background-color: rgb(42, 61, 78);
 
   @media (max-width: 1279px) {
     color: black;
@@ -128,9 +128,10 @@ const MemberInfoLine = styled.div`
 `;
 
 const ProfileTitle = styled.div`
+  margin-top: 8px;
   margin-bottom: 16px;
   font-size: 24px;
-  color: black;
+  color: rgb(211, 211, 211);
 `;
 
 const ProfileUserInfo = styled.div`
@@ -142,13 +143,14 @@ const ProfileUserInfo = styled.div`
   height: 272px;
 `;
 const ProfileUserInfoImg = styled.div`
-  margin-top: 16px;
+  /* margin-top: 16px; */
   /* background-color: #fff; */
   /* border: solid 1px white; */
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   overflow: hidden;
+  border: 1px solid white;
   background-size: cover;
   background-image: url(https://graph.facebook.com/5610881185597352/picture?type=large);
 `;
@@ -158,7 +160,7 @@ const ProfileLogInSet = styled.div`
 `;
 
 const ProfileInputSet = styled.label`
-  color: black;
+  color: rgb(211, 211, 211);
   width: 100%;
   padding: 16px 0;
   display: flex;
@@ -170,14 +172,14 @@ const AccountWord = styled.p``;
 
 const ProfileInput = styled.input`
   box-sizing: border-box;
-  margin-top: 8px;
+  margin-top: 10px;
   padding: 0 8px;
   width: 100%;
-  border: solid 1px black;
-  background-color: rgba(255, 255, 255, 0.3);
+  border: solid 1px white;
+  background-color: inherit;
   border-radius: 4px;
   height: 32px;
-  color: black;
+  color: rgb(211, 211, 211);
 `;
 
 const ProfileCheckSet = styled.div`
@@ -197,7 +199,7 @@ const ProfileCheckboxSet = styled.label`
 
 const ProfileNoAcount = styled.div`
   text-decoration: none;
-  color: black;
+  color: rgb(211, 211, 211);
   font-size: 14px;
   cursor: pointer;
   &:hover {
@@ -206,7 +208,7 @@ const ProfileNoAcount = styled.div`
 `;
 const ProfileWithAcount = styled.div`
   text-decoration: none;
-  color: black;
+  color: rgb(211, 211, 211);
   font-size: 14px;
   cursor: pointer;
   &:hover {
@@ -229,7 +231,7 @@ const ProfileStayWord = styled.p`
 `;
 
 const ProfileLoginBtn = styled.button`
-  color: rgb(58, 58, 58);
+  color: rgb(211, 211, 211);
   font-weight: bold;
   box-sizing: border-box;
   width: 100%;
@@ -238,16 +240,18 @@ const ProfileLoginBtn = styled.button`
   border-radius: 4px;
   margin-top: 32px;
   cursor: pointer;
-  background-color: rgb(187, 187, 187);
+
+  background-color: inherit;
   border: none;
   transition: background-color 0.1s;
   &:hover {
-    background-color: #fff;
+    background-color: rgb(211, 211, 211);
+    color: rgb(42, 61, 78);
   }
   ${"" /* display:none */};
 `;
 const ProfileRegisterBtn = styled.button`
-  color: rgb(58, 58, 58);
+  color: rgb(211, 211, 211);
   font-weight: bold;
   box-sizing: border-box;
   width: 100%;
@@ -256,11 +260,12 @@ const ProfileRegisterBtn = styled.button`
   border-radius: 4px;
   margin-top: 32px;
   cursor: pointer;
-  background-color: rgb(187, 187, 187);
+  background-color: inherit;
   border: none;
   transition: background-color 0.1s;
   &:hover {
-    background-color: #fff;
+    background-color: rgb(211, 211, 211);
+    color: rgb(42, 61, 78);
   }
   ${"" /* display: ${registerBtnStatus} */};
 `;
@@ -273,14 +278,15 @@ const ProfileLogoutBtn = styled.button`
   line-height: 40px;
   font-weight: bold;
   cursor: pointer;
-  color: rgb(58, 58, 58);
+  color: rgb(211, 211, 211);
   box-sizing: border-box;
-  background-color: rgb(187, 187, 187);
+  background-color: inherit;
   border: none;
   transition: 0.1s;
   font-size: 16px;
   &:hover {
-    background-color: #fff;
+    background-color: rgb(211, 211, 211);
+    color: rgb(42, 61, 78);
   }
   ${"" /* display: none; */} @media (max-width: 1279px) {
     display: none;
@@ -359,7 +365,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
   // console.log(isLoggedIn);
   const [memberRole, setMemberRole] = useState("金屬會員");
   // const [ memberInfo, setMemberInfo ] = useState([])
-  const [memberName, setMemberName] = useState("Welcome back");
+  const [memberName, setMemberName] = useState("Timothy");
   const [memberEmail, setMemberEmail] = useState("您尊貴的Email");
   const [nameInputValue, setNameInputValue] = useState("");
   const [accountInputValue, setAccountInputValue] = useState("");
@@ -391,7 +397,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
           setToLogIn(false);
           setUid(user.uid);
           writeUserMap1Data(user.uid);
-
+          writeUserNameToData(user.uid);
           // ...
         })
         .catch((error) => {
@@ -443,15 +449,27 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
     //   country
     // });
   }
+
+  async function writeUserNameToData(uid: string) {
+    await setDoc(doc(db, "user", uid), {
+      userName: nameInputValue,
+    });
+
+    console.log("我有寫啦");
+    // await setDoc(doc(db, "user/7LkdfIpKjPiFsrPDlsaM"), {
+    //   country
+    // });
+  }
+
   // console.log(memberInfo)
   // console.log(memberRole);
   return (
     <Wrapper>
       <LogginPopUp>
         <ProfilePanel>
-          {isLoggedIn === false && loginStatus === "login" && <ProfileTitle>Welcome back</ProfileTitle>}
-          {isLoggedIn === false && loginStatus === "register" && <ProfileTitle>You're new around here</ProfileTitle>}
-          {isLoggedIn === true && <ProfileTitle>{memberName}</ProfileTitle>}
+          {isLoggedIn === false && loginStatus === "login" && <ProfileTitle>Welcome Back</ProfileTitle>}
+          {isLoggedIn === false && loginStatus === "register" && <ProfileTitle>Let's Map the World</ProfileTitle>}
+          {isLoggedIn === true && <ProfileTitle>Hi {memberName}</ProfileTitle>}
           {isLoggedIn === true && (
             <ProfileUserInfo>
               <ProfileUserInfoImg />
@@ -480,8 +498,8 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
 
               <ProfileCheckSet>
                 <ProfileCheckboxSet>
-                  <ProfileStayInput type="checkbox" />
-                  <ProfileStayWord>Stay Logged In</ProfileStayWord>
+                  {/* <ProfileStayInput type="checkbox" />
+                  <ProfileStayWord>Stay Logged In</ProfileStayWord> */}
                 </ProfileCheckboxSet>
                 {loginStatus === "login" && (
                   <ProfileNoAcount
