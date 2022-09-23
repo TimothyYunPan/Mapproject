@@ -4,14 +4,20 @@ import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { Reset } from "styled-reset";
 import { createGlobalStyle } from "styled-components";
-
 // import ReactHover, { Trigger, Hover } from 'react-hover'
 // import TriggerComponent from './components/TriggerComponent'
 // import HoverComponent from './components/HoverComponent'
 
 const GlobalStyleComponent = createGlobalStyle`
   *{
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
+    /* font-weight: 800; */
+    font-family: 'Noto Sans TC', sans-serif;
+    font-family: 'Oswald', sans-serif;
+    
+    
     /* display: flex;
     justify-content: center;
     flex-direction: column; */
@@ -20,6 +26,19 @@ const GlobalStyleComponent = createGlobalStyle`
     /* margin: 20px; */
     /* background-color: red; */
   }
+  
+  /* ::-webkit-scrollbar-track {
+	background-color: #F5F5F5;
+  }
+
+    ::-webkit-scrollbar {
+    width: 6px;
+    background-color: #F5F5F5;
+  }
+
+    ::-webkit-scrollbar-thumb {
+    background-color: #000000;
+  } */
 `;
 export interface countryListType {
   countryId: string;
@@ -39,7 +58,7 @@ function App() {
 
   return (
     <>
-      <Reset />
+      {/* <Reset /> */}
       <GlobalStyleComponent />
       <Header toLogIn={toLogIn} setToLogIn={setToLogIn} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} countryList={countryList} setCountryList={setCountryList} uid={uid} setUid={setUid} mapState={mapState} setMapState={setMapState} isShowingPoint={isShowingPoint} setIsShowingPoint={setIsShowingPoint} />
       <WorldMap isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} countryList={countryList} setCountryList={setCountryList} uid={uid} setUid={setUid} toLogIn={toLogIn} setToLogIn={setToLogIn} mapState={mapState} setMapState={setMapState} isShowingPoint={isShowingPoint} setIsShowingPoint={setIsShowingPoint} />

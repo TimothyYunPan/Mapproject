@@ -19,8 +19,27 @@ import trashCan from "./components/trashCan.png";
 import trashCanHover from "./components/trashCanHover.png";
 import edit from "./components/edit.png";
 import editHover from "./components/editHover.png";
+import imageIcon from "./components/imageIcon.png";
+import imageHover from "./components/imageHover.png";
+import noIcon from "./components/noIcon.png";
+import okIcon from "./components/okIcon.png";
+import Tiptap from "./Tiptap";
+import addIcon from "./components/addIcon.png";
+import parse from "html-react-parser";
+import backIcon from "./components/backIcon.png";
+import Overlap from "./components/Overlap";
 
 const storage = getStorage(app);
+
+const IconBtnStyle = styled.div`
+  width: 20px;
+  height: 20px;
+  bottom: 20px;
+  right: 15px;
+  background-size: cover;
+  position: absolute;
+  cursor: pointer;
+`;
 
 // async function writeUserMap1Data(country:string) {
 //   console.log("write")
@@ -245,21 +264,15 @@ const AddFriendBtn = styled.div`
   color: white;
   /* z-index: 100; */
 `;
-const CloseBtn = styled.div`
+const CloseBtn = styled(IconBtnStyle)`
   position: absolute;
-  top: 10px;
+  top: 20px;
+  right: 20px;
+  /* top: 10px;
   right: 1%;
-  /* margin: 10px; */
-  /* transform: translate(-50%,-50%); */
-  height: 50px;
-  width: 50px;
-  /* border: 1px solid black; */
-  /* border-radius: 50%; */
-  text-align: center;
-  font-size: 24px;
-  line-height: 46px;
-  cursor: pointer;
-  /* z-index: 100; */
+  height: 22px;
+  width: 22px; */
+  background-image: url(${noIcon});
 `;
 const AddFriendBox = styled.div`
   position: absolute;
@@ -268,7 +281,7 @@ const AddFriendBox = styled.div`
   /* height: 100%; */
   width: 200px;
   height: 500px;
-  border-radius: 20px;
+  /* border-radius: 20px; */
   border: 1px solid white;
   /* border-radius: 2%; */
   display: flex;
@@ -278,6 +291,8 @@ const AddFriendBox = styled.div`
   justify-content: center;
   align-items: center;
   color: white;
+  background-color: rgb(42, 61, 78);
+
   /* box-shadow: 0 0 0 10000px rgba(0,0,0,0.5) */
 `;
 
@@ -287,13 +302,14 @@ const AddFriendSet = styled.div`
   margin-top: 10px;
 `;
 const AddFriendFormLabel = styled.label`
-  width: 110px;
+  /* width: 110px; */
   line-height: 19px;
   font-size: 16px;
+  padding-left: 2px;
   /* color: #3f3a3a; */
   display: block;
   color: white;
-  margin-bottom: 6px;
+  margin-top: 3px;
 `;
 
 const AddFriendFormInput = styled.input`
@@ -301,7 +317,9 @@ const AddFriendFormInput = styled.input`
   height: 30px;
   border-radius: 2px;
   background-color: transparent;
-  border: 1px solid white;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid white;
   color: white;
 `;
 
@@ -313,6 +331,7 @@ const AddFriendFormTextarea = styled.textarea`
   background-color: transparent;
   border: 1px solid white;
   color: white;
+  margin-top: 6px;
 `;
 const FriendMiddleBox = styled.div`
   display: flex;
@@ -401,16 +420,9 @@ const EditFriendBtn = styled.div`
     bottom: 15px;
   }
 `;
-const DeleteFriendBtn = styled.div`
-  width: 20px;
-  height: 20px;
-  bottom: 20px;
-  right: 15px;
-  background-image: url(${trashCan});
-  background-size: cover;
-  position: absolute;
-  cursor: pointer;
 
+const DeleteFriendBtn = styled(IconBtnStyle)`
+  background-image: url(${trashCan});
   :hover {
     background-image: url(${trashCanHover});
   }
@@ -429,17 +441,21 @@ const AddFriendSentBtn = styled.div`
   text-align: center;
   width: 100%;
   cursor: pointer;
-  font-size: 14px;
-  border: 1px solid white;
+  font-size: 16px;
+  /* border: 1px solid white; */
   line-height: 23px;
   height: 25px;
-  border-radius: 10px;
+  /* border-radius: 10px; */
+  :hover {
+    background-color: rgb(211, 211, 211);
+    color: rgba(42, 61, 78);
+  }
 `;
 
 const addFriendFormGroups = [
   { label: "Name", key: "name" },
   { label: "City", key: "city" },
-  { label: "Insta", key: "insta" },
+  { label: "Instagram", key: "insta" },
   { label: "Notes", key: "notes" },
 ];
 
@@ -470,7 +486,7 @@ const randomColor = Math.floor(Math.random() * 16777215).toString(16);
 //   background-color: blue
 
 // `
-const PointSet = styled.div<{ pointInfo: pointListType }>`
+export const PointSet = styled.div<{ pointInfo: pointListType }>`
   position: absolute;
   top: ${(props) => {
     return props.pointInfo.y - 100 + "px";
@@ -483,7 +499,7 @@ const PointSet = styled.div<{ pointInfo: pointListType }>`
   align-items: center;
   /* border: 1px solid black; */
 `;
-const Point = styled.div`
+export const Point = styled.div`
   /* position: absolute; */
   height: 7px;
   width: 7px;
@@ -491,42 +507,56 @@ const Point = styled.div`
   border-radius: 50%;
   background-color: rgb(236, 174, 72);
 `;
-const PointSole = styled.div`
+export const PointSole = styled.div`
   background-color: grey;
   height: 20px;
   width: 1.5px;
   /* position: absolute; */
 `;
 
-const PointNotes = styled.div`
+export const PointNotes = styled.div`
   width: 300px;
   height: 550px;
   /* height: 100px; */
   position: absolute;
   border: 1px solid white;
   top: 60px;
-  right: 20px;
+  right: 25px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-radius: 20px;
+  border-radius: 10px;
+  background-color: rgb(124, 134, 146, 0.7);
   /* border: 1px solid black; */
 `;
 
 // const PointInfoBox =
 
-const PointNotesTitle = styled.h2`
+export const PointNotesTitle = styled.h2`
   margin: 20px 0;
   color: white;
 `;
+export const PointNotesTitleInput = styled.input`
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #fff;
+  background-color: inherit;
+  font-size: 20px;
+  margin: 25px 0;
+  text-align: center;
+  color: white;
+`;
 
-const PointNotesTextArea = styled.textarea`
-  resize: none;
+const PointNotesTextArea = styled.div`
   margin-top: 20px;
   width: 90%;
-  height: 70%;
+  color: white;
+  background-color: inherit;
+  height: auto;
+  border: 1px solid #fff;
+  /* height: 70%; */
 `;
-const PointNote = styled.div`
+export const PointNote = styled.div`
   margin-top: 45px;
   /* text-align: left; */
   width: 90%;
@@ -534,19 +564,59 @@ const PointNote = styled.div`
   margin-bottom: 45px;
 `;
 
-const PointNotesTextImg = styled.img`
+export const PointNotesTextImg = styled.img`
   width: 90%;
-  height: 120px;
+  height: auto;
 `;
 
 const NotesFlex = styled.div`
   /* display: flex; */
 `;
 
-// const AddCityInput = styled.input`
-//   width: 90%
+const NoteEditBtn = styled(EditFriendBtn)`
+  /* top: 20px;
+  right: 20px; */
+`;
 
-// `
+const NoteDeleteBtn = styled(DeleteFriendBtn)`
+  /* left: 20px; */
+`;
+
+const NoteImgUploadBtn = styled.div`
+  width: 24px;
+  height: 24px;
+  bottom: 16px;
+  right: 70px;
+  background-image: url(${imageIcon});
+  background-size: cover;
+  position: absolute;
+  cursor: pointer;
+
+  :hover {
+    background-image: url(${imageHover});
+    width: 24px;
+    height: 24px;
+    bottom: 17px;
+  }
+`;
+
+const NoteAddBtn = styled(IconBtnStyle)`
+  background-image: url(${okIcon});
+  bottom: 19px;
+  :hover {
+    bottom: 21px;
+  }
+`;
+const NoteCancelBtn = styled(IconBtnStyle)`
+  height: 22px;
+  width: 22px;
+  background-image: url(${backIcon});
+  bottom: 19px;
+  right: 45px;
+  :hover {
+    bottom: 21px;
+  }
+`;
 
 // const AddSocialMediaInput = styled.input`
 
@@ -572,7 +642,8 @@ const Block4 = styled(Block1)`
 `;
 const NotesPhotoLabel = styled.label``;
 
-type pointListType = {
+export type pointListType = {
+  title: string;
   countryId: string;
   y: number;
   x: number;
@@ -618,6 +689,7 @@ type WorldMapType = {
 function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, toLogIn, setToLogIn, uid, setUid, countryList, setCountryList, isLoggedIn, setIsLoggedIn }: WorldMapType) {
   console.log(mapState);
   const [isHovering, setIsHovering] = useState<boolean>(false);
+  console.log(isHovering);
   // const [isClicked, setIsClicked]= useState<boolean>(false)
   const [countryName, setCountryName] = useState<string>("");
   const [countryCount, setCountryCount] = useState<number>(0);
@@ -645,7 +717,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   const [friendsList, setFriendsList] = useState<friendListType[]>([]);
   console.log(friendsList);
   const [friendList, setFriendList] = useState<friendListType[]>([]);
-  console.log(friendList);
+  // console.log(friendList);
   const [haveFriendList, setHaveFriendList] = useState<haveFriendListType[]>([]);
   console.log(haveFriendList);
   const [isAddingFriend, setIsAddingFriend] = useState<boolean>(false);
@@ -663,11 +735,14 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [pointList, setPointList] = useState<pointListType[]>([]);
   const [userName, setUserName] = useState<string>("");
-  console.log(userName);
+  // console.log(userName);
   console.log(pointList);
   // const [pointList1, setPointList1] = useState<pointListType[]>([]);
   // console.log(pointList1);
   const [singlePointList, setSinglePointList] = useState<pointListType[]>([]);
+  const [X, setX] = useState<number>(0);
+  const [Y, setY] = useState<number>(0);
+  // console.log(xy);
   console.log(singlePointList);
   // const contentImageUpload = useRef();
   // console.log(contentImageUpload.current);
@@ -680,6 +755,16 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   }>({ x: 0, y: 0 });
   // console.log(mousePlace);
   const [pointIndex, setPointIndex] = useState<number>(-1);
+
+  const [selectPointIndex, setSelectPointIndex] = useState<number>(-1);
+  // console.log(selectPointIndex);
+  // const [pointNoteTitle, setPointNoteTitle] = useState<string>("");
+  const pointTitleInputRef = useRef<HTMLInputElement>(null);
+
+  // function handleClick() {
+  //   // pointTitleInputRef.current!.value = "New value";
+  //   console.log(pointTitleInputRef.current!.value);
+  // }
   // console.log(pointIndex);
 
   type AddFriendType = {
@@ -775,6 +860,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     await setDoc(doc(db, "user", uid, "custimizedMapCountries", country), {
       List: [
         {
+          title: newObj.title,
           countryId: country,
           y: newObj.y,
           x: newObj.x,
@@ -811,6 +897,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     // console.log(pointList);
     let newPointList = [];
     const newListObj = {
+      title: newObj.title,
       countryId: countryId,
       y: newObj.y,
       x: newObj.x,
@@ -906,10 +993,11 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     // console.log(querySnapshot);
     querySnapshot.forEach((country) => {
       // console.log(country);
-
+      console.log(country.data());
       console.log(country.data().List);
       country.data().List.forEach((point: pointListType) => {
         let newPointObj = {
+          title: point.title,
           countryId: country.id,
           imgUrl: point.imgUrl,
           notes: point.notes,
@@ -1027,8 +1115,6 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     if (result.length > 0) {
       setCountryName(result[0].name);
     }
-
-    setIsHovering(true);
   }
 
   // function deleteCheckedToMap(target:HTMLInputElement){
@@ -1118,6 +1204,25 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   //     })
   //   })
   // }
+  async function deleteNote() {
+    // console.log(countryId);
+    // console.log(singlePointList);
+    console.log(pointList);
+
+    // let newPointList = pointList.filter((obj, i) => {
+    //   return i !== pointIndex;
+    // });
+
+    let newPointList = pointList.filter((obj) => {
+      return obj.x !== X && obj.y !== Y;
+    });
+    setPointList(newPointList);
+    console.log(newPointList);
+    await updateDoc(doc(db, "user", uid, "custimizedMapCountries", countryId), {
+      List: arrayRemove(singlePointList[0]),
+    });
+  }
+
   async function deleteFriend(index: number) {
     console.log(friendList[index]);
 
@@ -1262,6 +1367,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                         setToLogIn(true);
                       } else {
                         setMapState(3);
+                        setIsShowingPoint(true);
                       }
                     }}></WallPaper3>
                   <SelectMapText>My Map</SelectMapText>
@@ -1273,6 +1379,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
           <>
             <Map
               onMouseOver={(e) => {
+                setIsHovering(true);
                 hoverAddCountryName(e);
               }}
               onMouseLeave={(e) => {
@@ -1335,12 +1442,6 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
         ) : mapState === 2 ? (
           <>
             <Map
-              onMouseOver={(e) => {
-                hoverAddCountryName(e);
-              }}
-              onMouseLeave={(e) => {
-                setIsHovering(false);
-              }}
               onClick={(e) => {
                 const target = e.target as HTMLInputElement;
                 // console.log(target.tagName);
@@ -1350,9 +1451,15 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                 setCountryId(target.id);
                 setIsShowingFriends(true);
                 getUserMap2Friends(target.id);
-                setIsHovering(false);
               }}>
-              <MapCover>
+              <MapCover
+                onMouseOver={(e) => {
+                  setIsHovering(true);
+                  hoverAddCountryName(e);
+                }}
+                onMouseLeave={(e) => {
+                  setIsHovering(false);
+                }}>
                 <MapSVG countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
               </MapCover>
               {isShowingFriends && isShowingFriends === true ? (
@@ -1390,9 +1497,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                       onClick={() => {
                         setIsShowingFriends(false);
                         setIsAddingFriend(false);
-                      }}>
-                      X
-                    </CloseBtn>
+                      }}></CloseBtn>
                     <AddFriendBtn
                       onClick={() => {
                         setIsAddingFriend(true);
@@ -1449,14 +1554,12 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                               notes: "",
                             });
                           }}>
-                          Add as my new friend
+                          Create
                         </AddFriendSentBtn>
                         <CloseBtn
                           onClick={() => {
                             setIsAddingFriend(false);
-                          }}>
-                          X
-                        </CloseBtn>
+                          }}></CloseBtn>
                       </AddFriendBox>
                     ) : (
                       <></>
@@ -1476,6 +1579,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
         ) : mapState === 3 ? (
           <Map
             onMouseOver={(e) => {
+              setIsHovering(true);
               hoverAddCountryName(e);
             }}
             onMouseLeave={(e) => {
@@ -1501,6 +1605,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
               setMousePos(mousePosition);
               let a = mousePosition;
               let newObj = {
+                title: "",
                 countryId: target.id,
                 imgUrl: "",
                 notes: "",
@@ -1525,17 +1630,18 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                         <Point
                           id={pointInfo.countryId}
                           onClick={(e) => {
-                            // console.log(id)
-                            // console.log(index);
                             const target = e.target as HTMLInputElement;
+                            setX(pointInfo.x);
+                            setY(pointInfo.y);
                             console.log(target.id);
                             getUserMap3Points(target.id);
                             setPointIndex(index);
                             e.stopPropagation();
                             setIsShowingPointNotes(true);
                             setIsEditing(false);
+                            setCountryId(target.id);
                             setNotePhoto(pointInfo.imgUrl);
-                            console.log(pointInfo.imgUrl);
+                            // console.log(pointInfo.imgUrl);
                             setPointNotes("");
                           }}></Point>
                         <PointSole></PointSole>
@@ -1549,7 +1655,16 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
             )}
             {isShowingPointNotes && isShowingPointNotes ? (
               <PointNotes>
-                <PointNotesTitle>Journal</PointNotesTitle>
+                {isEditing && isEditing ? (
+                  <PointNotesTitleInput
+                    defaultValue={pointList[pointIndex].title}
+                    // defaultValue={pointList[pointIndex].title}
+                    ref={pointTitleInputRef}
+                    // onChange={()=>{setPointNoteTitle()}}
+                  ></PointNotesTitleInput>
+                ) : (
+                  <PointNotesTitle>{pointList[pointIndex].title}</PointNotesTitle>
+                )}
                 {previewImgUrl && previewImgUrl ? <PointNotesTextImg src={previewImgUrl} /> : <PointNotesTextImg src={pointList[pointIndex].imgUrl} />}
 
                 {isEditing && isEditing ? (
@@ -1558,7 +1673,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                       {/* <button>upload images</button> */}
                       {/* <AddFriendProfilePic src={imageList[0]}></AddFriendProfilePic> */}
                       {/* <button></button> */}
-                      <UploadBtn>upload images</UploadBtn>
+                      <NoteImgUploadBtn></NoteImgUploadBtn>
                     </NotesPhotoLabel>
                     <NotesPhotoInput
                       type="file"
@@ -1570,16 +1685,14 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                         // setImageUpload(e.target.files![0]);
                       }}></NotesPhotoInput>
                     <PointNotesTextArea
-                      onChange={(e) => {
-                        setPointNotes(e.target.value);
-                      }}
                       onClick={(e) => {
                         e.stopPropagation();
-                      }}
-                      defaultValue={pointList[pointIndex].notes}></PointNotesTextArea>
+                      }}>
+                      <Tiptap setPointNotes={setPointNotes} pointList={pointList} pointIndex={pointIndex} />
+                    </PointNotesTextArea>
                   </>
                 ) : (
-                  <PointNote>{pointList[pointIndex].notes}</PointNote>
+                  <PointNote>{pointList && parse(pointList[pointIndex].notes)}</PointNote>
                 )}
                 {/* <div contentEditable="true" onInput={(e) => console.log(e.currentTarget.innerHTML)}>
                   hi
@@ -1589,55 +1702,68 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
 
                 <NotesFlex>
                   {isEditing && isEditing ? (
-                    <button
+                    <NoteCancelBtn
                       onClick={(e) => {
                         e.stopPropagation();
+
                         setIsEditing(false);
-                      }}>
-                      Cancel
-                    </button>
+                      }}></NoteCancelBtn>
                   ) : (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIsEditing(true);
-                        setPointNotes(pointList[pointIndex].notes);
-                        setNotePhoto(pointList[pointIndex].imgUrl);
-                      }}>
-                      Edit
-                    </button>
+                    <>
+                      <NoteEditBtn
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsEditing(true);
+                          setPointNotes(pointList[pointIndex].notes);
+                          setNotePhoto(pointList[pointIndex].imgUrl);
+                        }}></NoteEditBtn>
+                      <NoteDeleteBtn
+                        onClick={(e) => {
+                          setIsShowingPointNotes(false);
+                          deleteNote();
+                        }}></NoteDeleteBtn>
+                    </>
                   )}
                   {isEditing && isEditing ? (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        let newObj: pointListType = {
-                          countryId: countryId,
-                          x: mousePos.x as number,
-                          y: mousePos.y as number,
-                          imgUrl: previewImgUrl,
-                          notes: pointNotes,
-                        };
-                        // let newArr = [];
-                        setPointList((pre) => {
-                          pre[pointIndex] = {
-                            ...pre[pointIndex],
+                    <>
+                      <NoteAddBtn
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          let newObj: pointListType = {
+                            title: pointTitleInputRef.current!.value,
+                            countryId: countryId,
+                            x: mousePos.x as number,
+                            y: mousePos.y as number,
                             imgUrl: previewImgUrl,
                             notes: pointNotes,
                           };
-                          const newArr = [...pre];
-                          console.log(newArr);
-                          return newArr;
-                        });
-                        // console.log(countryId);
-                        sendNewNotesInfo(countryId, newObj);
-                        setPointPhoto(null);
-                        // writeUserMap3Data(countryId, newObj);
-                        setIsEditing(false);
-                        setPointNotes("");
-                      }}>
-                      Add
-                    </button>
+                          setSinglePointList([newObj]);
+                          console.log([newObj]);
+                          // let newArr = [];
+                          setPointList((pre) => {
+                            pre[pointIndex] = {
+                              ...pre[pointIndex],
+                              title: pointTitleInputRef.current!.value,
+                              imgUrl: previewImgUrl,
+                              notes: pointNotes,
+                            };
+                            const newArr = [...pre];
+                            console.log(newArr);
+                            return newArr;
+                          });
+                          // console.log(countryId);
+                          sendNewNotesInfo(countryId, newObj);
+                          setPointPhoto(null);
+                          // writeUserMap3Data(countryId, newObj);
+                          setIsEditing(false);
+                          setPointNotes("");
+                        }}></NoteAddBtn>
+
+                      {/* <NoteDeleteBtn
+                        onClick={(e) => {
+                          deleteNote();
+                        }}></NoteDeleteBtn> */}
+                    </>
                   ) : (
                     <></>
                   )}

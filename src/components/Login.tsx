@@ -25,6 +25,8 @@ const Wrapper = styled.div`
 
 const LogginPopUp = styled.div`
   display: flex;
+  border-radius: 2px;
+  border: 12px solid white;
 
   ${"" /* flex-direction: column; */} justify-content: center;
   align-items: center;
@@ -39,13 +41,15 @@ const LogginPopUp = styled.div`
 
 const ProfilePanel = styled.div`
   width: 330px;
+
   ${"" /* height: 520px; */} padding: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
+
   /* background-color: rgba(255, 255, 255, 0.05); */
   border: solid 1px white;
-  border-radius: 2px;
+  border-radius: 5px;
   background-color: rgb(42, 61, 78);
 
   @media (max-width: 1279px) {

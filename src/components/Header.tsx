@@ -140,7 +140,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
         <Logo
           mapState={mapState}
           onClick={() => {
-            setMapState(1);
+            setMapState(-1);
           }}></Logo>
         {mapState && mapState === -1 ? (
           <></>
