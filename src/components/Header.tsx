@@ -3,9 +3,10 @@ import styled from "styled-components";
 import countries from "../utils/countries";
 import continent from "./continents1.png";
 import search from "./search.png";
-import { countryListType } from "../App";
+import { countryListType, friendListType, haveFriendListType, pointListType } from "../App";
 import Login from "./Login";
-
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "../utils/firebaseConfig";
 const Logo = styled.div<{ mapState: number }>`
   margin-top: ${(props) => (props.mapState === -1 ? "20px" : "0px")};
   width: ${(props) => (props.mapState === -1 ? "100px" : "70px")};
@@ -46,7 +47,7 @@ const Wrapper = styled.div`
   align-items: center;
   /* justify-content: center; */
 `;
-const LoginSet = styled.div`
+const HeaderRightSet = styled.div`
   text-align: center;
   display: flex;
   position: relative;
@@ -58,7 +59,7 @@ const Back = styled.div`
   right: 120px;
   z-index: 250;
 `;
-const ChangeMapBtnSet = styled.div`
+const HeaderLeftSet = styled.div`
   display: flex;
   align-items: center;
   /* justify-content: center; */
@@ -68,8 +69,8 @@ const SearchBtn = styled.div`
   position: absolute;
   height: 20px;
   width: 20px;
-  top: 25px;
-  right: 90px;
+  top: 22px;
+  right: 180px;
   z-index: 150;
   border-radius: 5%;
   line-height: 24px;
@@ -82,20 +83,48 @@ const SearchInput = styled.input`
   position: absolute;
   height: 30px;
   width: 180px;
-  right: 130px;
-  border-radius: 5%;
-  top: 20px;
+  right: 220px;
+  border-radius: 20px;
+  top: 18px;
   z-index: 100;
   color: rgb(42, 60, 77);
+  border: 1px solid white;
+  padding-left: 10px;
+  background-color: inherit;
+  color: white;
 `;
 const LoginBtn = styled.div`
-  height: 40px;
+  height: 50px;
   width: 80px;
-  padding-top: 10px;
+  padding-top: 18px;
+  padding-bottom: 10px;
   font-size: 16px;
-  margin-top: 15px;
+  /* margin-top: 15px; */
   cursor: pointer;
   color: white;
+  :hover {
+    border-bottom: 1px solid white;
+  }
+`;
+
+const OverlapBtn = styled.div<{ isShowingPoint: boolean }>`
+  /* position: absolute; */
+  top: 0;
+  right: 120px;
+  height: 50px;
+  width: 80px;
+  margin: 0 10px;
+  /* padding-bottom: 16px; */
+  padding-top: 18px;
+  padding-bottom: 10px;
+
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+  /* font-weight: ${(props) => (props.isShowingPoint === true ? "400" : "900")}; */
+  color: white;
+  /* color: ${(props) => (props.isShowingPoint === true ? "rgb(236,174,72)" : "white")}; */
+
   :hover {
     border-bottom: 1px solid white;
   }
@@ -105,6 +134,7 @@ type HeaderType = {
   setMapState: React.Dispatch<React.SetStateAction<number>>;
   isShowingPoint: boolean;
   setIsShowingPoint: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsShowingPointNotes: React.Dispatch<React.SetStateAction<boolean>>;
   uid: string;
   setUid: React.Dispatch<React.SetStateAction<string>>;
   toLogIn: boolean;
@@ -113,30 +143,59 @@ type HeaderType = {
   setCountryList: React.Dispatch<React.SetStateAction<countryListType[]>>;
   isLoggedIn: boolean;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  getUserMap2Friends: (id: string) => void;
+  isShowingFriends: boolean;
+  setIsShowingFriends: React.Dispatch<React.SetStateAction<boolean>>;
+  setCountryId: React.Dispatch<React.SetStateAction<string>>;
+  setCountryName: React.Dispatch<React.SetStateAction<string>>;
+  friendsList: friendListType[];
+  setFriendsList: React.Dispatch<React.SetStateAction<friendListType[]>>;
+  setHaveFriendList: React.Dispatch<React.SetStateAction<haveFriendListType[]>>;
+  setFriendList: React.Dispatch<React.SetStateAction<friendListType[]>>;
+  setPointList: React.Dispatch<React.SetStateAction<pointListType[]>>;
 };
 
-function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid, setUid, toLogIn, setToLogIn, countryList, setCountryList, isLoggedIn, setIsLoggedIn }: HeaderType) {
+function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid, setUid, toLogIn, setToLogIn, countryList, setCountryList, isLoggedIn, setIsLoggedIn, setIsShowingPointNotes, getUserMap2Friends, isShowingFriends, setIsShowingFriends, setCountryId, setCountryName, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList }: HeaderType) {
   const [searchCountry, setSearchCountry] = useState<string>("");
   const [searchValue, setSearchValue] = useState<string>("");
   function searchCountries() {
     const result = countries.filter(function (obj) {
-      return obj.name == searchValue;
+      return obj.name.toLowerCase() == searchValue.toLowerCase();
     });
-    console.log(result);
-    let a = result[0].code;
-    // setSearchCountry(a);
-    if (a) {
+    if (result[0]) {
+      setCountryName(searchValue.charAt(0).toUpperCase() + searchValue.slice(1));
+      let a = result[0].code;
+      getUserMap2Friends(a);
+      setCountryId(a);
+      setIsShowingFriends(true);
       // document.getElementById(a)!.style.scale = "2px";
       document.getElementById(a)!.style.fill = "rgb(236,174,72)";
+    } else {
+      searchName();
     }
-    // countries.forEach((country)=>{
 
-    // })
+    // setSearchCountry(a);
   }
+  async function searchName() {
+    const countriesRef = collection(db, "user", uid, "friendsLocatedCountries");
+    const q = query(countriesRef, where("searchName", "array-contains", searchValue));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      console.log(doc.data());
+      getUserMap2Friends(doc.id);
+      setIsShowingFriends(true);
+      setCountryId(doc.id);
+      setCountryName(doc.data().friends[0].country);
+      console.log("hi");
+    });
+  }
+  // countries.forEach((country)=>{
+
+  // })
 
   return (
     <Wrapper>
-      <ChangeMapBtnSet>
+      <HeaderLeftSet>
         <Logo
           mapState={mapState}
           onClick={() => {
@@ -149,7 +208,6 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
             <ChangeMapBtn
               onClick={() => {
                 setMapState(1);
-                setIsShowingPoint(false);
               }}>
               Visited
             </ChangeMapBtn>
@@ -160,6 +218,8 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                   setToLogIn(true);
                 } else {
                   setMapState(2);
+                  setIsShowingPointNotes(false);
+                  setIsShowingFriends(false);
                 }
               }}>
               Friends{" "}
@@ -180,8 +240,24 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
         )}
 
         {/* <ChangeMapBtn>Overlap</ChangeMapBtn> */}
-      </ChangeMapBtnSet>
-      <LoginSet>
+      </HeaderLeftSet>
+      <HeaderRightSet>
+        {(mapState && mapState === 1) || mapState === 2 ? (
+          <OverlapBtn
+            isShowingPoint={isShowingPoint}
+            onClick={() => {
+              if (isShowingPoint) {
+                setIsShowingPoint(false);
+              } else {
+                setIsShowingPoint(true);
+              }
+              setIsShowingPointNotes(false);
+            }}>
+            Overlap
+          </OverlapBtn>
+        ) : (
+          <></>
+        )}
         {(mapState && mapState === -1) || mapState === 4 ? (
           <></>
         ) : (
@@ -222,11 +298,11 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
           </LoginBtn>
         )}
         {}
-      </LoginSet>
+      </HeaderRightSet>
 
-      {toLogIn && toLogIn ? (
+      {toLogIn ? (
         <>
-          <Login setMapState={setMapState} uid={uid} toLogIn={toLogIn} setToLogIn={setToLogIn} countryList={countryList} setCountryList={setCountryList} setUid={setUid} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}></Login>
+          <Login friendsList={friendsList} setFriendsList={setFriendsList} setMapState={setMapState} uid={uid} toLogIn={toLogIn} setToLogIn={setToLogIn} countryList={countryList} setCountryList={setCountryList} setUid={setUid} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setHaveFriendList={setHaveFriendList} setFriendList={setFriendList} setPointList={setPointList}></Login>
           <Back
             onClick={() => {
               setToLogIn(false);

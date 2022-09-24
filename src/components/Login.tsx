@@ -6,14 +6,14 @@ import app from "../utils/firebaseConfig";
 
 // import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
-import { countryListType } from "../App";
+import { countryListType, friendListType, haveFriendListType, pointListType } from "../App";
 // import getJwtToken from '../../utils/getJwtToken';
 
 const auth = getAuth(app);
 
 const Wrapper = styled.div`
   position: fixed;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.9);
   width: 100vw;
   height: 100vh;
   /* padding: 100px 20px; */
@@ -26,7 +26,7 @@ const Wrapper = styled.div`
 const LogginPopUp = styled.div`
   display: flex;
   border-radius: 2px;
-  border: 12px solid white;
+  border: 32px solid rgb(42, 61, 78);
 
   ${"" /* flex-direction: column; */} justify-content: center;
   align-items: center;
@@ -359,9 +359,14 @@ type LoginType = {
   setToLogIn: React.Dispatch<React.SetStateAction<boolean>>;
   uid: string;
   setMapState: React.Dispatch<React.SetStateAction<number>>;
+  friendsList: friendListType[];
+  setFriendsList: React.Dispatch<React.SetStateAction<friendListType[]>>;
+  setHaveFriendList: React.Dispatch<React.SetStateAction<haveFriendListType[]>>;
+  setFriendList: React.Dispatch<React.SetStateAction<friendListType[]>>;
+  setPointList: React.Dispatch<React.SetStateAction<pointListType[]>>;
 };
 
-function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList, toLogIn, setToLogIn, uid, setMapState }: LoginType) {
+function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList, toLogIn, setToLogIn, uid, setMapState, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList }: LoginType) {
   const [profile, setProfile] = useState();
   const [loginStatus, setLoginStatus] = useState("login");
   // console.log(loginStatus);
@@ -557,6 +562,10 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
                 LogOut();
                 setMapState(-1);
                 setCountryList([]);
+                setHaveFriendList([]);
+                setFriendsList([]);
+                setFriendList([]);
+                setPointList([]);
               }}>
               LOG OUT
             </ProfileLogoutBtn>

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { haveFriendListType } from "../WorldMap";
-import { countryListType } from "../App";
+import { countryListType, haveFriendListType } from "../App";
+import { getAllByTitle } from "@testing-library/react";
+import countries from "../utils/countries";
 
 const SVGBox = styled.svg`
   width: 1440px;
@@ -55,10 +56,56 @@ const Path = styled.path<Pathtype>`
 </div> */
 }
 
-function MapSVG({ countryList, mapState, haveFriendList }: { countryList: countryListType[]; mapState: number; haveFriendList: haveFriendListType[] }) {
+// all = ['CH', 'TW','JP']
+// visit = ['TW', 'JP']
+// all.forEach((country) => {
+//   if(visit.inclued(country) {
+//     document.getElementById(country)?.style.fill = 黃色
+//   }) else {
+//      灰色
+//   }
+// })
+
+function MapSVG({ countryList, mapState, haveFriendList, allCountries }: { countryList: countryListType[]; mapState: number; haveFriendList: haveFriendListType[]; allCountries: string[] }) {
   useEffect(() => {
     if (mapState === 1) {
       // console.log(countryList)
+      console.log(123);
+      // let a = [];
+      // allCountries.forEach((country) => {
+      //   console.log(country);
+      //   let result = countryList.filter((obj) => {
+      //     return obj.countryId === country;
+      //   });
+      //   // console.log(result);
+      //   if (result.length !== 0) {
+      //     a.push(result[0].countryId);
+      //   }
+      // });
+      // // let b = [];
+      // let b = allCountries.filter((obj) => {
+      //   return a.indexOf(obj) === -1;
+      // });
+      // a.forEach((countryId) => {
+      //   if (!document.getElementById(countryId)) return;
+      //   document.getElementById(countryId)!.style.fill = "rgb(236,174,72)";
+      // });
+
+      // b.forEach((countryId) => {
+      //   if (!document.getElementById(countryId)) return;
+      //   document.getElementById(countryId)!.style.fill = "rgb(148, 149, 154)";
+      // });
+
+      // allCountries.forEach((country) => {
+      //   console.log(country);
+      //   let result = countryList.filter((obj) => {
+      //     return obj.countryId !== country;
+      //   });
+      //   // console.log(result);
+      //   if (result.length !== 0) {
+      //     b.push(result[0]);
+      //   }
+      // });
       countryList.forEach((country) => {
         if (country.visited) {
           let countryId = country.countryId;

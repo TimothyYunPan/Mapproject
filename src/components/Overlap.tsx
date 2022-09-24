@@ -1,8 +1,23 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import NoteImgUploadBtn from "../WorldMap";
-import { Point, PointNotes, PointSet, PointSole, PointNotesTitleInput, PointNotesTitle, PointNote, PointNotesTextImg } from "../WorldMap";
-function Overlap() {
+import { Point, PointNotes, PointSet, PointSole, PointNotesTitle, PointNote, PointNotesTextImg } from "../WorldMap";
+import { pointListType } from "../App";
+import parse from "html-react-parser";
+
+type OverlapType = {
+  pointList: pointListType[];
+  isShowingPointNotes: boolean;
+  pointIndex: number;
+  previewImgUrl: string;
+  getUserMap3Points: (id: string) => void;
+  setPointIndex: React.Dispatch<React.SetStateAction<number>>;
+  setIsShowingPointNotes: React.Dispatch<React.SetStateAction<boolean>>;
+  setCountryId: React.Dispatch<React.SetStateAction<string>>;
+  mapState: number;
+  // isShowingPoint: isShowingPointType
+};
+function Overlap({ mapState, pointList, isShowingPointNotes, pointIndex, previewImgUrl, getUserMap3Points, setPointIndex, setIsShowingPointNotes, setCountryId }: OverlapType) {
   return (
     <>
       {/* <Map
@@ -28,56 +43,41 @@ function Overlap() {
           };
           setPointList([...pointList, newObj]);
         }}> */}
-      {isShowingPoint && isShowingPoint ? (
-        <>
-          {pointList.map((pointInfo, index) => {
-            // console.log(pointInfo);
-            return (
-              <>
-                <PointSet
-                  key={index}
-                  pointInfo={pointInfo}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}>
-                  <Point
-                    id={pointInfo.countryId}
-                    onClick={(e) => {
-                      const target = e.target as HTMLInputElement;
-                      setX(pointInfo.x);
-                      setY(pointInfo.y);
-                      console.log(target.id);
-                      getUserMap3Points(target.id);
-                      setPointIndex(index);
-                      e.stopPropagation();
-                      setIsShowingPointNotes(true);
-                      setIsEditing(false);
-                      setCountryId(target.id);
-                      setNotePhoto(pointInfo.imgUrl);
-                      // console.log(pointInfo.imgUrl);
-                      setPointNotes("");
-                    }}></Point>
-                  <PointSole></PointSole>
-                </PointSet>
-              </>
-            );
-          })}
-        </>
-      ) : (
-        <></>
-      )}
+      {pointList.map((pointInfo, index) => {
+        // console.log(pointInfo);
+        return (
+          <>
+            <PointSet
+              key={index}
+              pointInfo={pointInfo}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}>
+              <Point
+                mapState={mapState}
+                id={pointInfo.countryId}
+                onClick={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  // setX(pointInfo.x);
+                  // setY(pointInfo.y);
+                  console.log(target.id);
+                  getUserMap3Points(target.id);
+                  setPointIndex(index);
+                  e.stopPropagation();
+                  setIsShowingPointNotes(true);
+                  // setIsEditing(false);
+                  setCountryId(target.id);
+                  // setNotePhoto(pointInfo.imgUrl);
+                  // console.log(pointInfo.imgUrl);
+                }}></Point>
+              <PointSole></PointSole>
+            </PointSet>
+          </>
+        );
+      })}
       {isShowingPointNotes && isShowingPointNotes ? (
         <PointNotes>
-          {isEditing && isEditing ? (
-            <PointNotesTitleInput
-              defaultValue={pointList[pointIndex].title}
-              // defaultValue={pointList[pointIndex].title}
-              ref={pointTitleInputRef}
-              // onChange={()=>{setPointNoteTitle()}}
-            ></PointNotesTitleInput>
-          ) : (
-            <PointNotesTitle>{pointList[pointIndex].title}</PointNotesTitle>
-          )}
+          <PointNotesTitle>{pointList[pointIndex].title}</PointNotesTitle>
           {previewImgUrl && previewImgUrl ? <PointNotesTextImg src={previewImgUrl} /> : <PointNotesTextImg src={pointList[pointIndex].imgUrl} />}
 
           <PointNote>{pointList && parse(pointList[pointIndex].notes)}</PointNote>

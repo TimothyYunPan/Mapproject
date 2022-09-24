@@ -44,24 +44,100 @@ export interface countryListType {
   countryId: string;
   visited: boolean;
 }
+export type friendListType = {
+  countryId: string;
+  name: string;
+  city: string;
+  country: string;
+  insta: string;
+  imgUrl: string;
+  notes: string;
+};
+export type haveFriendListType = {
+  countryId: string;
+  haveFriend: number;
+};
+export type pointListType = {
+  title: string;
+  countryId: string;
+  y: number;
+  x: number;
+  imgUrl: string;
+  notes: string;
+};
 
 function App() {
   const [countryList, setCountryList] = useState<countryListType[]>([]);
+  console.log(countryList);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   console.log(isLoggedIn);
   const [mapState, setMapState] = useState<number>(0);
   const [isShowingPoint, setIsShowingPoint] = useState<boolean>(false);
   const [toLogIn, setToLogIn] = useState<boolean>(false);
   const [uid, setUid] = useState<string>("");
+  const [isShowingPointNotes, setIsShowingPointNotes] = useState<boolean>(false);
+  const [friendsList, setFriendsList] = useState<friendListType[]>([]);
+  const [friendList, setFriendList] = useState<friendListType[]>([]);
+  const [isShowingFriends, setIsShowingFriends] = useState<boolean>(false);
+  const [countryId, setCountryId] = useState<string>("");
+  const [countryName, setCountryName] = useState<string>("");
+  const [haveFriendList, setHaveFriendList] = useState<haveFriendListType[]>([]);
+  const [pointList, setPointList] = useState<pointListType[]>([]);
+  // console.log(haveFriendList);
+  // console.log(countryId);
+  // console.log(friendList);
+  console.log(friendsList);
+  function getUserMap2Friends(id: string) {
+    const nf: friendListType[] = [];
+    console.log(id);
 
+    friendsList.forEach((friend) => {
+      // console.log(friend);
+      if (friend.countryId === id) {
+        nf.push(friend);
+      }
+    });
+    console.log(nf);
+    setFriendList(nf);
+  }
   console.log(toLogIn);
 
   return (
     <>
       {/* <Reset /> */}
       <GlobalStyleComponent />
-      <Header toLogIn={toLogIn} setToLogIn={setToLogIn} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} countryList={countryList} setCountryList={setCountryList} uid={uid} setUid={setUid} mapState={mapState} setMapState={setMapState} isShowingPoint={isShowingPoint} setIsShowingPoint={setIsShowingPoint} />
-      <WorldMap isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} countryList={countryList} setCountryList={setCountryList} uid={uid} setUid={setUid} toLogIn={toLogIn} setToLogIn={setToLogIn} mapState={mapState} setMapState={setMapState} isShowingPoint={isShowingPoint} setIsShowingPoint={setIsShowingPoint} />
+      <Header toLogIn={toLogIn} setToLogIn={setToLogIn} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} countryList={countryList} setCountryList={setCountryList} uid={uid} setUid={setUid} mapState={mapState} setMapState={setMapState} isShowingPoint={isShowingPoint} setIsShowingPoint={setIsShowingPoint} setIsShowingPointNotes={setIsShowingPointNotes} getUserMap2Friends={getUserMap2Friends} isShowingFriends={isShowingFriends} setIsShowingFriends={setIsShowingFriends} setCountryId={setCountryId} setCountryName={setCountryName} friendsList={friendsList} setFriendsList={setFriendsList} setHaveFriendList={setHaveFriendList} setFriendList={setFriendList} setPointList={setPointList} />
+      <WorldMap
+        isLoggedIn={isLoggedIn}
+        setIsLoggedIn={setIsLoggedIn}
+        countryList={countryList}
+        setCountryList={setCountryList}
+        uid={uid}
+        setUid={setUid}
+        toLogIn={toLogIn}
+        setToLogIn={setToLogIn}
+        mapState={mapState}
+        setMapState={setMapState}
+        isShowingPoint={isShowingPoint}
+        setIsShowingPoint={setIsShowingPoint}
+        isShowingPointNotes={isShowingPointNotes}
+        setIsShowingPointNotes={setIsShowingPointNotes}
+        getUserMap2Friends={getUserMap2Friends}
+        friendsList={friendsList}
+        setFriendsList={setFriendsList}
+        friendList={friendList}
+        setFriendList={setFriendList}
+        isShowingFriends={isShowingFriends}
+        setIsShowingFriends={setIsShowingFriends}
+        countryId={countryId}
+        setCountryId={setCountryId}
+        countryName={countryName}
+        setCountryName={setCountryName}
+        haveFriendList={haveFriendList}
+        setHaveFriendList={setHaveFriendList}
+        pointList={pointList}
+        setPointList={setPointList}
+      />
     </>
   );
 }

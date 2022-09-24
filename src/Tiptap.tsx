@@ -2,7 +2,7 @@ import "./styles.css";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import React from "react";
-import { pointListType } from "./WorldMap";
+import { pointListType } from "./App";
 
 const MenuBar = ({ editor }: any) => {
   if (!editor) {
