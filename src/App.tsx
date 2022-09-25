@@ -83,6 +83,9 @@ function App() {
   const [countryName, setCountryName] = useState<string>("");
   const [haveFriendList, setHaveFriendList] = useState<haveFriendListType[]>([]);
   const [pointList, setPointList] = useState<pointListType[]>([]);
+  const [isShowingPopUp, setIsShowingPopUp] = useState<boolean>(false);
+  const [loginStatus, setLoginStatus] = useState("login");
+
   // console.log(haveFriendList);
   // console.log(countryId);
   // console.log(friendList);
@@ -106,7 +109,35 @@ function App() {
     <>
       {/* <Reset /> */}
       <GlobalStyleComponent />
-      <Header toLogIn={toLogIn} setToLogIn={setToLogIn} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} countryList={countryList} setCountryList={setCountryList} uid={uid} setUid={setUid} mapState={mapState} setMapState={setMapState} isShowingPoint={isShowingPoint} setIsShowingPoint={setIsShowingPoint} setIsShowingPointNotes={setIsShowingPointNotes} getUserMap2Friends={getUserMap2Friends} isShowingFriends={isShowingFriends} setIsShowingFriends={setIsShowingFriends} setCountryId={setCountryId} setCountryName={setCountryName} friendsList={friendsList} setFriendsList={setFriendsList} setHaveFriendList={setHaveFriendList} setFriendList={setFriendList} setPointList={setPointList} />
+      <Header
+        toLogIn={toLogIn}
+        setToLogIn={setToLogIn}
+        isLoggedIn={isLoggedIn}
+        setIsLoggedIn={setIsLoggedIn}
+        countryList={countryList}
+        setCountryList={setCountryList}
+        uid={uid}
+        setUid={setUid}
+        mapState={mapState}
+        setMapState={setMapState}
+        isShowingPoint={isShowingPoint}
+        setIsShowingPoint={setIsShowingPoint}
+        setIsShowingPointNotes={setIsShowingPointNotes}
+        getUserMap2Friends={getUserMap2Friends}
+        isShowingFriends={isShowingFriends}
+        setIsShowingFriends={setIsShowingFriends}
+        setCountryId={setCountryId}
+        setCountryName={setCountryName}
+        friendsList={friendsList}
+        setFriendsList={setFriendsList}
+        setHaveFriendList={setHaveFriendList}
+        setFriendList={setFriendList}
+        setPointList={setPointList}
+        setIsShowingPopUp={setIsShowingPopUp}
+        isShowingPopUp={isShowingPopUp}
+        loginStatus={loginStatus}
+        setLoginStatus={setLoginStatus}
+      />
       <WorldMap
         isLoggedIn={isLoggedIn}
         setIsLoggedIn={setIsLoggedIn}
@@ -137,6 +168,10 @@ function App() {
         setHaveFriendList={setHaveFriendList}
         pointList={pointList}
         setPointList={setPointList}
+        isShowingPopUp={isShowingPopUp}
+        setIsShowingPopUp={setIsShowingPopUp}
+        loginStatus={loginStatus}
+        setLoginStatus={setLoginStatus}
       />
     </>
   );

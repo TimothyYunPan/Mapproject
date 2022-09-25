@@ -138,22 +138,27 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
         {countryCollection.map((country: any) => {
           return (
             <CountrySelectList key={country.countryName}>
-              <CountrySelectCheck
-                type="checkbox"
-                // {countryList.map(country)=>{country.id ===}}
-                // {countryList.map((selectedCountry)=>{
-                //   let a = false
-                //   if (selectedCountry.countryId === country)
-                //   a = true})}
-                // checked={country === countryList[i].countryId}
-                checked={countryList.find((a) => a.countryId === country.countryId)}
-                style={{ accentColor: "rgb(236,174,72)" }}
-                value={country.countryName}
-                id={country.countryName}
-                onChange={(e) => {
-                  editCheckedToMap(e.target);
-                }}></CountrySelectCheck>
-              <CountrySelectName htmlFor={country.countryName}>{country.countryName}</CountrySelectName>
+              <span>
+                <CountrySelectCheck
+                  type="checkbox"
+                  // {countryList.map(country)=>{country.id ===}}
+                  // {countryList.map((selectedCountry)=>{
+                  //   let a = false
+                  //   if (selectedCountry.countryId === country)
+                  //   a = true})}
+                  // checked={country === countryList[i].countryId}
+                  vertical-align="middle"
+                  checked={countryList.find((a) => a.countryId === country.countryId)}
+                  style={{ accentColor: "rgb(236,174,72)" }}
+                  value={country.countryName}
+                  id={country.countryName}
+                  onChange={(e) => {
+                    editCheckedToMap(e.target);
+                  }}></CountrySelectCheck>
+                <CountrySelectName htmlFor={country.countryName} vertical-align="middle">
+                  {country.countryName}
+                </CountrySelectName>
+              </span>
               {/* <CountryText>visited times</CountryText> */}
               {/* <CountryVisitedCount></CountryVisitedCount> */}
             </CountrySelectList>

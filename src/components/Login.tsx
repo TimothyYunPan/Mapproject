@@ -13,7 +13,7 @@ const auth = getAuth(app);
 
 const Wrapper = styled.div`
   position: fixed;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(128, 128, 128, 0.5);
   width: 100vw;
   height: 100vh;
   /* padding: 100px 20px; */
@@ -26,7 +26,7 @@ const Wrapper = styled.div`
 const LogginPopUp = styled.div`
   display: flex;
   border-radius: 2px;
-  border: 32px solid rgb(42, 61, 78);
+  /* border: 32px solid rgb(42, 61, 78); */
 
   ${"" /* flex-direction: column; */} justify-content: center;
   align-items: center;
@@ -49,9 +49,9 @@ const ProfilePanel = styled.div`
 
   /* background-color: rgba(255, 255, 255, 0.05); */
   border: solid 1px white;
-  border-radius: 5px;
-  background-color: rgb(42, 61, 78);
-
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  transition: 0.5s;
   @media (max-width: 1279px) {
     color: black;
     box-sizing: border-box;
@@ -132,10 +132,10 @@ const MemberInfoLine = styled.div`
 `;
 
 const ProfileTitle = styled.div`
+  color: #222;
   margin-top: 8px;
   margin-bottom: 16px;
   font-size: 24px;
-  color: rgb(211, 211, 211);
 `;
 
 const ProfileUserInfo = styled.div`
@@ -170,6 +170,7 @@ const ProfileInputSet = styled.label`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  color: #222;
 `;
 
 const AccountWord = styled.p``;
@@ -179,11 +180,11 @@ const ProfileInput = styled.input`
   margin-top: 10px;
   padding: 0 8px;
   width: 100%;
-  border: solid 1px white;
+  border: solid 1px #222;
   background-color: inherit;
   border-radius: 4px;
   height: 32px;
-  color: rgb(211, 211, 211);
+  color: #222;
 `;
 
 const ProfileCheckSet = styled.div`
@@ -203,7 +204,7 @@ const ProfileCheckboxSet = styled.label`
 
 const ProfileNoAcount = styled.div`
   text-decoration: none;
-  color: rgb(211, 211, 211);
+  color: #222;
   font-size: 14px;
   cursor: pointer;
   &:hover {
@@ -212,7 +213,7 @@ const ProfileNoAcount = styled.div`
 `;
 const ProfileWithAcount = styled.div`
   text-decoration: none;
-  color: rgb(211, 211, 211);
+  color: #222;
   font-size: 14px;
   cursor: pointer;
   &:hover {
@@ -235,7 +236,6 @@ const ProfileStayWord = styled.p`
 `;
 
 const ProfileLoginBtn = styled.button`
-  color: rgb(211, 211, 211);
   font-weight: bold;
   box-sizing: border-box;
   width: 100%;
@@ -244,6 +244,7 @@ const ProfileLoginBtn = styled.button`
   border-radius: 4px;
   margin-top: 32px;
   cursor: pointer;
+  color: #222;
 
   background-color: inherit;
   border: none;
@@ -255,7 +256,7 @@ const ProfileLoginBtn = styled.button`
   ${"" /* display:none */};
 `;
 const ProfileRegisterBtn = styled.button`
-  color: rgb(211, 211, 211);
+  color: #222;
   font-weight: bold;
   box-sizing: border-box;
   width: 100%;
@@ -282,7 +283,7 @@ const ProfileLogoutBtn = styled.button`
   line-height: 40px;
   font-weight: bold;
   cursor: pointer;
-  color: rgb(211, 211, 211);
+  color: #222;
   box-sizing: border-box;
   background-color: inherit;
   border: none;
@@ -364,11 +365,12 @@ type LoginType = {
   setHaveFriendList: React.Dispatch<React.SetStateAction<haveFriendListType[]>>;
   setFriendList: React.Dispatch<React.SetStateAction<friendListType[]>>;
   setPointList: React.Dispatch<React.SetStateAction<pointListType[]>>;
+  loginStatus: string;
+  setLoginStatus: React.Dispatch<React.SetStateAction<string>>;
 };
 
-function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList, toLogIn, setToLogIn, uid, setMapState, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList }: LoginType) {
+function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList, toLogIn, setToLogIn, uid, setMapState, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList, loginStatus, setLoginStatus }: LoginType) {
   const [profile, setProfile] = useState();
-  const [loginStatus, setLoginStatus] = useState("login");
   // console.log(loginStatus);
 
   // console.log(isLoggedIn);
@@ -523,7 +525,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
                     onClick={() => {
                       setLoginStatus("login");
                     }}>
-                    log in?
+                    sign in?
                   </ProfileWithAcount>
                 )}
               </ProfileCheckSet>
@@ -532,7 +534,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
                   onClick={() => {
                     onSubmit();
                   }}>
-                  LOGIN
+                  SIGN IN
                 </ProfileLoginBtn>
               )}
               {loginStatus === "register" && (

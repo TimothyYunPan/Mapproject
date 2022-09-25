@@ -29,6 +29,7 @@ import parse from "html-react-parser";
 import backIcon from "./components/backIcon.png";
 import Overlap from "./components/Overlap";
 import userProfile from "./components/userProfile.png";
+import PopUp from "./components/PopUp";
 
 const storage = getStorage(app);
 
@@ -746,13 +747,17 @@ type WorldMapType = {
   setHaveFriendList: React.Dispatch<React.SetStateAction<haveFriendListType[]>>;
   pointList: pointListType[];
   setPointList: React.Dispatch<React.SetStateAction<pointListType[]>>;
+  isShowingPopUp: boolean;
+  setIsShowingPopUp: React.Dispatch<React.SetStateAction<boolean>>;
+  loginStatus: string;
+  setLoginStatus: React.Dispatch<React.SetStateAction<string>>;
 };
 export type countryCollectionArrType = {
   countryName: string;
   countryId: string;
 };
 
-function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, toLogIn, setToLogIn, uid, setUid, countryList, setCountryList, isLoggedIn, setIsLoggedIn, setIsShowingPointNotes, isShowingPointNotes, getUserMap2Friends, friendList, setFriendList, friendsList, setFriendsList, isShowingFriends, setIsShowingFriends, countryId, setCountryId, countryName, setCountryName, haveFriendList, setHaveFriendList, pointList, setPointList }: WorldMapType) {
+function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, toLogIn, setToLogIn, uid, setUid, countryList, setCountryList, isLoggedIn, setIsLoggedIn, setIsShowingPointNotes, isShowingPointNotes, getUserMap2Friends, friendList, setFriendList, friendsList, setFriendsList, isShowingFriends, setIsShowingFriends, countryId, setCountryId, countryName, setCountryName, haveFriendList, setHaveFriendList, pointList, setPointList, isShowingPopUp, setIsShowingPopUp, loginStatus, setLoginStatus }: WorldMapType) {
   console.log(mapState);
   const [isHovering, setIsHovering] = useState<boolean>(false);
   console.log(isHovering);
@@ -1433,7 +1438,8 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                   <WallPaper2
                     onClick={(e) => {
                       if (!uid) {
-                        setToLogIn(true);
+                        // setToLogIn(true);
+                        setIsShowingPopUp(true);
                       } else {
                         setMapState(2);
                         setIsShowingPoint(false);
@@ -1456,6 +1462,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                   <SelectMapText>My Map</SelectMapText>
                 </WallPaperSet>
               </HomePageContainer>
+              <PopUp toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
             </HomePage>
           </>
         ) : mapState === 1 ? (
@@ -1473,6 +1480,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                 if (target.tagName !== "path") {
                   return;
                 }
+                setIsShowingPopUp(true);
                 // setUseTarget(target.id)
                 // const result = countries.filter(function(obj){return obj.code == target.id })
                 // setIsClicked(true)
@@ -1520,6 +1528,8 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
               </button> */}
               {isShowingPoint ? <Overlap mapState={mapState} pointList={pointList} isShowingPointNotes={isShowingPointNotes} pointIndex={pointIndex} previewImgUrl={previewImgUrl} getUserMap3Points={getUserMap3Points} setPointIndex={setPointIndex} setIsShowingPointNotes={setIsShowingPointNotes} setCountryId={setCountryId}></Overlap> : <></>}
             </Map>
+            <PopUp toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
+
             {(countryList && countryList.length === 0) || countryList.length === 1 ? <FriendNum>You've visited {countryList.length} country / area</FriendNum> : <FriendNum>You've visited {countryList.length} countries / area</FriendNum>}
             <CountryCheckList writeUserMap1Data={writeUserMap1Data} countryCollection={countryCollection} setCountryList={setCountryList} setCountryCollection={setCountryCollection} countryList={countryList}></CountryCheckList>
           </>
@@ -1655,7 +1665,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
               ) : (
                 <></>
               )}
-
+              <PopUp toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
               {isHovering ? <ShowName mousePlace={mousePlace}>{countryName}</ShowName> : <></>}
               {isShowingPoint ? <Overlap mapState={mapState} pointList={pointList} isShowingPointNotes={isShowingPointNotes} pointIndex={pointIndex} previewImgUrl={previewImgUrl} getUserMap3Points={getUserMap3Points} setPointIndex={setPointIndex} setIsShowingPointNotes={setIsShowingPointNotes} setCountryId={setCountryId}></Overlap> : <></>}
             </Map>

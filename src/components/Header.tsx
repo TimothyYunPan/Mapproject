@@ -7,6 +7,8 @@ import { countryListType, friendListType, haveFriendListType, pointListType } fr
 import Login from "./Login";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../utils/firebaseConfig";
+import PopUp from "./PopUp";
+
 const Logo = styled.div<{ mapState: number }>`
   margin-top: ${(props) => (props.mapState === -1 ? "20px" : "0px")};
   width: ${(props) => (props.mapState === -1 ? "100px" : "70px")};
@@ -153,9 +155,13 @@ type HeaderType = {
   setHaveFriendList: React.Dispatch<React.SetStateAction<haveFriendListType[]>>;
   setFriendList: React.Dispatch<React.SetStateAction<friendListType[]>>;
   setPointList: React.Dispatch<React.SetStateAction<pointListType[]>>;
+  isShowingPopUp: boolean;
+  setIsShowingPopUp: React.Dispatch<React.SetStateAction<boolean>>;
+  loginStatus: string;
+  setLoginStatus: React.Dispatch<React.SetStateAction<string>>;
 };
 
-function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid, setUid, toLogIn, setToLogIn, countryList, setCountryList, isLoggedIn, setIsLoggedIn, setIsShowingPointNotes, getUserMap2Friends, isShowingFriends, setIsShowingFriends, setCountryId, setCountryName, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList }: HeaderType) {
+function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid, setUid, toLogIn, setToLogIn, countryList, setCountryList, isLoggedIn, setIsLoggedIn, setIsShowingPointNotes, getUserMap2Friends, isShowingFriends, setIsShowingFriends, setCountryId, setCountryName, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList, isShowingPopUp, setIsShowingPopUp, loginStatus, setLoginStatus }: HeaderType) {
   const [searchCountry, setSearchCountry] = useState<string>("");
   const [searchValue, setSearchValue] = useState<string>("");
   function searchCountries() {
@@ -208,6 +214,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
             <ChangeMapBtn
               onClick={() => {
                 setMapState(1);
+                setIsShowingPopUp(false);
               }}>
               Visited
             </ChangeMapBtn>
@@ -215,7 +222,8 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
             <ChangeMapBtn
               onClick={() => {
                 if (!uid) {
-                  setToLogIn(true);
+                  setIsShowingPopUp(true);
+                  // setToLogIn(true);
                 } else {
                   setMapState(2);
                   setIsShowingPointNotes(false);
@@ -228,7 +236,8 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
             <ChangeMapBtn
               onClick={() => {
                 if (!uid) {
-                  setToLogIn(true);
+                  setIsShowingPopUp(true);
+                  // setToLogIn(true);
                 } else {
                   setMapState(3);
                   setIsShowingPoint(true);
@@ -302,7 +311,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
 
       {toLogIn ? (
         <>
-          <Login friendsList={friendsList} setFriendsList={setFriendsList} setMapState={setMapState} uid={uid} toLogIn={toLogIn} setToLogIn={setToLogIn} countryList={countryList} setCountryList={setCountryList} setUid={setUid} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setHaveFriendList={setHaveFriendList} setFriendList={setFriendList} setPointList={setPointList}></Login>
+          <Login friendsList={friendsList} setFriendsList={setFriendsList} setMapState={setMapState} uid={uid} toLogIn={toLogIn} setToLogIn={setToLogIn} countryList={countryList} setCountryList={setCountryList} setUid={setUid} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setHaveFriendList={setHaveFriendList} setFriendList={setFriendList} setPointList={setPointList} loginStatus={loginStatus} setLoginStatus={setLoginStatus}></Login>
           <Back
             onClick={() => {
               setToLogIn(false);
