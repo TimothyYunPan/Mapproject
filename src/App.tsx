@@ -58,7 +58,7 @@ export type haveFriendListType = {
   haveFriend: number;
 };
 export type pointListType = {
-  title: string;
+  title?: string;
   countryId: string;
   y: number;
   x: number;
@@ -85,6 +85,9 @@ function App() {
   const [pointList, setPointList] = useState<pointListType[]>([]);
   const [isShowingPopUp, setIsShowingPopUp] = useState<boolean>(false);
   const [loginStatus, setLoginStatus] = useState("login");
+  const [userName, setUserName] = useState<string>("");
+  console.log(userName);
+  const [userImage, setUserImg] = useState<string>("");
 
   // console.log(haveFriendList);
   // console.log(countryId);
@@ -137,6 +140,9 @@ function App() {
         isShowingPopUp={isShowingPopUp}
         loginStatus={loginStatus}
         setLoginStatus={setLoginStatus}
+        userName={userName}
+        setUserName={setUserName}
+        userImage={userImage}
       />
       <WorldMap
         isLoggedIn={isLoggedIn}
@@ -172,6 +178,8 @@ function App() {
         setIsShowingPopUp={setIsShowingPopUp}
         loginStatus={loginStatus}
         setLoginStatus={setLoginStatus}
+        setUserName={setUserName}
+        setUserImg={setUserImg}
       />
     </>
   );

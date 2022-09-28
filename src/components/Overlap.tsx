@@ -10,14 +10,13 @@ type OverlapType = {
   isShowingPointNotes: boolean;
   pointIndex: number;
   previewImgUrl: string;
-  getUserMap3Points: (id: string) => void;
   setPointIndex: React.Dispatch<React.SetStateAction<number>>;
   setIsShowingPointNotes: React.Dispatch<React.SetStateAction<boolean>>;
   setCountryId: React.Dispatch<React.SetStateAction<string>>;
   mapState: number;
   // isShowingPoint: isShowingPointType
 };
-function Overlap({ mapState, pointList, isShowingPointNotes, pointIndex, previewImgUrl, getUserMap3Points, setPointIndex, setIsShowingPointNotes, setCountryId }: OverlapType) {
+function Overlap({ mapState, pointList, isShowingPointNotes, pointIndex, previewImgUrl, setPointIndex, setIsShowingPointNotes, setCountryId }: OverlapType) {
   return (
     <>
       {/* <Map
@@ -61,7 +60,6 @@ function Overlap({ mapState, pointList, isShowingPointNotes, pointIndex, preview
                   // setX(pointInfo.x);
                   // setY(pointInfo.y);
                   console.log(target.id);
-                  getUserMap3Points(target.id);
                   setPointIndex(index);
                   e.stopPropagation();
                   setIsShowingPointNotes(true);

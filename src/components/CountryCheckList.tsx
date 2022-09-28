@@ -131,11 +131,15 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
       visited: deleteField(),
     });
   }
-
+  function isCountrySelected(country: countryCollectionArrType) {
+    if (countryList.find((a) => a.countryId === country.countryId)) {
+      return true;
+    }
+  }
   return (
     <CountrySelectSet>
       <CountrySelectListSet>
-        {countryCollection.map((country: any) => {
+        {countryCollection.map((country: countryCollectionArrType) => {
           return (
             <CountrySelectList key={country.countryName}>
               <span>
@@ -148,7 +152,7 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
                   //   a = true})}
                   // checked={country === countryList[i].countryId}
                   vertical-align="middle"
-                  checked={countryList.find((a) => a.countryId === country.countryId)}
+                  checked={isCountrySelected(country)}
                   style={{ accentColor: "rgb(236,174,72)" }}
                   value={country.countryName}
                   id={country.countryName}

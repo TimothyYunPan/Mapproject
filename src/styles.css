@@ -1,10 +1,12 @@
 .ProseMirror > * + * {
   margin-top: 0.75em;
+  /* border: 1px solid white; */
 }
 
 .ProseMirror ul,
 .ProseMirror ol {
-  padding: 0 1rem;
+  padding: 0 20px;
+  /* border: 1px solid white; */
 }
 
 .ProseMirror h1,
@@ -51,4 +53,13 @@
   border-top: 2px solid rgba(13, 13, 13, 0.1);
   margin: 2rem 0;
 }
+
+.ProseMirror {
+  padding: 20px 0;
+  line-height: 20px;
+  max-height: 325px;
+  overflow: scroll;
+  padding: 6px 4px 10px 4px;
+}
+
 /*# sourceMappingURL=styles.css.map */

@@ -7,8 +7,13 @@ import countries from "../utils/countries";
 const SVGBox = styled.svg`
   width: 1440px;
   height: 650px;
-  /* justify-content: center; */
-  /* margin: 0 auto; */
+  /* position: absolute;
+  top: 0;
+  left: 0; */
+  /* width: 100%;
+  height: 100%; */
+  /* justify-content: center;
+  margin: 0 auto; */
 `;
 
 const SVG = styled.svg<{ mapState: number }>`
@@ -66,7 +71,7 @@ const Path = styled.path<Pathtype>`
 //   }
 // })
 
-function MapSVG({ countryList, mapState, haveFriendList, allCountries }: { countryList: countryListType[]; mapState: number; haveFriendList: haveFriendListType[]; allCountries: string[] }) {
+function MapSVG({ countryList, mapState, haveFriendList, allCountries, setIsHovering, hoverAddCountryName }: { countryList: countryListType[]; mapState: number; haveFriendList: haveFriendListType[]; allCountries: string[]; setIsHovering: React.Dispatch<React.SetStateAction<boolean>>; hoverAddCountryName: (e: any) => void }) {
   useEffect(() => {
     if (mapState === 1) {
       // console.log(countryList)
@@ -157,7 +162,21 @@ function MapSVG({ countryList, mapState, haveFriendList, allCountries }: { count
   // }
   return (
     <SVGBox>
-      <SVG mapState={mapState} id="CtySVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650">
+      <SVG
+        mapState={mapState}
+        id="CtySVG"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 1000 650"
+        onMouseMove={(e) => {
+          setIsHovering(true);
+          hoverAddCountryName(e);
+          console.log(1);
+        }}
+        onMouseLeave={(e) => {
+          setTimeout(() => {
+            setIsHovering(false);
+          }, 200);
+        }}>
         <defs></defs>
 
         <Path mapState={mapState} id="AD" title="Andorra" className="land" d="M480.487,331.376L480.41,331.401L480.152,331.556L480.005,331.61L479.871,331.637L479.766,331.626L479.708,331.535L479.714,331.396L479.69,331.272L479.67,331.205L479.708,331.024L479.794,330.927L479.913,330.847L480.101,330.876L480.499,330.992L480.582,331.101L480.583,331.173L480.51,331.292z" />

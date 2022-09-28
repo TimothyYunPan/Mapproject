@@ -10,7 +10,8 @@ const PopUpBlock = styled.div<{ isShowingPopUp: boolean }>`
   width: 500px;
   /* width: ${(props) => (props.isShowingPopUp === true ? 500 : 0)}px; */
   border: ${(props) => (props.isShowingPopUp === true ? 1 : 0)}px solid white;
-  opacity: ${(props) => (props.isShowingPopUp === true ? 1 : 0)};
+  /* opacity: ${(props) => (props.isShowingPopUp === true ? 1 : 0)}; */
+  visibility: ${(props) => (props.isShowingPopUp === true ? "visible" : "hidden")};
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 10px;
   /* background-color: ${(props) => (props.isShowingPopUp === true ? "white" : "inherit")}; */
@@ -25,9 +26,11 @@ const PopUpSet = styled.div`
   flex-direction: column;
 `;
 
-const PopUpText = styled.div`
+const PopUpText = styled.div<{ isShowingPopUp: boolean }>`
   font-size: 24px;
   color: #222;
+  opacity: ${(props) => (props.isShowingPopUp === true ? 1 : 0)};
+  transition: 0.1s;
 `;
 
 const PopUpBtn = styled.div<{ isShowingPopUp: boolean }>`
@@ -49,10 +52,10 @@ const PopUpBtn = styled.div<{ isShowingPopUp: boolean }>`
   }
 `;
 
-const PopUpBg = styled.div<{ isShowingPopUp: boolean }>`
+const PopUpBg = styled.div<{ isShowingPopUp: boolean; toLogIn: boolean }>`
   position: absolute;
-  width: ${(props) => (props.isShowingPopUp === true ? 100 : 0)}%;
-  height: ${(props) => (props.isShowingPopUp === true ? 100 : 0)}%;
+  width: ${(props) => (props.isShowingPopUp || props.toLogIn ? 100 : 0)}%;
+  height: ${(props) => (props.isShowingPopUp || props.toLogIn ? 100 : 0)}%;
   background-color: rgba(128, 128, 128, 0.5);
   /* transition: 0.5s; */
 `;
@@ -75,10 +78,10 @@ type PopUpType = {
 function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatus, toLogIn, setToLogIn }: PopUpType) {
   return (
     <>
-      <PopUpBg isShowingPopUp={isShowingPopUp}></PopUpBg>
+      <PopUpBg isShowingPopUp={isShowingPopUp} toLogIn={toLogIn}></PopUpBg>
       <PopUpBlock isShowingPopUp={isShowingPopUp}>
         <PopUpSet>
-          <PopUpText>Sign in to explore your new map</PopUpText>
+          <PopUpText isShowingPopUp={isShowingPopUp}>Sign in to explore your new map</PopUpText>
           <PopupBtnSet>
             <PopUpBtn
               isShowingPopUp={isShowingPopUp}
