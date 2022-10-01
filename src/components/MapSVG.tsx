@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useScroll } from "@react-hooks-library/core";
 import styled from "styled-components";
 import { countryListType, haveFriendListType } from "../App";
 import { getAllByTitle } from "@testing-library/react";
 import countries from "../utils/countries";
+import useWindowDimensions from "./WindowDimensions";
 
-const SVGBox = styled.svg`
+const SVGBox = styled.svg<{ windowHeight: number; windowWidth: number }>`
+  /* width: ${(props) => props.windowWidth}px;
+  height: ${(props) => props.windowHeight - 130}px; */
   width: 1440px;
   height: 650px;
   /* position: absolute;
@@ -143,7 +147,14 @@ function MapSVG({ countryList, mapState, haveFriendList, allCountries, setIsHove
       });
     }
   }, [mapState, countryList, haveFriendList]);
-
+  const { height, width } = useWindowDimensions();
+  const [windowWidth, setWindowWidth] = useState<number>(width);
+  const [windowHeight, setWindowHeight] = useState<number>(height);
+  // const box = useRef<HTMLDivElement | null>(null);
+  // const [scroll, setScroll] = useState({ x: 0, y: 0 });
+  // console.log(scroll);
+  // useScroll(box, ({ scrollX, scrollY }) => setScroll({ x: scrollX, y: scrollY }));
+  // console.log(scrollX, scrollY);
   // function searchCountries(){
   //   if(searchValue === )
   // }
@@ -161,13 +172,14 @@ function MapSVG({ countryList, mapState, haveFriendList, allCountries, setIsHove
   // alert(position.x + ", " + position.y);
   // }
   return (
-    <SVGBox>
+    <SVGBox windowWidth={windowWidth} windowHeight={windowHeight}>
       <SVG
         mapState={mapState}
         id="CtySVG"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 1000 650"
         onMouseMove={(e) => {
+          console.log(height, width);
           setIsHovering(true);
           hoverAddCountryName(e);
           console.log(1);

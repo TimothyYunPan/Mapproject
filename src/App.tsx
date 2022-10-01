@@ -65,6 +65,10 @@ export type pointListType = {
   imgUrl: string;
   notes: string;
 };
+export type mapNameType = {
+  name: string;
+  id: string;
+};
 
 function App() {
   const [countryList, setCountryList] = useState<countryListType[]>([]);
@@ -78,6 +82,7 @@ function App() {
   const [isShowingPointNotes, setIsShowingPointNotes] = useState<boolean>(false);
   const [friendsList, setFriendsList] = useState<friendListType[]>([]);
   const [friendList, setFriendList] = useState<friendListType[]>([]);
+  console.log(friendList);
   const [isShowingFriends, setIsShowingFriends] = useState<boolean>(false);
   const [countryId, setCountryId] = useState<string>("");
   const [countryName, setCountryName] = useState<string>("");
@@ -88,6 +93,17 @@ function App() {
   const [userName, setUserName] = useState<string>("");
   console.log(userName);
   const [userImage, setUserImg] = useState<string>("");
+  const [mapId, setMapId] = useState<string>("");
+  console.log(mapId);
+  const [mapNames, setMapNames] = useState<mapNameType[]>([]);
+  const [originalMapNames, setOriginalMapNames] = useState<mapNameType[]>([
+    { id: "visitedCountries", name: "Visited Countries Map" },
+    { id: "friendsLocatedCountries", name: "Friends Located Map" },
+    { id: "custimizedMapCountries", name: "My Map" },
+  ]);
+  console.log(originalMapNames);
+
+  console.log(mapNames);
 
   // console.log(haveFriendList);
   // console.log(countryId);
@@ -105,6 +121,7 @@ function App() {
     });
     console.log(nf);
     setFriendList(nf);
+    console.log(friendsList);
   }
   console.log(toLogIn);
 
@@ -143,6 +160,12 @@ function App() {
         userName={userName}
         setUserName={setUserName}
         userImage={userImage}
+        mapId={mapId}
+        setMapId={setMapId}
+        mapNames={mapNames}
+        setMapNames={setMapNames}
+        originalMapNames={originalMapNames}
+        setOriginalMapNames={setOriginalMapNames}
       />
       <WorldMap
         isLoggedIn={isLoggedIn}
@@ -180,6 +203,10 @@ function App() {
         setLoginStatus={setLoginStatus}
         setUserName={setUserName}
         setUserImg={setUserImg}
+        mapId={mapId}
+        setMapNames={setMapNames}
+        mapNames={mapNames}
+        setOriginalMapNames={setOriginalMapNames}
       />
     </>
   );

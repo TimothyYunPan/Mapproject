@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
-import { doc, setDoc, collection } from "firebase/firestore";
+import { doc, setDoc, collection, arrayUnion } from "firebase/firestore";
 import { db } from "../utils/firebaseConfig";
 import app from "../utils/firebaseConfig";
 import userProfileGrey from "./userProfileGrey.png";
@@ -8,7 +8,7 @@ import userProfileGrey from "./userProfileGrey.png";
 // import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage";
-import { countryListType, friendListType, haveFriendListType, pointListType } from "../App";
+import { countryListType, friendListType, haveFriendListType, pointListType, mapNameType } from "../App";
 import edit from "./edit.png";
 import editHover from "./editHover.png";
 import okIcon from "./okIcon.png";
@@ -365,9 +365,11 @@ type LoginType = {
   userName: string;
   setUserName: React.Dispatch<React.SetStateAction<string>>;
   userImage: string;
+  originalMapNames: mapNameType[];
+  setMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
 };
 
-function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList, toLogIn, setToLogIn, uid, setMapState, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList, loginStatus, setLoginStatus, userName, setUserName, userImage }: LoginType) {
+function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList, toLogIn, setToLogIn, uid, setMapState, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList, loginStatus, setLoginStatus, userName, setUserName, userImage, originalMapNames, setMapNames }: LoginType) {
   const [profile, setProfile] = useState();
   // console.log(loginStatus);
   const [imageUpload, setImageUpload] = useState<File | null>(null);
@@ -377,15 +379,23 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
 
   const imageListRef = ref(storage, "images/");
   const [imageList, setImageList] = useState<string[]>([]);
-  const [memberRole, setMemberRole] = useState("金屬會員");
   // const [ memberInfo, setMemberInfo ] = useState([])
-  const [memberEmail, setMemberEmail] = useState("您尊貴的Email");
   const [nameInputValue, setNameInputValue] = useState("");
   const [accountInputValue, setAccountInputValue] = useState("");
   const [passwordInputValue, setPasswordInputValue] = useState("");
   const userNameInputRef = useRef<HTMLInputElement>(null);
 
   // console.log(uid)
+  async function writeOriginMapToData(uid: string) {
+    // const originalMap = [
+    //   { name: "Visited Countries Map", id: "visitedCountries" },
+    //   { name: "Friends Located Map", id: "friendsLocatedCountries" },
+    //   { name: "My Map", id: "custimizedMapCountries" },
+    // ];
+    await setDoc(doc(db, "user", uid), { originalMap: originalMapNames }, { merge: true });
+    console.log("hi");
+    // let newMap = { id: newId, name: "new Map" };
+  }
 
   useEffect(() => {
     if (userNameInputRef.current !== null) {
@@ -416,6 +426,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
           setUid(user.uid);
           writeUserMap1Data(user.uid);
           writeUserNameToData(user.uid);
+          writeOriginMapToData(user.uid);
           // ...
         })
         .catch((error) => {
@@ -457,9 +468,13 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
     console.log(uid);
 
     countryList.map(async (country) => {
-      await setDoc(doc(db, "user", uid, "visitedCountries", country.countryId), {
-        visited: true,
-      });
+      await setDoc(
+        doc(db, "user", uid, "visitedCountries", country.countryId),
+        {
+          visited: true,
+        },
+        { merge: true }
+      );
     });
 
     console.log("我有寫啦");
@@ -483,10 +498,14 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
     if (imageUpload == null) {
       const url = "";
       console.log(userNameInputRef.current);
-      await setDoc(doc(db, "user", uid), {
-        userName: userNameInputRef.current!.value,
-        imgUrl: url,
-      });
+      await setDoc(
+        doc(db, "user", uid),
+        {
+          userName: userNameInputRef.current!.value,
+          imgUrl: url,
+        },
+        { merge: true }
+      );
       setIsEditingProfile(false);
     } else {
       console.log(imageUpload);
@@ -499,10 +518,14 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
           // console.log(uid);
           // console.log(userNameInputRef);
           // console.log(userName);
-          await setDoc(doc(db, "user", uid), {
-            userName: userNameInputRef.current !== null ? userNameInputRef.current!.value : userName,
-            imgUrl: url,
-          });
+          await setDoc(
+            doc(db, "user", uid),
+            {
+              userName: userNameInputRef.current !== null ? userNameInputRef.current!.value : userName,
+              imgUrl: url,
+            },
+            { merge: true }
+          );
           setIsEditingProfile(false);
         });
       });
@@ -510,8 +533,8 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
   }
   // console.log(memberInfo)
   // console.log(memberRole);
-  console.log(userName);
-  console.log(userNameInputRef.current);
+  // console.log(userName);
+  // console.log(userNameInputRef.current);
   return (
     <Wrapper toLogIn={toLogIn}>
       <LogginPopUp>
@@ -643,6 +666,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
                 setFriendsList([]);
                 setFriendList([]);
                 setPointList([]);
+                setMapNames([]);
               }}>
               LOG OUT
             </ProfileLogoutBtn>

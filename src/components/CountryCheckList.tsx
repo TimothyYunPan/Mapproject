@@ -66,6 +66,13 @@ const CountryVisitedCount = styled.input`
   margin: 0 10px;
 `;
 
+const Mask = styled.input`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 200px;
+`;
+
 type CountryCheckListType = {
   countryCollection: countryCollectionArrType[];
   countryList: countryListType[];

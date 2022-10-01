@@ -14,7 +14,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import CountryCheckList from "./components/CountryCheckList";
 import userEvent from "@testing-library/user-event";
 import Header from "./components/Header";
-import { countryListType, friendListType, haveFriendListType, pointListType } from "./App";
+import { countryListType, friendListType, haveFriendListType, pointListType, mapNameType } from "./App";
 import trashCan from "./components/trashCan.png";
 import trashCanHover from "./components/trashCanHover.png";
 import edit from "./components/edit.png";
@@ -30,6 +30,9 @@ import backIcon from "./components/backIcon.png";
 import Overlap from "./components/Overlap";
 import userProfile from "./components/userProfile.png";
 import PopUp from "./components/PopUp";
+import FriendBox from "./components/FriendBox";
+import { uuidv4 } from "@firebase/util";
+// import { ScrollDetect } from "./components/ScrollDetect";
 
 const storage = getStorage(app);
 
@@ -245,7 +248,7 @@ const FriendBg = styled.div`
 //   }
 // `;
 
-const FriendBox = styled.div`
+const FriendOutsideBox = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -393,73 +396,7 @@ const FriendMiddleBox = styled.div`
   margin: 0 24px 0 20px;
 `;
 
-const FriendInsideBox = styled.div`
-  background-color: rgba(42, 61, 78);
-
-  position: relative;
-  /* top: 10%; */
-  /* right: -240px; */
-  /* height: 100%; */
-  align-items: center;
-  width: 200px;
-  /* height: 450px; */
-  margin: 20px 20px 20px 0;
-  border: 1px solid white;
-  /* border-radius: 2%; */
-  display: flex;
-  flex-direction: column;
-  padding: 20px 10px 45px 10px;
-
-  /* z-index: 1000; */
-  /* box-shadow: 0 0 0 10000px rgba(0,0,0,0.5) */
-`;
-
-const FriendSet = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-top: 10px;
-`;
-const FriendFormdiv = styled.div`
-  width: 150px;
-  height: 40px;
-  line-height: 19px;
-  font-size: 16px;
-  margin-bottom: 8px;
-  /* color: rgb(42, 61, 78); */
-  display: block;
-  color: white;
-  overflow: scroll;
-
-  :nth-last-child(1) {
-    height: 150px;
-  }
-  /* text-shadow: -1px -1px 0 rgb(42, 61, 78), 0px 0px 0 #000, 0px 0px 0 #000, 0px 0px 0 #000; */
-`;
-const FriendFormTitle = styled.h2`
-  width: 159px;
-  height: 50px;
-  padding-top: 20px;
-  /* line-height: 65px; */
-  font-size: 20px;
-  margin-bottom: 20px;
-  margin: 0 auto;
-  text-align: center;
-  overflow: scroll;
-
-  /* text-shadow: -1px -1px 0 rgb(42, 61, 78), 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; */
-`;
-
-const FriendFormInfo = styled.input`
-  width: 50%;
-`;
-
-const FriendFormTextarea = styled.textarea`
-  width: 100%;
-  height: 100px;
-  resize: none;
-`;
-
-const EditFriendBtn = styled.div`
+export const EditFriendBtn = styled.div`
   width: 20px;
   height: 20px;
   bottom: 20px;
@@ -477,13 +414,7 @@ const EditFriendBtn = styled.div`
   }
 `;
 
-const DeleteFriendBtn = styled(IconBtnStyle)`
-  background-image: url(${trashCan});
-  :hover {
-    background-image: url(${trashCanHover});
-  }
-`;
-const FriendProfileNoPic = styled.div`
+export const FriendProfileNoPic = styled.div`
   height: 80px;
   width: 80px;
   border: 1px solid white;
@@ -493,14 +424,6 @@ const FriendProfileNoPic = styled.div`
   background-size: cover;
   background-repeat: no-repeat;
   cursor: pointer;
-`;
-
-const FriendProfilePic = styled.img`
-  height: 80px;
-  width: 80px;
-  border: 1px solid white;
-  border-radius: 50%;
-  object-fit: cover;
 `;
 
 const AddFriendSentBtn = styled.div`
@@ -532,12 +455,13 @@ const AddFriendProfilePic = styled.img`
   border: 1px solid white;
   border-radius: 50%;
   cursor: pointer;
+  object-fit: cover;
 `;
 
-const AddFriendPicLabel = styled.label`
+export const AddFriendPicLabel = styled.label`
   justify-content: center;
 `;
-const AddFriendPicInput = styled.input`
+export const AddFriendPicInput = styled.input`
   display: none;
 `;
 
@@ -676,8 +600,11 @@ const NoteEditBtn = styled(EditFriendBtn)`
   right: 20px; */
 `;
 
-const NoteDeleteBtn = styled(DeleteFriendBtn)`
-  /* left: 20px; */
+const NoteDeleteBtn = styled(IconBtnStyle)`
+  background-image: url(${trashCan});
+  :hover {
+    background-image: url(${trashCanHover});
+  }
 `;
 
 const NoteImgUploadBtn = styled.div`
@@ -705,6 +632,7 @@ const NoteAddBtn = styled(IconBtnStyle)`
     bottom: 21px;
   }
 `;
+
 const NoteCancelBtn = styled(IconBtnStyle)`
   height: 22px;
   width: 22px;
@@ -729,15 +657,7 @@ const Block1 = styled.div`
   background-color: #008b8b;
   opacity: 1;
 `;
-const Block2 = styled(Block1)`
-  opacity: 0.9;
-`;
-const Block3 = styled(Block1)`
-  opacity: 0.7;
-`;
-const Block4 = styled(Block1)`
-  opacity: 0.5;
-`;
+
 const NotesPhotoLabel = styled.label``;
 
 const UploadBtn = styled.div`
@@ -785,13 +705,17 @@ type WorldMapType = {
   setLoginStatus: React.Dispatch<React.SetStateAction<string>>;
   setUserName: React.Dispatch<React.SetStateAction<string>>;
   setUserImg: React.Dispatch<React.SetStateAction<string>>;
+  mapId: string;
+  mapNames: mapNameType[];
+  setMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
+  setOriginalMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
 };
 export type countryCollectionArrType = {
   countryName: string;
   countryId: string;
 };
 
-function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, toLogIn, setToLogIn, uid, setUid, countryList, setCountryList, isLoggedIn, setIsLoggedIn, setIsShowingPointNotes, isShowingPointNotes, getUserMap2Friends, friendList, setFriendList, friendsList, setFriendsList, isShowingFriends, setIsShowingFriends, countryId, setCountryId, countryName, setCountryName, haveFriendList, setHaveFriendList, pointList, setPointList, isShowingPopUp, setIsShowingPopUp, loginStatus, setLoginStatus, setUserName, setUserImg }: WorldMapType) {
+function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, toLogIn, setToLogIn, uid, setUid, countryList, setCountryList, isLoggedIn, setIsLoggedIn, setIsShowingPointNotes, isShowingPointNotes, getUserMap2Friends, friendList, setFriendList, friendsList, setFriendsList, isShowingFriends, setIsShowingFriends, countryId, setCountryId, countryName, setCountryName, haveFriendList, setHaveFriendList, pointList, setPointList, isShowingPopUp, setIsShowingPopUp, loginStatus, setLoginStatus, setUserName, setUserImg, mapId, setMapNames, mapNames, setOriginalMapNames }: WorldMapType) {
   // console.log(mapState);
   // console.log(isHovering);
   const [isHovering, setIsHovering] = useState<boolean>(false);
@@ -820,12 +744,17 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [searchFriendList, setSearchFriendList] = useState<string[]>([]);
   const [searchTitleList, setSearchTitleList] = useState<(string | undefined)[]>([]);
+
   // console.log(searchTitleList);
   // const [pointList1, setPointList1] = useState<pointListType[]>([]);
   // console.log(pointList1);
   // const [singlePointList, setSinglePointList] = useState<pointListType[]>([]);
   const [X, setX] = useState<number>(0);
   const [Y, setY] = useState<number>(0);
+
+  const [editNotes, setEditNotes] = useState<(string | undefined)[]>([]);
+  // const NoteRef = useRef<HTMLInputElement>(null);
+
   // console.log(xy);
   // const contentImageUpload = useRef();
   // console.log(contentImageUpload.current);
@@ -843,6 +772,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   // const [pointNoteTitle, setPointNoteTitle] = useState<string>("");
   const pointTitleInputRef = useRef<HTMLInputElement>(null);
   const [allCountries, setAllCountries] = useState<string[]>([]);
+
   // console.log(allCountries);
   function getAllCountries() {
     let All: string[] = [];
@@ -888,13 +818,29 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   function getUserData(userUid: string) {
     getUserMap1Data(userUid);
     getUserMap2Data(userUid);
-    getUserMap3Data(userUid);
+    getUserMap3Data(userUid, mapId);
     getUserName(userUid);
+    getMapName(userUid);
   }
 
+  async function getMapName(userUid: string) {
+    const docRef = doc(db, "user", userUid);
+    const docSnap = await getDoc(docRef);
+    console.log(docSnap.data());
+    if (docSnap.exists()) {
+      setMapNames(docSnap.data().names);
+      console.log(docSnap.data().names);
+      console.log(docSnap.data().originalMap);
+      setOriginalMapNames(docSnap.data().originalMap);
+    } else {
+      console.log("No such document!");
+    }
+  }
+  useEffect(() => {
+    setMapState(-1);
+  }, []);
   useEffect(() => {
     const auth = getAuth();
-    setMapState(-1);
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
@@ -937,7 +883,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
         });
       });
     });
-  }, []);
+  }, [mapId]);
 
   async function writeUserMap1Data(country: string) {
     console.log(country);
@@ -960,8 +906,9 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     console.log("我準備要write");
     console.log(country);
     console.log(newObj);
+    console.log(mapId);
 
-    await setDoc(doc(db, "user", uid, "custimizedMapCountries", country), {
+    await setDoc(doc(db, "user", uid, mapId, country), {
       List: [
         {
           title: newObj.title,
@@ -1023,7 +970,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     console.log(newSinglePointList);
     let newSearchTitleList = [...searchTitleList, newObj.title];
     setSearchTitleList(newSearchTitleList);
-    await updateDoc(doc(db, "user", uid, "custimizedMapCountries", countryId), { List: newSinglePointList, searchTitle: newSearchTitleList });
+    await updateDoc(doc(db, "user", uid, mapId, countryId), { List: newSinglePointList, searchTitle: newSearchTitleList });
 
     console.log("增加點點");
     // 寫的update
@@ -1097,14 +1044,16 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
           insta: friend.insta,
           imgUrl: friend.imgUrl,
           notes: friend.notes,
+          key: friend.key,
         };
         newFriendsList.push(newFriendObj);
       });
       setFriendsList(newFriendsList);
+      console.log(newFriendsList);
     });
   }
-  async function getUserMap3Data(userUid: string) {
-    const q = collection(db, "user", userUid, "custimizedMapCountries");
+  async function getUserMap3Data(userUid: string, mapId: any) {
+    const q = collection(db, "user", userUid, mapId);
     const querySnapshot = await getDocs(q);
     let newPointList: pointListType[] = [];
     // let newPhotoList: string[] = [];
@@ -1188,6 +1137,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
       insta: addFriendState.insta,
       imgUrl: url,
       notes: addFriendState.notes,
+      key: uuidv4(),
     };
     newFriendList = [...friendList, newFriend];
     const newHaveFriendNum = friendList.length + 1;
@@ -1257,7 +1207,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
         updateUserMap2Data(url);
       }
     } else {
-      const imageRef = ref(storage, `${uid}friendsMap/${imageUpload.name}`);
+      const imageRef = ref(storage, `${uid}/friendsMap/${imageUpload.name}`);
       uploadBytes(imageRef, imageUpload).then((snapshot) => {
         getDownloadURL(snapshot.ref).then((url) => {
           // writeUserMap2Data(url)
@@ -1367,77 +1317,13 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     });
     setPointList(newPointList);
     console.log(newPointList);
-    await updateDoc(doc(db, "user", uid, "custimizedMapCountries", countryId), {
+    await updateDoc(doc(db, "user", uid, mapId, countryId), {
       List: arrayRemove(singlePointList[0]),
     });
   }
 
-  async function deleteFriend(index: number) {
-    console.log(friendList[index]);
-
-    let newFriendsList = friendsList.filter((friend) => {
-      return friend !== friendList[index];
-    });
-    console.log(newFriendsList);
-    setFriendsList(newFriendsList);
-    let newFriendList = friendList.filter((friend, i) => {
-      return i !== index;
-    });
-    setFriendList(newFriendList);
-    let newHaveFriendNum = friendList.length - 1;
-    // setHaveFriendList()
-
-    let newHaveFriendList = haveFriendList.map((obj) => {
-      console.log(obj.countryId === countryId);
-      if (obj.countryId === countryId) {
-        obj.haveFriend = obj.haveFriend - 1;
-      }
-      return obj;
-    });
-    // console.log(newHaveFriendList);
-    // setHaveFriendList(newHaveFriendList);
-
-    let newNewHaveFriendList = [];
-    newNewHaveFriendList = newHaveFriendList.filter((obj) => {
-      return obj.haveFriend !== 0;
-    });
-    setHaveFriendList(newNewHaveFriendList);
-
-    // let newHaveFriendList = haveFriendList
-    //   .reduce((acc,curr) => {
-    //     let index = acc.findIndex(country => country.Id = countryId)
-    //     acc[index].friend -= 1
-    //     (acc[index].friend !== 0)
-    //     console.log(obj.countryId === countryId);
-    //     if (obj.countryId === countryId) {
-    //       obj.haveFriend = obj.haveFriend - 1;
-    //     }
-    //     return obj;
-    //   })
-    //   .filter((obj) => {
-    //     return obj.haveFriend !== 0;
-    //   });
-    // console.log(newFriendList);
-
-    console.log(newHaveFriendList);
-    // console.log(newNewHaveFriendList);
-
-    // let newHaveFriendList = haveFriendList.filter((obj) => obj.countryId === countryId);
-    // console.log(newHaveFriendList[0].haveFriend - 1);
-    // console.log(newHaveFriendList);
-    // setHaveFriendList(newHaveFriendList);
-
-    if (newFriendList.length) {
-      await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), { friends: newFriendList, haveFriend: newHaveFriendNum });
-    } else {
-      await deleteDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId));
-    }
-    // await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), {
-    //   friends: arrayRemove(friendList[index]),
-    //   haveFriend: friendList.length - 1,
-    // });
-  }
   function writeUserMap2Data(url: string) {
+    const key = uuidv4();
     let newFriendList = [];
     const data = {
       friends: [
@@ -1449,6 +1335,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
           insta: addFriendState.insta,
           imgUrl: url,
           notes: addFriendState.notes,
+          key,
         },
       ],
       searchName: [addFriendState.name],
@@ -1464,6 +1351,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
       insta: addFriendState.insta,
       imgUrl: url,
       notes: addFriendState.notes,
+      key,
     };
     newFriendList.push(data2);
     setFriendList(newFriendList);
@@ -1628,34 +1516,13 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
               </MapCover>
               {isShowingFriends && isShowingFriends === true ? (
                 <FriendBg>
-                  <FriendBox>
+                  <FriendOutsideBox>
                     <FriendMiddleBox>
-                      {friendList.map((friend: { imgUrl: string; name: string; city: string; insta: string; notes: string }, index) => (
-                        <FriendInsideBox>
-                          <DeleteFriendBtn
-                            onClick={(e) => {
-                              deleteFriend(index);
-                            }}></DeleteFriendBtn>
-                          <EditFriendBtn></EditFriendBtn>
-                          {friend.imgUrl && friend.imgUrl ? <FriendProfilePic src={friend.imgUrl}></FriendProfilePic> : <FriendProfileNoPic></FriendProfileNoPic>}
-                          <FriendFormTitle>{friend.name}</FriendFormTitle>
-
-                          <FriendSet>
-                            <FriendFormdiv>
-                              City: <br />
-                              {friend.city}
-                            </FriendFormdiv>
-                            <FriendFormdiv>
-                              Instagram: <br />
-                              {friend.insta}
-                            </FriendFormdiv>
-                            <FriendFormdiv>
-                              Notes: <br />
-                              {friend.notes}
-                            </FriendFormdiv>
-                          </FriendSet>
-                        </FriendInsideBox>
-                      ))}
+                      {friendList.map((friend: { imgUrl: string; name: string; city: string; insta: string; notes: string }, index) => {
+                        console.log(friend.name);
+                        return <FriendBox key={friend.key} countryName={countryName} index={index} countryId={countryId} friend={friend} uid={uid} friendList={friendList} setFriendList={setFriendList} friendsList={friendsList} haveFriendList={haveFriendList} setHaveFriendList={setHaveFriendList} setFriendsList={setFriendsList}></FriendBox>;
+                        // onChange={(e)=>{setEditNotes(e.target.value)}}
+                      })}
                     </FriendMiddleBox>
                     <CloseBtn
                       onClick={() => {
@@ -1674,7 +1541,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                     <FriendsCountry>{countryName}</FriendsCountry>
                     {isAddingFriend && isAddingFriend ? (
                       <AddFriendBox>
-                        <AddFriendPicLabel htmlFor="addFriendPic">{previewFriendImgUrl && previewFriendImgUrl ? <AddFriendProfilePic src={previewFriendImgUrl}></AddFriendProfilePic> : <FriendProfileNoPic></FriendProfileNoPic>}</AddFriendPicLabel>
+                        <AddFriendPicLabel htmlFor="addFriendPic">{previewFriendImgUrl ? <AddFriendProfilePic src={previewFriendImgUrl}></AddFriendProfilePic> : <FriendProfileNoPic></FriendProfileNoPic>}</AddFriendPicLabel>
 
                         <AddFriendPicInput
                           id="addFriendPic"
@@ -1730,7 +1597,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                     ) : (
                       <></>
                     )}
-                  </FriendBox>
+                  </FriendOutsideBox>
                 </FriendBg>
               ) : (
                 <></>
@@ -1740,7 +1607,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
             </Map>
             <PopUp toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
 
-            {(friendsList && friendsList.length === 0) || friendsList.length === 1 ? (
+            {(friendsList && friendsList.length <= 0) || friendsList.length === 1 ? (
               <FriendNum>
                 You've made {friendsList.length} friend located in {haveFriendList.length} country
               </FriendNum>
@@ -1828,6 +1695,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
               ) : (
                 <></>
               )}
+
               {isShowingPointNotes ? (
                 <PointNotes>
                   {isEditing ? (
