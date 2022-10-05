@@ -19,11 +19,14 @@ const PopUpBlock = styled.div<{ isShowingPopUp: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 `;
 
 const PopUpSet = styled.div`
   display: flex;
   flex-direction: column;
+  width: 400px;
+  text-align: center;
 `;
 
 const PopUpText = styled.div<{ isShowingPopUp: boolean }>`
@@ -57,12 +60,12 @@ const PopUpBg = styled.div<{ isShowingPopUp: boolean; toLogIn: boolean }>`
   width: ${(props) => (props.isShowingPopUp || props.toLogIn ? 100 : 0)}%;
   height: ${(props) => (props.isShowingPopUp || props.toLogIn ? 100 : 0)}%;
   background-color: rgba(128, 128, 128, 0.5);
+  z-index: 900;
   /* transition: 0.5s; */
 `;
 
 const PopupBtnSet = styled.div`
   display: flex;
-
   justify-content: space-around;
 `;
 
@@ -73,33 +76,59 @@ type PopUpType = {
   setLoginStatus: React.Dispatch<React.SetStateAction<string>>;
   toLogIn: boolean;
   setToLogIn: React.Dispatch<React.SetStateAction<boolean>>;
+  popUpMsg: any[];
+  setPopUpMsg: React.Dispatch<React.SetStateAction<any[]>>;
+  setIsShowingPointNotes: React.Dispatch<React.SetStateAction<boolean>>;
+  deleteNote: () => void;
+  deleteFriend: (index: number) => void;
+  setDeleteMap: React.Dispatch<React.SetStateAction<string>>;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatus, toLogIn, setToLogIn }: PopUpType) {
+function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatus, toLogIn, setToLogIn, popUpMsg, setPopUpMsg, setIsShowingPointNotes, deleteNote, deleteFriend, setDeleteMap, setIsEditing }: PopUpType) {
   return (
     <>
       <PopUpBg isShowingPopUp={isShowingPopUp} toLogIn={toLogIn}></PopUpBg>
       <PopUpBlock isShowingPopUp={isShowingPopUp}>
         <PopUpSet>
-          <PopUpText isShowingPopUp={isShowingPopUp}>Sign in to explore your new map</PopUpText>
+          <PopUpText isShowingPopUp={isShowingPopUp}>{popUpMsg[0]}</PopUpText>
           <PopupBtnSet>
             <PopUpBtn
               isShowingPopUp={isShowingPopUp}
               onClick={() => {
+                if (popUpMsg[4] === "signin") {
+                  setLoginStatus("login");
+                  setToLogIn(true);
+                } else if (popUpMsg[0] === "Sure to delete the pin?") {
+                  setIsShowingPointNotes(false);
+                  deleteNote();
+                } else if (popUpMsg[4] === "deletefriend") {
+                  // console.log(popUpMsg);
+                  deleteFriend(Number(popUpMsg[3]));
+                } else if (popUpMsg[4] === "deletemap") {
+                  // setDeleteMap("yes");
+                  console.log("hi");
+                  console.log(popUpMsg[5]);
+
+                  popUpMsg[5]();
+                } else if (popUpMsg[0] === "Sure to go back before saving it?") {
+                  setIsEditing(false);
+                }
+
                 setIsShowingPopUp(false);
-                setLoginStatus("login");
-                setToLogIn(true);
               }}>
-              Sign In
+              {popUpMsg[1]}
             </PopUpBtn>
             <PopUpBtn
               isShowingPopUp={isShowingPopUp}
               onClick={() => {
+                if (popUpMsg[0] === "Sign in to explore your new map") {
+                  setLoginStatus("register");
+                  setToLogIn(true);
+                }
                 setIsShowingPopUp(false);
-                setLoginStatus("register");
-                setToLogIn(true);
               }}>
-              Sign Up
+              {popUpMsg[2]}
             </PopUpBtn>
           </PopupBtnSet>
         </PopUpSet>

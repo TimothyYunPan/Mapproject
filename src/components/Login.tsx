@@ -8,7 +8,7 @@ import userProfileGrey from "./userProfileGrey.png";
 // import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage";
-import { countryListType, friendListType, haveFriendListType, pointListType, mapNameType } from "../App";
+import { countryListType, friendListType, haveFriendListType, pointListType, mapNameType, notificationInfoType } from "../App";
 import edit from "./edit.png";
 import editHover from "./editHover.png";
 import okIcon from "./okIcon.png";
@@ -36,6 +36,7 @@ const Wrapper = styled.div<{ toLogIn: boolean }>`
   /* transform: translate(-50%, -50%); */
   visibility: ${(props) => (props.toLogIn ? "visible" : "hidden")};
   z-index: -150;
+  /* z-index: 1000; */
 `;
 
 const LogginPopUp = styled.div`
@@ -338,7 +339,7 @@ const Back = styled.div<{ toLogIn: boolean }>`
   position: absolute;
   top: 20px;
   right: 20px;
-  z-index: 250;
+  z-index: 1001;
   background-image: url(${closeGrey});
   background-size: cover;
   cursor: pointer;
@@ -367,9 +368,10 @@ type LoginType = {
   userImage: string;
   originalMapNames: mapNameType[];
   setMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
+  setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
 };
 
-function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList, toLogIn, setToLogIn, uid, setMapState, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList, loginStatus, setLoginStatus, userName, setUserName, userImage, originalMapNames, setMapNames }: LoginType) {
+function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList, toLogIn, setToLogIn, uid, setMapState, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList, loginStatus, setLoginStatus, userName, setUserName, userImage, originalMapNames, setMapNames, setNotificationInfo }: LoginType) {
   const [profile, setProfile] = useState();
   // console.log(loginStatus);
   const [imageUpload, setImageUpload] = useState<File | null>(null);
@@ -393,7 +395,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
     //   { name: "My Map", id: "custimizedMapCountries" },
     // ];
     await setDoc(doc(db, "user", uid), { originalMap: originalMapNames }, { merge: true });
-    console.log("hi");
+    // console.log("hi");
     // let newMap = { id: newId, name: "new Map" };
   }
 
@@ -419,14 +421,15 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          console.log(userCredential.user.uid);
-          console.log("登入囉");
-          console.log(user.uid);
+          // console.log(userCredential.user.uid);
+          // console.log("登入囉");
+          // console.log(user.uid);
           setToLogIn(false);
           setUid(user.uid);
           writeUserMap1Data(user.uid);
           writeUserNameToData(user.uid);
           writeOriginMapToData(user.uid);
+
           // ...
         })
         .catch((error) => {
@@ -441,11 +444,16 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
           // Signed in
           const user = userCredential.user;
           setUid(user.uid);
-          console.log("登入囉");
+          // console.log("登入囉");
           setToLogIn(false);
-          console.log(user.uid);
+          // console.log(user.uid);
           // setIsLoggedIn(true);
           // ...
+          setNotificationInfo({ text: "Welcome Back!", status: true });
+          setTimeout(() => {
+            setNotificationInfo({ text: "", status: false });
+          }, 3000);
+          // setMapState(2);
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -464,8 +472,8 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
       });
   }
   async function writeUserMap1Data(uid: string) {
-    console.log("哈哈哈");
-    console.log(uid);
+    // console.log("哈哈哈");
+    // console.log(uid);
 
     countryList.map(async (country) => {
       await setDoc(
@@ -477,7 +485,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
       );
     });
 
-    console.log("我有寫啦");
+    // console.log("我有寫啦");
     // await setDoc(doc(db, "user/7LkdfIpKjPiFsrPDlsaM"), {
     //   country
     // });
@@ -487,8 +495,11 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
     await setDoc(doc(db, "user", uid), {
       userName: nameInputValue,
     });
-
-    console.log("我有寫啦");
+    setNotificationInfo({ text: `Hi, ${nameInputValue}. Welcome to Maphub!`, status: true });
+    setTimeout(() => {
+      setNotificationInfo({ text: "", status: false });
+    }, 3000);
+    // console.log("我有寫啦");
     // await setDoc(doc(db, "user/7LkdfIpKjPiFsrPDlsaM"), {
     //   country
     // });
@@ -497,7 +508,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
   async function updateProfileInfo(uid: string) {
     if (imageUpload == null) {
       const url = "";
-      console.log(userNameInputRef.current);
+      // console.log(userNameInputRef.current);
       await setDoc(
         doc(db, "user", uid),
         {
@@ -508,8 +519,8 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
       );
       setIsEditingProfile(false);
     } else {
-      console.log(imageUpload);
-      console.log(userNameInputRef.current!.value);
+      // console.log(imageUpload);
+      // console.log(userNameInputRef.current!.value);
       const imageRef = ref(storage, `${uid}profile/${imageUpload.name}`);
       uploadBytes(imageRef, imageUpload).then((snapshot) => {
         getDownloadURL(snapshot.ref).then(async (url) => {
@@ -601,7 +612,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
               </ProfileInputSet>
               <ProfileInputSet>
                 <AccountWord>Password</AccountWord>
-                <ProfileInput value={passwordInputValue} onChange={(e) => setPasswordInputValue(e.target.value)} />
+                <ProfileInput type={"password"} value={passwordInputValue} onChange={(e) => setPasswordInputValue(e.target.value)} />
                 {/* {console.log(passwordInputValue)} */}
               </ProfileInputSet>
 
@@ -667,8 +678,12 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
                 setFriendList([]);
                 setPointList([]);
                 setMapNames([]);
+                setNotificationInfo({ text: "Successfully sign out!", status: true });
+                setTimeout(() => {
+                  setNotificationInfo({ text: "", status: false });
+                }, 2000);
               }}>
-              LOG OUT
+              SIGN OUT
             </ProfileLogoutBtn>
           )}
           <Back

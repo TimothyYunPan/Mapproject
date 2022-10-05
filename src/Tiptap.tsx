@@ -22,6 +22,11 @@ const TipTapBox = styled.div`
   }
 `;
 
+const EditorContentBox = styled.div<{ largeTipTap: boolean }>`
+  height: ${(props) => (props.largeTipTap ? 340 : 180)}px;
+  overflow: scroll;
+`;
+
 const MenuBar = ({ editor }: any) => {
   if (!editor) {
     return null;
@@ -54,7 +59,7 @@ const MenuBar = ({ editor }: any) => {
   );
 };
 
-const Tiptap = ({ setPointNotes, pointList, pointIndex }: { setPointNotes: React.Dispatch<React.SetStateAction<string>>; pointList: pointListType[]; pointIndex: number }) => {
+const Tiptap = ({ setPointNotes, pointList, pointIndex, largeTipTap }: { setPointNotes: React.Dispatch<React.SetStateAction<string>>; pointList: pointListType[]; pointIndex: number; largeTipTap: boolean }) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -74,7 +79,9 @@ const Tiptap = ({ setPointNotes, pointList, pointIndex }: { setPointNotes: React
   return (
     <TipTapBox>
       <MenuBar editor={editor} />
-      <EditorContent editor={editor} className="ProseMirror" />
+      <EditorContentBox largeTipTap={largeTipTap}>
+        <EditorContent editor={editor} className="ProseMirror" />
+      </EditorContentBox>
     </TipTapBox>
   );
 };

@@ -6,13 +6,14 @@ import { db } from "../utils/firebaseConfig";
 
 type ChangeMapBtnType = {
   setIsShowingPointNotes: React.Dispatch<React.SetStateAction<boolean>>;
+  pointList: pointListType[];
   setPointList: React.Dispatch<React.SetStateAction<pointListType[]>>;
   setIsChangingMap: React.Dispatch<React.SetStateAction<boolean>>;
   mapId: string;
   setMapId: React.Dispatch<React.SetStateAction<string>>;
   setMapState: React.Dispatch<React.SetStateAction<number>>;
   setIsShowingPoint: React.Dispatch<React.SetStateAction<boolean>>;
-  setCurrentMap: React.Dispatch<React.SetStateAction<string>>;
+  setCurrentMapName: React.Dispatch<React.SetStateAction<string>>;
   mapName: { id: string; name: string };
   isEditingMap: number;
   setIsEditingMap: React.Dispatch<React.SetStateAction<number>>;
@@ -21,12 +22,17 @@ type ChangeMapBtnType = {
   setMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
   uid: string;
   setOverlapName: React.Dispatch<React.SetStateAction<string>>;
+  deleteMap: string;
+  setDeleteMap: React.Dispatch<React.SetStateAction<string>>;
+  setPopUpMsg: React.Dispatch<React.SetStateAction<any[]>>;
+  setIsShowingPopUp: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, setMapId, setMapState, setIsShowingPoint, setCurrentMap, mapName, isEditingMap, setIsEditingMap, index, uid, mapNames, setMapNames, setOverlapName, mapId }: ChangeMapBtnType) {
+function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, setMapId, setMapState, setIsShowingPoint, setCurrentMapName, mapName, isEditingMap, setIsEditingMap, index, uid, mapNames, setMapNames, setOverlapName, mapId, deleteMap, setDeleteMap, setPopUpMsg, setIsShowingPopUp, pointList }: ChangeMapBtnType) {
   // const [isEditingNewMap, setIsEditingNewMap] = useState<boolean>(false);
   const [isReadOnly, setIsReadOnly] = useState<boolean>(true);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const CurrentMapIdRef = useRef<any>(null);
   const MapNameRef = useRef<HTMLInputElement>(null);
 
   async function updateNewMapName(mapId: string) {
@@ -39,23 +45,36 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
     // setOriginalMapNames(newNames);
   }
 
-  async function deleteNewMap(mapId: string) {
+  async function deleteNewMap() {
     console.log("有");
+    console.log(CurrentMapIdRef.current);
     let newMapList = mapNames.filter((obj) => {
       console.log(obj.id);
-      return obj.id !== mapId;
+      return obj.id !== CurrentMapIdRef.current;
     });
+
     setMapNames(newMapList);
     console.log(newMapList);
 
     await setDoc(doc(db, "user", uid), { names: newMapList }, { merge: true });
     console.log("有嗎");
+    setDeleteMap("no");
+    // console.log(deleteMap);
   }
   useEffect(() => {
     MapNameRef.current!.value = mapName.name;
   }, [mapName.name]);
 
-  console.log(MapNameRef.current?.value, "value");
+  // useEffect(() => {
+  //   console.log(deleteMap);
+  //   if (deleteMap === "yes" && CurrentMapIdRef.current !== null) {
+  //     console.log("kk");
+  //     deleteNewMap();
+  //   }
+  //   // console.log(CurrentMapIdRef.current);
+  // }, [deleteMap]);
+
+  // console.log(MapNameRef.current?.value, "value");
   return (
     <ChangeMapBtnSet>
       <MapNameInput
@@ -75,7 +94,7 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
           }
           setOverlapName(mapName.name);
           setMapState(3);
-          setCurrentMap(mapName.name);
+          setCurrentMapName(mapName.name);
           setIsShowingPoint(true);
 
           // if (!uid) {
@@ -97,10 +116,14 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
               updateNewMapName(mapName.id);
             }}></OkIcon>
           <DeleteMapBtn
+            // ref={CurrentMapIdRef}
             onClick={() => {
+              CurrentMapIdRef.current = mapName.id;
+              setIsShowingPopUp(true);
+              setPopUpMsg([`Sure to delete your map named ${mapName.name} ?`, "Yes", "No", "", "deletemap", deleteNewMap]);
               setIsEditing(false);
-              console.log(index);
-              deleteNewMap(mapName.id);
+
+              // console.log(index);
             }}></DeleteMapBtn>
         </>
       ) : (

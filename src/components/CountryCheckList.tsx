@@ -133,7 +133,7 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
   }
 
   async function deleteUserMap1Data(country: string) {
-    console.log("delete");
+    // console.log("delete");
     await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
       visited: deleteField(),
     });

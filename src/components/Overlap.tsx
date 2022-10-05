@@ -59,7 +59,7 @@ function Overlap({ mapState, pointList, isShowingPointNotes, pointIndex, preview
                   const target = e.target as HTMLInputElement;
                   // setX(pointInfo.x);
                   // setY(pointInfo.y);
-                  console.log(target.id);
+                  // console.log(target.id);
                   setPointIndex(index);
                   e.stopPropagation();
                   setIsShowingPointNotes(true);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { db } from "../utils/firebaseConfig";
-import { countryListType, friendListType, haveFriendListType, pointListType, mapNameType } from "../App";
+import { countryListType, friendListType, haveFriendListType, pointListType, mapNameType, notificationInfoType } from "../App";
 import { doc, setDoc, updateDoc, deleteDoc, arrayRemove } from "firebase/firestore";
 import styled from "styled-components";
 import { EditFriendBtn, AddFriendPicInput, AddFriendPicLabel, FriendProfileNoPic } from "../WorldMap";
@@ -148,75 +148,45 @@ type friendInsideBoxType = {
   countryId: string;
   index: number;
   countryName: string;
+  setPopUpMsg: React.Dispatch<React.SetStateAction<string[]>>;
+  setIsShowingPopUp: React.Dispatch<React.SetStateAction<boolean>>;
+  setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
+  setSearchFriendList: React.Dispatch<React.SetStateAction<string[]>>;
+  searchFriendList: string[];
 };
 
-function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList, setHaveFriendList, setFriendsList, friend, countryId, index, countryName }: friendInsideBoxType) {
+function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList, setHaveFriendList, setFriendsList, friend, countryId, index, countryName, setPopUpMsg, setIsShowingPopUp, setNotificationInfo, setSearchFriendList, searchFriendList }: friendInsideBoxType) {
   const NameRef = useRef<HTMLInputElement>(null);
   const CityRef = useRef<HTMLInputElement>(null);
   const InstaRef = useRef<HTMLInputElement>(null);
-  const NotesRef = useRef<HTMLInputElement>(null);
+  const NotesRef = useRef<HTMLTextAreaElement>(null);
   const [isEditingFriend, setIsEditingFriend] = useState<boolean>(false);
   const [imageUpload, setImageUpload] = useState<File | null>(null);
 
   const previewFriendNewImgUrl = imageUpload ? URL.createObjectURL(imageUpload) : "";
   const [friendOriginalPhoto, setFrienOriginalPhoto] = useState<string>("");
   const imageListRef = ref(storage, "images/");
-  console.log(previewFriendNewImgUrl, CityRef.current);
-
-  async function deleteFriend(index: number) {
-    console.log(friendList[index]);
-
-    let newFriendsList = friendsList.filter((friend) => {
-      return friend.key !== friendList[index].key;
-    });
-    console.log(newFriendsList);
-    setFriendsList(newFriendsList);
-    let newFriendList = friendList.filter((friend, i) => {
-      return i !== index;
-    });
-    console.log(newFriendList);
-    setFriendList(newFriendList);
-    let newHaveFriendNum = friendList.length - 1;
-    // setHaveFriendList()
-
-    let newHaveFriendList = haveFriendList.map((obj) => {
-      console.log(obj.countryId === countryId);
-      if (obj.countryId === countryId) {
-        obj.haveFriend = obj.haveFriend - 1;
-      }
-      return obj;
-    });
-    // console.log(newHaveFriendList);
-    // setHaveFriendList(newHaveFriendList);
-
-    let newNewHaveFriendList = [];
-    newNewHaveFriendList = newHaveFriendList.filter((obj) => {
-      return obj.haveFriend !== 0;
-    });
-    setHaveFriendList(newNewHaveFriendList);
-    if (newFriendList.length) {
-      await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), { friends: newFriendList, haveFriend: newHaveFriendNum });
-    } else {
-      await deleteDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId));
-    }
-    await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), {
-      friends: arrayRemove(friendList[index]),
-      haveFriend: friendList.length - 1,
-    });
-  }
+  // console.log(previewFriendNewImgUrl, CityRef.current);
 
   async function updateFriendInfo(index: number, newObj: friendListType) {
-    friendList[index] = newObj;
+    searchFriendList.splice(index, 1, newObj.name);
+
+    // console.log(newSearhingName);
 
     let newfriendsList = friendsList.filter((friends) => {
-      console.log(friends.countryId);
-      console.log(friendsList);
+      // console.log(friends.countryId);
+      // console.log(friendsList);
       return friends.countryId !== countryId;
     });
     newfriendsList = [...newfriendsList, ...friendList];
+
     setFriendsList(newfriendsList);
 
-    await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), { friends: friendList }, { merge: true });
+    await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), { friends: friendList, searchName: searchFriendList }, { merge: true });
+    setNotificationInfo({ text: "Successfully edit your friends info!", status: true });
+    setTimeout(() => {
+      setNotificationInfo({ text: "", status: false });
+    }, 2000);
   }
 
   function sendEditFriendInfo(index: number, newObj: friendListType) {
@@ -225,7 +195,7 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
       newObj.imgUrl = friendOriginalPhoto;
       // const url = friendOriginalPhoto;
       updateFriendInfo(index, newObj);
-      console.log("這裡");
+      // console.log("這裡");
       // friendList
       // setPointList((pre) => {
       //   pre[pointIndex] = {
@@ -241,7 +211,7 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
     } else {
       // let newTitle = pointTitleInputRef.current?.value;
       const imageRef = ref(storage, `${uid}/friendMap/${imageUpload.name}`);
-      console.log("還是這裡");
+      // console.log("還是這裡");
       // setPointList((pre) => {
       //   pre[pointIndex] = {
       //     ...pre[pointIndex],
@@ -297,18 +267,20 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
     //   haveFriend: friendList.length - 1,
     // });
   }
-  console.log(friendsList);
+  // console.log(friendsList);
   return (
     <>
       <FriendInsideBox>
         {isEditingFriend ? <></> : <FriendMask></FriendMask>}
         <DeleteFriendBtn
           onClick={(e) => {
-            deleteFriend(index);
+            setIsShowingPopUp(true);
+            setPopUpMsg([`Sure to delete ${friendList[index].name} 😭 ?`, "Yes", "No", `${index}`, `deletefriend`]);
           }}></DeleteFriendBtn>
         {isEditingFriend ? (
           <FriendUpdateBtn
             onClick={() => {
+              let key = friendList[index].key;
               let newObj = {
                 city: CityRef.current!.value,
                 country: countryName,
@@ -317,6 +289,7 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
                 insta: InstaRef.current!.value,
                 name: NameRef.current!.value,
                 notes: NotesRef.current!.value,
+                key: key,
               };
 
               sendEditFriendInfo(index, newObj);

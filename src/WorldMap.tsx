@@ -14,7 +14,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import CountryCheckList from "./components/CountryCheckList";
 import userEvent from "@testing-library/user-event";
 import Header from "./components/Header";
-import { countryListType, friendListType, haveFriendListType, pointListType, mapNameType } from "./App";
+import { countryListType, friendListType, haveFriendListType, pointListType, mapNameType, notificationInfoType } from "./App";
 import trashCan from "./components/trashCan.png";
 import trashCanHover from "./components/trashCanHover.png";
 import edit from "./components/edit.png";
@@ -32,6 +32,7 @@ import userProfile from "./components/userProfile.png";
 import PopUp from "./components/PopUp";
 import FriendBox from "./components/FriendBox";
 import { uuidv4 } from "@firebase/util";
+
 // import { ScrollDetect } from "./components/ScrollDetect";
 
 const storage = getStorage(app);
@@ -185,7 +186,7 @@ type mousePlaceType = {
 };
 
 const ShowName = styled.div<{
-  mousePlace: mousePlaceType;
+  currentPos: mousePlaceType;
 }>`
   /* width: 50px; */
   /* height: 50px; */
@@ -193,8 +194,8 @@ const ShowName = styled.div<{
   position: absolute;
   cursor: pointer;
 
-  top: ${(props) => (props.mousePlace.y as number) - 100}px;
-  left: ${(props) => props.mousePlace.x}px;
+  top: ${(props) => props.currentPos.y as number}px;
+  left: ${(props) => props.currentPos.x + 220}px;
   /* top:0; */
   /* left:0 */
   transform: translate(-50%, -150%);
@@ -202,7 +203,8 @@ const ShowName = styled.div<{
 `;
 function getMousePos(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
   const e = event || window.event;
-  return { x: e.clientX, y: e.clientY };
+  // console.log(e.clientX, e.clientY);
+  // return { x: e.clientX, y: e.clientY };
 }
 
 //map2
@@ -279,11 +281,14 @@ const FriendNum = styled.div`
 
 const AddFriendBtn = styled.div`
   position: absolute;
-  bottom: 20px;
-  right: 20px;
+  bottom: 10px;
+  right: 10px;
   /* transform: translate(-50%,-50%); */
   height: 50px;
   width: 50px;
+  /* background-image: url(${addIcon});
+  background-position: center;
+  background-size: contain; */
   border: 1px solid white;
   border-radius: 50%;
   text-align: center;
@@ -291,6 +296,9 @@ const AddFriendBtn = styled.div`
   line-height: 46px;
   cursor: pointer;
   color: white;
+  background-color: rgba(42, 60, 77, 0.3);
+  /* background-color: rgba(0, 0, 0, 0.5); */
+
   /* z-index: 100; */
 `;
 
@@ -389,6 +397,8 @@ const AddFriendFormTextarea = styled.textarea`
   border: 1px solid white;
   color: white;
   margin-top: 6px;
+  /* padding-left: px; */
+  outline: none;
 `;
 const FriendMiddleBox = styled.div`
   display: flex;
@@ -479,7 +489,7 @@ const randomColor = Math.floor(Math.random() * 16777215).toString(16);
 // `
 
 const MapTitle = styled.div`
-  width: 100%;
+  /* width: 100%; */
   height: 100px;
   position: absolute;
   left: 270px;
@@ -541,13 +551,13 @@ export const PointNotes = styled.div`
 // const PointInfoBox =
 
 export const PointNotesTitle = styled.h2`
-  margin: 20px 0;
+  margin: 20px 0 10px 0;
   color: white;
 `;
 export const PointNotesTitleInput = styled.input`
   border: none;
   outline: none;
-  border-bottom: 1px solid #fff;
+  /* border-bottom: 1px solid #fff; */
   background-color: inherit;
   font-size: 20px;
   margin: 25px 0;
@@ -569,26 +579,36 @@ const PointNotesTextArea = styled.div`
   /* height: 70%; */
 `;
 export const PointNote = styled.div`
-  margin-top: 45px;
-  max-width: 255px;
+  margin-top: 15px;
+  width: 255px;
   white-space: wrap;
   /* text-align: left; */
   word-break: break-all;
-  width: 90%;
+  /* width: 90%; */
   max-height: 380px;
   overflow: scroll;
   color: white;
-  margin-bottom: 45px;
+  margin-bottom: 65px;
   /* padding: 20px; */
 
   ol {
     padding: 20px;
   }
+  hr {
+    margin: 10px 0;
+    border-top: 1px solid rgba(225, 225, 225, 0.5);
+  }
+`;
+
+const PointNoteLarge = styled(PointNote)`
+  max-height: 640px;
 `;
 
 export const PointNotesTextImg = styled.img`
-  width: 90%;
-  height: auto;
+  max-width: 268px;
+  max-height: 160px;
+  object-fit: cover;
+  object-position: center;
 `;
 
 const NotesFlex = styled.div`
@@ -684,7 +704,7 @@ type WorldMapType = {
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   isShowingPointNotes: boolean;
   setIsShowingPointNotes: React.Dispatch<React.SetStateAction<boolean>>;
-  getUserMap2Friends: (id: string) => void;
+  getCountryFriends: (id: string) => void;
   friendList: friendListType[];
   setFriendList: React.Dispatch<React.SetStateAction<friendListType[]>>;
   friendsList: friendListType[];
@@ -709,17 +729,22 @@ type WorldMapType = {
   mapNames: mapNameType[];
   setMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
   setOriginalMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
+  popUpMsg: any[];
+  setPopUpMsg: React.Dispatch<React.SetStateAction<any[]>>;
+  setDeleteMap: React.Dispatch<React.SetStateAction<string>>;
+  setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
+  setCurrentMapName: React.Dispatch<React.SetStateAction<string>>;
 };
 export type countryCollectionArrType = {
   countryName: string;
   countryId: string;
 };
 
-function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, toLogIn, setToLogIn, uid, setUid, countryList, setCountryList, isLoggedIn, setIsLoggedIn, setIsShowingPointNotes, isShowingPointNotes, getUserMap2Friends, friendList, setFriendList, friendsList, setFriendsList, isShowingFriends, setIsShowingFriends, countryId, setCountryId, countryName, setCountryName, haveFriendList, setHaveFriendList, pointList, setPointList, isShowingPopUp, setIsShowingPopUp, loginStatus, setLoginStatus, setUserName, setUserImg, mapId, setMapNames, mapNames, setOriginalMapNames }: WorldMapType) {
+function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, toLogIn, setToLogIn, uid, setUid, countryList, setCountryList, isLoggedIn, setIsLoggedIn, setIsShowingPointNotes, isShowingPointNotes, getCountryFriends, friendList, setFriendList, friendsList, setFriendsList, isShowingFriends, setIsShowingFriends, countryId, setCountryId, countryName, setCountryName, haveFriendList, setHaveFriendList, pointList, setPointList, isShowingPopUp, setIsShowingPopUp, loginStatus, setLoginStatus, setUserName, setUserImg, mapId, setMapNames, mapNames, setOriginalMapNames, popUpMsg, setPopUpMsg, setDeleteMap, setNotificationInfo, setCurrentMapName }: WorldMapType) {
   // console.log(mapState);
   // console.log(isHovering);
   const [isHovering, setIsHovering] = useState<boolean>(false);
-  console.log(isHovering);
+  // console.log(isHovering);
   const [countryCount, setCountryCount] = useState<number>(0);
   // const [useTarget, setUseTarget] = useState<any>("")
   const [isColored, setIsColored] = useState<boolean>(false);
@@ -744,8 +769,16 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [searchFriendList, setSearchFriendList] = useState<string[]>([]);
   const [searchTitleList, setSearchTitleList] = useState<(string | undefined)[]>([]);
-
-  // console.log(searchTitleList);
+  const mouseRef = useRef<any>(null);
+  const [currentPos, setCurrentPos] = useState<mousePosType>({ x: null, y: null });
+  const [largeTipTap, setLargeTipTap] = useState<boolean>(true);
+  // console.log(largeTipTap);
+  // console.log(xy);
+  // const contentImageUpload = useRef();
+  // console.log(contentImageUpload.current);
+  // console.log(pointList);
+  // const [visitedCountries, setVisitedCountries] = useState<boolean>(false)
+  // console.log(searchFriendList);
   // const [pointList1, setPointList1] = useState<pointListType[]>([]);
   // console.log(pointList1);
   // const [singlePointList, setSinglePointList] = useState<pointListType[]>([]);
@@ -807,13 +840,24 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   const singlePointList: pointListType[] = [];
 
   pointList.forEach((pointInfo) => {
-    console.log(pointInfo);
+    // console.log(pointInfo);
     if (pointInfo.countryId === countryId) {
       singlePointList.push(pointInfo);
     }
   });
-  console.log(singlePointList);
+  // console.log(singlePointList);
   //
+  const getPosition = (e) => {
+    let rect = mouseRef.current.getBoundingClientRect();
+    let x = e.clientX - rect.left; //x position within the element.
+    let y = e.clientY - rect.top; //y position within the element.
+    // console.log("Left? : " + x + " ; Top? : " + y + ".");
+    setCurrentPos({ x: x, y: y });
+    // const x = mouseRef.current.offsetLeft;
+    // const y = mouseRef.current?.offsetTop;
+    // console.log(mouseRef.current.offsetLeft);
+    // console.log(mouseRef.current);
+  };
 
   function getUserData(userUid: string) {
     getUserMap1Data(userUid);
@@ -826,12 +870,12 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   async function getMapName(userUid: string) {
     const docRef = doc(db, "user", userUid);
     const docSnap = await getDoc(docRef);
-    console.log(docSnap.data());
+    // console.log(docSnap.data());
     if (docSnap.exists()) {
       setMapNames(docSnap.data().names);
-      console.log(docSnap.data().names);
-      console.log(docSnap.data().originalMap);
-      setOriginalMapNames(docSnap.data().originalMap);
+      // console.log(docSnap.data().names);
+      // console.log(docSnap.data().originalMap);
+      // setOriginalMapNames(docSnap.data().originalMap);
     } else {
       console.log("No such document!");
     }
@@ -846,8 +890,8 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
         setUid(user.uid);
-        console.log("登入");
-        console.log(user.uid);
+        // console.log("登入");
+        // console.log(user.uid);
         getUserData(user.uid);
         setIsLoggedIn(true);
         getAllCountries();
@@ -886,7 +930,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   }, [mapId]);
 
   async function writeUserMap1Data(country: string) {
-    console.log(country);
+    // console.log(country);
     await setDoc(doc(db, "user", uid, "visitedCountries", country), {
       visited: true,
     });
@@ -896,7 +940,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     // });
   }
   async function deleteUserMap1Data(country: string) {
-    console.log("delete");
+    // console.log("delete");
     await updateDoc(doc(db, "user", uid, "visitedCountries", country), {
       visited: deleteField(),
     });
@@ -904,9 +948,9 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
 
   async function writeUserMap3Data(country: string, newObj: pointListType, url: string) {
     console.log("我準備要write");
-    console.log(country);
-    console.log(newObj);
-    console.log(mapId);
+    // console.log(country);
+    // console.log(newObj);
+    // console.log(mapId);
 
     await setDoc(doc(db, "user", uid, mapId, country), {
       List: [
@@ -928,6 +972,53 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     // await setDoc(doc(db, "user/7LkdfIpKjPiFsrPDlsaM"), {
     //   country
     // });
+  }
+
+  async function deleteFriend(index: number) {
+    // console.log(friendList[index]);
+    searchFriendList.splice(index, 1);
+
+    let newFriendsList = friendsList.filter((friend) => {
+      return friend.key !== friendList[index].key;
+    });
+    // console.log(newFriendsList);
+    setFriendsList(newFriendsList);
+    let newFriendList = friendList.filter((friend, i) => {
+      return i !== index;
+    });
+    // console.log(newFriendList);
+    setFriendList(newFriendList);
+    let newHaveFriendNum = friendList.length - 1;
+    // setHaveFriendList()
+
+    let newHaveFriendList = haveFriendList.map((obj) => {
+      // console.log(obj.countryId === countryId);
+      if (obj.countryId === countryId) {
+        obj.haveFriend = obj.haveFriend - 1;
+      }
+      return obj;
+    });
+    // console.log(newHaveFriendList);
+    // setHaveFriendList(newHaveFriendList);
+
+    let newNewHaveFriendList = [];
+    newNewHaveFriendList = newHaveFriendList.filter((obj) => {
+      return obj.haveFriend !== 0;
+    });
+    setHaveFriendList(newNewHaveFriendList);
+    if (newFriendList.length) {
+      await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), { friends: newFriendList, haveFriend: newHaveFriendNum, searchName: searchFriendList });
+    } else {
+      await deleteDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId));
+    }
+    await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), {
+      friends: arrayRemove(friendList[index]),
+      haveFriend: friendList.length - 1,
+    });
+    setNotificationInfo({ text: "Successfully delete this person from your friendlist 😈 ", status: true });
+    setTimeout(() => {
+      setNotificationInfo({ text: "", status: false });
+    }, 3000);
   }
 
   // let newFriendList = [];
@@ -959,7 +1050,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
       imgUrl: url,
       notes: newObj.notes,
     };
-    console.log(newListObj);
+    // console.log(newListObj);
 
     newSinglePointList = [...singlePointList];
     newSinglePointList.forEach((point, index) => {
@@ -967,12 +1058,12 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
         newSinglePointList[index] = newListObj;
       }
     });
-    console.log(newSinglePointList);
+    // console.log(newSinglePointList);
     let newSearchTitleList = [...searchTitleList, newObj.title];
     setSearchTitleList(newSearchTitleList);
     await updateDoc(doc(db, "user", uid, mapId, countryId), { List: newSinglePointList, searchTitle: newSearchTitleList });
 
-    console.log("增加點點");
+    // console.log("增加點點");
     // 寫的update
 
     // await setDoc(doc(db, "user/7LkdfIpKjPiFsrPDlsaM"), {
@@ -1000,7 +1091,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   async function getUserName(userUid: string) {
     const docRef = doc(db, "user", userUid);
     const docSnap = await getDoc(docRef);
-    console.log(docSnap.data());
+    // console.log(docSnap.data());
     if (docSnap.exists()) {
       setUserImg(docSnap.data().imgUrl);
       setUserName(docSnap.data().userName);
@@ -1049,7 +1140,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
         newFriendsList.push(newFriendObj);
       });
       setFriendsList(newFriendsList);
-      console.log(newFriendsList);
+      // console.log(newFriendsList);
     });
   }
   async function getUserMap3Data(userUid: string, mapId: any) {
@@ -1060,8 +1151,8 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     // console.log(querySnapshot);
     querySnapshot.forEach((country) => {
       // console.log(country);
-      console.log(country.data());
-      console.log(country.data().List);
+      // console.log(country.data());
+      // console.log(country.data().List);
       country.data().List.forEach((point: pointListType) => {
         let newPointObj = {
           title: point.title,
@@ -1073,9 +1164,10 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
         };
         newPointList.push(newPointObj);
         // newPhotoList.push(newPointObj.imgUrl);
-        // console.log(newPointObj)
+        // console.log(newPointObj);
       });
-      console.log(newPointList);
+      // console.log(newPointList);
+
       setPointList(newPointList);
       // setNotePhoto(newPhotoList);
     });
@@ -1096,7 +1188,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
 
   // }
 
-  // function getUserMap2Friends(id: string) {
+  // function getCountryFriends(id: string) {
   //   const nf: friendListType[] = [];
   //   console.log(id);
 
@@ -1140,16 +1232,20 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
       key: uuidv4(),
     };
     newFriendList = [...friendList, newFriend];
-    const newHaveFriendNum = friendList.length + 1;
-    console.log(newFriendList);
+    let newHaveFriendNum = friendList.length + 1;
+    // console.log(newHaveFriendNum);
+    // console.log(newFriendList);
     let newSearchFriendList = [...searchFriendList, addFriendState.name];
     setSearchFriendList(newSearchFriendList);
+    // console.log(uid);
+    // console.log(countryId);
+
     await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), { friends: newFriendList, haveFriend: newHaveFriendNum, searchName: newSearchFriendList });
     setFriendList(newFriendList);
     const newHaveFriendList = haveFriendList.map((countryFriend) => {
       if (countryFriend.countryId === countryId) {
         let a = countryFriend.haveFriend + 1;
-        console.log({ ...countryFriend, haveFriend: a });
+        // console.log({ ...countryFriend, haveFriend: a });
         return { ...countryFriend, haveFriend: a };
       }
       return countryFriend;
@@ -1160,6 +1256,10 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     setFriendsList(newFriendsList);
     // console.log(addFriendState)
     console.log("update");
+    setNotificationInfo({ text: "Congrats for making another new friend! 😃 ", status: true });
+    setTimeout(() => {
+      setNotificationInfo({ text: "", status: false });
+    }, 4000);
   }
 
   function hoverAddCountryName(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
@@ -1167,7 +1267,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     const result = countries.filter(function (obj) {
       return obj.code == target.id;
     });
-    setMousePlace(getMousePos(e));
+    // setMousePlace(currentPos);
     if (result.length > 0) {
       setCountryName(result[0].name);
     }
@@ -1226,7 +1326,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     if (pointPhoto == null) {
       // console.log(pointTitleInputRef.current.value);
       const url = notePhoto;
-      console.log(url);
+      // console.log(url);
       if (singlePointList.length <= 1) {
         console.log("我是沒照片的write");
         writeUserMap3Data(country, newObj, url);
@@ -1243,13 +1343,13 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
           notes: pointNotes,
         };
         const newArr = [...pre];
-        console.log(newArr);
+        // console.log(newArr);
         return newArr;
       });
-      console.log(pointList);
+      // console.log(pointList);
     } else {
       let newTitle = pointTitleInputRef.current?.value;
-      console.log(pointTitleInputRef.current);
+      // console.log(pointTitleInputRef.current);
       const imageRef = ref(storage, `${uid}/myMap/${pointPhoto.name}`);
       setPointList((pre) => {
         pre[pointIndex] = {
@@ -1291,7 +1391,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
         newCountryCount += 1;
       }
     });
-    console.log(newCountryCount);
+    // console.log(newCountryCount);
     setCountryCount(newCountryCount);
   }
   // function uploadImage(){
@@ -1316,10 +1416,15 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
       return obj.x !== X && obj.y !== Y;
     });
     setPointList(newPointList);
-    console.log(newPointList);
+    // console.log(newPointList);
     await updateDoc(doc(db, "user", uid, mapId, countryId), {
       List: arrayRemove(singlePointList[0]),
     });
+
+    setNotificationInfo({ text: "Your pin has been successfully deleted", status: true });
+    setTimeout(() => {
+      setNotificationInfo({ text: "", status: false });
+    }, 3000);
   }
 
   function writeUserMap2Data(url: string) {
@@ -1368,6 +1473,10 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     setFriendsList(newFriendsList);
     // newHaveFriendList.push(newHaveFriendObj);
     setHaveFriendList(newHaveFriendList);
+    setNotificationInfo({ text: `Congrats for making your first friend in ${countryName}! 😍 `, status: true });
+    setTimeout(() => {
+      setNotificationInfo({ text: "", status: false });
+    }, 4000);
   }
 
   return (
@@ -1385,6 +1494,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                     onClick={() => {
                       setMapState(1);
                       setIsShowingPoint(false);
+                      setCurrentMapName("Visited Countries Map");
                     }}></WallPaper>
                   <SelectMapText>ᴠɪsɪᴛᴇᴅ ᴍᴀᴘ</SelectMapText>
                 </WallPaperSet>
@@ -1396,9 +1506,11 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                       if (!uid) {
                         // setToLogIn(true);
                         setIsShowingPopUp(true);
+                        setPopUpMsg(["Sign in to explore your new map 😋", "Sign In", "Sign Up", "", "signin"]);
                       } else {
                         setMapState(2);
                         setIsShowingPoint(false);
+                        setCurrentMapName("Friends Located Map");
                       }
                     }}></WallPaper2>
                   <SelectMapText>ғʀɪᴇɴᴅ ᴍᴀᴘ</SelectMapText>
@@ -1409,16 +1521,18 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                   <WallPaper3
                     onClick={() => {
                       if (!uid) {
-                        setToLogIn(true);
+                        setIsShowingPopUp(true);
+                        setPopUpMsg(["Sign in to explore your new map 😋 ", "Sign In", "Sign Up", "", "signin"]);
                       } else {
                         setMapState(3);
                         setIsShowingPoint(true);
+                        setCurrentMapName("My Bucket List");
                       }
                     }}></WallPaper3>
-                  <SelectMapText>ᴍʏ ᴍᴀᴘ</SelectMapText>
+                  <SelectMapText>ᴍʏ ᴍᴀᴘs</SelectMapText>
                 </WallPaperSet>
               </HomePageContainer>
-              <PopUp toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
+              <PopUp setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} deleteFriend={deleteFriend} deleteNote={deleteNote} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
             </HomePage>
           </>
         ) : mapState === 1 ? (
@@ -1440,42 +1554,61 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                 // setUseTarget(target.id)
                 // const result = countries.filter(function(obj){return obj.code == target.id })
                 // setIsClicked(true)
-                let ColorChange = "rgb(236,174,72)";
-                let ColorOrigin = "rgb(232, 233, 234)";
+                let ColorChange = "rgb(236, 174, 72)";
+                let ColorOrigin = "rgb(148, 149, 154)";
                 if (target.style.fill == "") {
                   // target.style.fill = ColorChange;
-                  console.log(target.id);
+                  // console.log(target.id);
                   writeUserMap1Data(target.id);
-                  console.log("空去過");
+                  // console.log("空去過");
                   countryList.push({ countryId: target.id, visited: true });
                   const newCountryList = [...countryList];
                   setCountryList(newCountryList);
                 } else if (target.style.fill === ColorOrigin) {
                   // target.style.fill = ColorChange;
                   writeUserMap1Data(target.id);
-                  console.log("去過");
+                  // console.log("去過");
                   countryList.push({ countryId: target.id, visited: true });
                   const newCountryList = [...countryList];
                   setCountryList(newCountryList);
                 } else if (target.style.fill === ColorChange) {
-                  // console.log(123, target.style)
-                  // target.style.fill = ColorOrigin;
+                  target.style.fill = ColorOrigin;
                   updateUserMap1Data(target.id);
-                  const newCountryList = countryList.map((object) => {
-                    // console.log(targetValue)
-                    // console.log(object.countryId)
-                    if (object.countryId === target.id) {
-                      return { ...object, visited: false };
-                    }
-                    return object;
+                  // const newCountryList = countryList.filter((object) => {
+                  //   return object.countryId !== target.id;
+                  // });
+                  // console.log(countryList);
+                  const newCountryList = countryList.filter((object) => {
+                    return object.countryId !== target.id;
                   });
+                  // console.log(newCountryList);
+
+                  // const newCountryList = countryList.map((object) => {
+                  //   // console.log(targetValue)
+                  //   // console.log(object.countryId)
+
+                  //   if (object.countryId === target.id) {
+                  //     return { ...object, visited: false };
+                  //   }
+                  //   return object;
+                  // });
                   setCountryList(newCountryList);
-                  console.log("沒去過");
+                  // console.log("沒去過");
                 }
                 // updateCountryCount();
               }}>
-              {isHovering ? <ShowName mousePlace={mousePlace}>{countryName}</ShowName> : <></>}
-              <MapSVG hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
+              {isHovering ? <ShowName currentPos={currentPos}>{countryName}</ShowName> : <></>}
+              <div
+                onMouseMove={(e) => {
+                  getPosition(e);
+                }}
+                // onClick={(e) => {
+                //   getPosition(e);
+                // }}
+              >
+                {" "}
+                <MapSVG countryId={countryId} mouseRef={mouseRef} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
+              </div>
               {/* <button
                 onClick={() => {
                   setIsShowingPoint(true);
@@ -1484,7 +1617,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
               </button> */}
               {isShowingPoint ? <Overlap mapState={mapState} pointList={pointList} isShowingPointNotes={isShowingPointNotes} pointIndex={pointIndex} previewImgUrl={previewImgUrl} setPointIndex={setPointIndex} setIsShowingPointNotes={setIsShowingPointNotes} setCountryId={setCountryId}></Overlap> : <></>}
             </Map>
-            <PopUp toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
+            <PopUp setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} deleteFriend={deleteFriend} deleteNote={deleteNote} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
 
             {(countryList && countryList.length === 0) || countryList.length === 1 ? <FriendNum>You've visited {countryList.length} country / area</FriendNum> : <FriendNum>You've visited {countryList.length} countries / area</FriendNum>}
             <CountryCheckList writeUserMap1Data={writeUserMap1Data} countryCollection={countryCollection} setCountryList={setCountryList} setCountryCollection={setCountryCollection} countryList={countryList}></CountryCheckList>
@@ -1500,7 +1633,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                 }
                 setCountryId(target.id);
                 setIsShowingFriends(true);
-                getUserMap2Friends(target.id);
+                getCountryFriends(target.id);
                 setIsShowingPointNotes(false);
               }}>
               <MapCover
@@ -1512,15 +1645,25 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
               //   setIsHovering(false);
               // }}
               >
-                <MapSVG hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
+                <div
+                  onMouseMove={(e) => {
+                    getPosition(e);
+                  }}
+                  // onClick={(e) => {
+                  //   getPosition(e);
+                  // }}
+                >
+                  {" "}
+                  <MapSVG countryId={countryId} mouseRef={mouseRef} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
+                </div>
               </MapCover>
               {isShowingFriends && isShowingFriends === true ? (
                 <FriendBg>
                   <FriendOutsideBox>
                     <FriendMiddleBox>
-                      {friendList.map((friend: { imgUrl: string; name: string; city: string; insta: string; notes: string }, index) => {
-                        console.log(friend.name);
-                        return <FriendBox key={friend.key} countryName={countryName} index={index} countryId={countryId} friend={friend} uid={uid} friendList={friendList} setFriendList={setFriendList} friendsList={friendsList} haveFriendList={haveFriendList} setHaveFriendList={setHaveFriendList} setFriendsList={setFriendsList}></FriendBox>;
+                      {friendList.map((friend: { imgUrl: string; name: string; city: string; insta: string; notes: string; key: string }, index) => {
+                        // console.log(friend.name);
+                        return <FriendBox searchFriendList={searchFriendList} setSearchFriendList={setSearchFriendList} setNotificationInfo={setNotificationInfo} setIsShowingPopUp={setIsShowingPopUp} setPopUpMsg={setPopUpMsg} key={friend.key} countryName={countryName} index={index} countryId={countryId} friend={friend} uid={uid} friendList={friendList} setFriendList={setFriendList} friendsList={friendsList} haveFriendList={haveFriendList} setHaveFriendList={setHaveFriendList} setFriendsList={setFriendsList}></FriendBox>;
                         // onChange={(e)=>{setEditNotes(e.target.value)}}
                       })}
                     </FriendMiddleBox>
@@ -1578,7 +1721,6 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                           onClick={() => {
                             sentNewFriendInfo();
                             setIsAddingFriend(false);
-                            alert("Congrats for making a new friend");
                             setAddFriendState({
                               name: "",
                               // country: '',
@@ -1602,10 +1744,10 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
               ) : (
                 <></>
               )}
-              {isHovering ? <ShowName mousePlace={mousePlace}>{countryName}</ShowName> : <></>}
+              {isHovering ? <ShowName currentPos={currentPos}>{countryName}</ShowName> : <></>}
               {isShowingPoint ? <Overlap mapState={mapState} pointList={pointList} isShowingPointNotes={isShowingPointNotes} pointIndex={pointIndex} previewImgUrl={previewImgUrl} setPointIndex={setPointIndex} setIsShowingPointNotes={setIsShowingPointNotes} setCountryId={setCountryId}></Overlap> : <></>}
             </Map>
-            <PopUp toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
+            <PopUp setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} deleteFriend={deleteFriend} deleteNote={deleteNote} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
 
             {(friendsList && friendsList.length <= 0) || friendsList.length === 1 ? (
               <FriendNum>
@@ -1642,7 +1784,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                 // console.log(screenP)
                 // setSvgScreenPosition(screenP)
                 // }
-                let mousePosition = getMousePos(e);
+                let mousePosition = currentPos;
                 setMousePos(mousePosition);
                 let a = mousePosition;
                 let newObj = {
@@ -1650,11 +1792,18 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                   countryId: target.id,
                   imgUrl: "",
                   notes: "",
-                  x: a.x,
-                  y: a.y,
+                  x: a.x + 221,
+                  y: a.y + 73,
                 };
+                // console.log(a.x);
                 // setPointIndex(pointList.length + 1);
                 setPointList([...pointList, newObj]);
+                if (pointList.length === 0) {
+                  setNotificationInfo({ text: "click on your pin to add some notes", status: true });
+                  setTimeout(() => {
+                    setNotificationInfo({ text: "", status: false });
+                  }, 4000);
+                }
               }}>
               {isShowingPoint ? (
                 <>
@@ -1672,11 +1821,17 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                             mapState={mapState}
                             id={pointInfo.countryId}
                             onClick={(e) => {
+                              // if (previewImgUrl || pointInfo.imgUrl) {
+                              //   setLargeTipTap(false);
+                              // } else {
+                              //   setLargeTipTap(true);
+                              // }
+                              setPointPhoto(null);
                               const target = e.target as HTMLInputElement;
                               setX(pointInfo.x);
                               setY(pointInfo.y);
                               setMousePos({ x: pointInfo.x, y: pointInfo.y });
-                              console.log(target.id);
+                              // console.log(target.id);
                               setPointIndex(index);
                               e.stopPropagation();
                               setIsShowingPointNotes(true);
@@ -1685,6 +1840,12 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                               setNotePhoto(pointInfo.imgUrl);
                               // console.log(pointInfo.imgUrl);
                               setPointNotes("");
+                              if (pointList.length === 1) {
+                                setNotificationInfo({ text: "add some notes to save pin on your map", status: true });
+                                setTimeout(() => {
+                                  setNotificationInfo({ text: "", status: false });
+                                }, 4000);
+                              }
                             }}></Point>
                           <PointSole></PointSole>
                         </PointSet>
@@ -1722,22 +1883,28 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                       <NotesPhotoInput
                         type="file"
                         id="NotesPhotoInput"
-                        accept="image/png, image/gif, image/jpeg, image/svg"
+                        accept="image/png, image/gif, image/jpeg"
                         // ref={contentImageUpload}
 
                         onChange={(e) => {
                           setPointPhoto(e.target.files![0]);
+                          // console.log(e.target.files![0]);
+                          if (e.target.files![0] || pointList[pointIndex].imgUrl) {
+                            setLargeTipTap(false);
+                          } else {
+                            setLargeTipTap(true);
+                          }
                           // setImageUpload(e.target.files![0]);
                         }}></NotesPhotoInput>
                       <PointNotesTextArea
                         onClick={(e) => {
                           e.stopPropagation();
                         }}>
-                        <Tiptap setPointNotes={setPointNotes} pointList={pointList} pointIndex={pointIndex} />
+                        <Tiptap largeTipTap={largeTipTap} setPointNotes={setPointNotes} pointList={pointList} pointIndex={pointIndex} />
                       </PointNotesTextArea>
                     </>
                   ) : (
-                    <PointNote>{pointList && parse(pointList[pointIndex].notes)}</PointNote>
+                    <>{previewImgUrl || pointList[pointIndex].imgUrl ? <PointNote>{pointList && parse(pointList[pointIndex].notes)}</PointNote> : <PointNoteLarge>{pointList && parse(pointList[pointIndex].notes)}</PointNoteLarge>}</>
                   )}
                   {/* <div contentEditable="true" onInput={(e) => console.log(e.currentTarget.innerHTML)}>
                   hi
@@ -1750,13 +1917,18 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                       <NoteCancelBtn
                         onClick={(e) => {
                           e.stopPropagation();
-
-                          setIsEditing(false);
+                          setIsShowingPopUp(true);
+                          setPopUpMsg(["Sure to go back before saving it?", "Yes", "No"]);
                         }}></NoteCancelBtn>
                     ) : (
                       <>
                         <NoteEditBtn
                           onClick={(e) => {
+                            if (previewImgUrl || pointList[pointIndex].imgUrl) {
+                              setLargeTipTap(false);
+                            } else {
+                              setLargeTipTap(true);
+                            }
                             e.stopPropagation();
                             setIsEditing(true);
                             setPointNotes(pointList[pointIndex].notes);
@@ -1764,8 +1936,8 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                           }}></NoteEditBtn>
                         <NoteDeleteBtn
                           onClick={(e) => {
-                            setIsShowingPointNotes(false);
-                            deleteNote();
+                            setIsShowingPopUp(true);
+                            setPopUpMsg(["Sure to delete the pin?", "Yes", "No"]);
                           }}></NoteDeleteBtn>
                       </>
                     )}
@@ -1819,10 +1991,20 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
               ) : (
                 <></>
               )}
-              <MapSVG hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
-              {isHovering ? <ShowName mousePlace={mousePlace}>{countryName}</ShowName> : <></>}
+              <div
+                onMouseMove={(e) => {
+                  getPosition(e);
+                }}
+                // onClick={(e) => {
+                //   getPosition(e);
+                // }}
+              >
+                {" "}
+                <MapSVG countryId={countryId} mouseRef={mouseRef} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
+              </div>
+              {isHovering ? <ShowName currentPos={currentPos}>{countryName}</ShowName> : <></>}
             </Map>
-            <PopUp toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
+            <PopUp setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} deleteFriend={deleteFriend} deleteNote={deleteNote} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
           </>
         ) : mapState === 4 ? (
           <>{/* <Login countryList={countryList} setUid={setUid} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}></Login> */}</>
