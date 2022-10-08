@@ -90,7 +90,7 @@ function App() {
   const [isShowingPointNotes, setIsShowingPointNotes] = useState<boolean>(false);
   const [friendsList, setFriendsList] = useState<friendListType[]>([]);
   const [friendList, setFriendList] = useState<friendListType[]>([]);
-  // console.log(friendList);
+  // console.log(friendsList);
   const [isShowingFriends, setIsShowingFriends] = useState<boolean>(false);
   const [countryId, setCountryId] = useState<string>("");
   const [countryName, setCountryName] = useState<string>("");
@@ -105,6 +105,7 @@ function App() {
   const [deleteMap, setDeleteMap] = useState<string>("no");
   const [mapNames, setMapNames] = useState<mapNameType[]>([]);
   const [popUpMsg, setPopUpMsg] = useState<any[]>([]);
+  const [isChangingMap, setIsChangingMap] = useState<boolean>(false);
   // console.log(popUpMsg);
   const [notificationInfo, setNotificationInfo] = useState<notificationInfoType>({ text: "", status: false });
   // console.log(notificationInfo);
@@ -186,6 +187,8 @@ function App() {
         setNotificationInfo={setNotificationInfo}
         setCurrentMapName={setCurrentMapName}
         currentMapName={currentMapName}
+        isChangingMap={isChangingMap}
+        setIsChangingMap={setIsChangingMap}
       />
       <WorldMap
         isLoggedIn={isLoggedIn}
@@ -232,6 +235,7 @@ function App() {
         setDeleteMap={setDeleteMap}
         setNotificationInfo={setNotificationInfo}
         setCurrentMapName={setCurrentMapName}
+        setIsChangingMap={setIsChangingMap}
       />
       <Notification setNotificationInfo={setNotificationInfo} notificationInfo={notificationInfo}></Notification>
     </>

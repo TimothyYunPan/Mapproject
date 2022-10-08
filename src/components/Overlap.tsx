@@ -14,9 +14,11 @@ type OverlapType = {
   setIsShowingPointNotes: React.Dispatch<React.SetStateAction<boolean>>;
   setCountryId: React.Dispatch<React.SetStateAction<string>>;
   mapState: number;
+  setPointPhoto: React.Dispatch<React.SetStateAction<File | null>>;
+  setNotePhoto: React.Dispatch<React.SetStateAction<string>>;
   // isShowingPoint: isShowingPointType
 };
-function Overlap({ mapState, pointList, isShowingPointNotes, pointIndex, previewImgUrl, setPointIndex, setIsShowingPointNotes, setCountryId }: OverlapType) {
+function Overlap({ mapState, pointList, isShowingPointNotes, pointIndex, previewImgUrl, setPointIndex, setIsShowingPointNotes, setCountryId, setPointPhoto, setNotePhoto }: OverlapType) {
   return (
     <>
       {/* <Map
@@ -60,7 +62,9 @@ function Overlap({ mapState, pointList, isShowingPointNotes, pointIndex, preview
                   // setX(pointInfo.x);
                   // setY(pointInfo.y);
                   // console.log(target.id);
+                  setPointPhoto(null);
                   setPointIndex(index);
+                  setNotePhoto(pointInfo.imgUrl);
                   e.stopPropagation();
                   setIsShowingPointNotes(true);
                   // setIsEditing(false);

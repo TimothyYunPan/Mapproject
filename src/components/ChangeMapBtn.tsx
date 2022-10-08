@@ -82,19 +82,20 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
         defaultValue={mapName.name}
         readOnly={isReadOnly}
         onClick={() => {
-          if (mapId !== mapName.id) {
-            setPointList([]);
-          }
-          setMapId(mapName.id);
           setIsShowingPointNotes(false);
           if (isEditing === true) {
             setIsChangingMap(true);
           } else {
+            if (mapId !== mapName.id) {
+              setPointList([]);
+            }
             setIsChangingMap(false);
+            setMapState(3);
+            setCurrentMapName(mapName.name);
+            setOverlapName(mapName.name);
+
+            setMapId(mapName.id);
           }
-          setOverlapName(mapName.name);
-          setMapState(3);
-          setCurrentMapName(mapName.name);
           setIsShowingPoint(true);
 
           // if (!uid) {
@@ -111,16 +112,25 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
         <>
           <OkIcon
             onClick={() => {
-              setIsEditing(false);
-              setIsReadOnly(true);
-              updateNewMapName(mapName.id);
+              if (MapNameRef.current!.value.trim() !== "") {
+                setIsEditing(false);
+                setIsReadOnly(true);
+                updateNewMapName(mapName.id);
+                // setMapId(mapName.id);
+                if (mapId === mapName.id) {
+                  setCurrentMapName(MapNameRef.current!.value);
+                  setOverlapName(MapNameRef.current!.value);
+                }
+              } else {
+                console.log("popup");
+              }
             }}></OkIcon>
           <DeleteMapBtn
             // ref={CurrentMapIdRef}
             onClick={() => {
               CurrentMapIdRef.current = mapName.id;
               setIsShowingPopUp(true);
-              setPopUpMsg([`Sure to delete your map named ${mapName.name} ?`, "Yes", "No", "", "deletemap", deleteNewMap]);
+              setPopUpMsg([`Are you sure you want to delete the map "${mapName.name}" ?`, "Yes", "No", "", "deletemap", deleteNewMap]);
               setIsEditing(false);
 
               // console.log(index);
@@ -128,7 +138,7 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
         </>
       ) : (
         <EditMapBtn
-          onClick={() => {
+          onClick={(e) => {
             setIsReadOnly(false);
             setIsEditing(true);
           }}></EditMapBtn>

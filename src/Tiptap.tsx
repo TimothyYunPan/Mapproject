@@ -67,9 +67,7 @@ const Tiptap = ({ setPointNotes, pointList, pointIndex, largeTipTap }: { setPoin
         placeholder: "Start type something...",
       }),
     ],
-    content: `
-    ${pointList && pointList[pointIndex].notes}
-    `,
+    content: pointList[pointIndex].notes ? pointList[pointIndex].notes : `<p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p>`,
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
       setPointNotes(html);

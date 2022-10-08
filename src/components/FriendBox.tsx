@@ -151,11 +151,11 @@ type friendInsideBoxType = {
   setPopUpMsg: React.Dispatch<React.SetStateAction<string[]>>;
   setIsShowingPopUp: React.Dispatch<React.SetStateAction<boolean>>;
   setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
-  setSearchFriendList: React.Dispatch<React.SetStateAction<string[]>>;
-  searchFriendList: string[];
+  // setSearchFriendList: React.Dispatch<React.SetStateAction<string[]>>;
+  // searchFriendList: string[];
 };
 
-function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList, setHaveFriendList, setFriendsList, friend, countryId, index, countryName, setPopUpMsg, setIsShowingPopUp, setNotificationInfo, setSearchFriendList, searchFriendList }: friendInsideBoxType) {
+function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList, setHaveFriendList, setFriendsList, friend, countryId, index, countryName, setPopUpMsg, setIsShowingPopUp, setNotificationInfo }: friendInsideBoxType) {
   const NameRef = useRef<HTMLInputElement>(null);
   const CityRef = useRef<HTMLInputElement>(null);
   const InstaRef = useRef<HTMLInputElement>(null);
@@ -169,20 +169,22 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
   // console.log(previewFriendNewImgUrl, CityRef.current);
 
   async function updateFriendInfo(index: number, newObj: friendListType) {
-    searchFriendList.splice(index, 1, newObj.name);
+    // searchFriendList.splice(index, 1, newObj.name);
 
     // console.log(newSearhingName);
-
+    console.log(newObj);
+    friendList[index] = newObj;
     let newfriendsList = friendsList.filter((friends) => {
       // console.log(friends.countryId);
-      // console.log(friendsList);
+      console.log(friendsList);
       return friends.countryId !== countryId;
     });
+    console.log(friendList);
     newfriendsList = [...newfriendsList, ...friendList];
 
     setFriendsList(newfriendsList);
 
-    await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), { friends: friendList, searchName: searchFriendList }, { merge: true });
+    await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), { merge: true });
     setNotificationInfo({ text: "Successfully edit your friends info!", status: true });
     setTimeout(() => {
       setNotificationInfo({ text: "", status: false });
@@ -195,7 +197,7 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
       newObj.imgUrl = friendOriginalPhoto;
       // const url = friendOriginalPhoto;
       updateFriendInfo(index, newObj);
-      // console.log("這裡");
+      console.log("這裡");
       // friendList
       // setPointList((pre) => {
       //   pre[pointIndex] = {
@@ -211,7 +213,7 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
     } else {
       // let newTitle = pointTitleInputRef.current?.value;
       const imageRef = ref(storage, `${uid}/friendMap/${imageUpload.name}`);
-      // console.log("還是這裡");
+      console.log("還是這裡");
       // setPointList((pre) => {
       //   pre[pointIndex] = {
       //     ...pre[pointIndex],
@@ -275,7 +277,7 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
         <DeleteFriendBtn
           onClick={(e) => {
             setIsShowingPopUp(true);
-            setPopUpMsg([`Sure to delete ${friendList[index].name} 😭 ?`, "Yes", "No", `${index}`, `deletefriend`]);
+            setPopUpMsg([`Are you sure  you want to delete the friend "${friendList[index].name}" 😭 ?`, "Yes", "No", `${index}`, `deletefriend`]);
           }}></DeleteFriendBtn>
         {isEditingFriend ? (
           <FriendUpdateBtn

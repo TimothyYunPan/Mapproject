@@ -195,7 +195,7 @@ export const OkIcon = styled(HeaderBtnStyle)`
   }
 `;
 
-const CurrentMap = styled.div`
+const CurrentMap = styled.div<{ mapState: number }>`
   height: 60px;
   width: 220px;
   /* margin: 0 10px; */
@@ -207,6 +207,7 @@ const CurrentMap = styled.div`
   text-align: left;
   cursor: pointer;
   :hover {
+    /* color: ${(props) => (props.mapState === 2 ? "rgba(102,255,229,.8)" : "rgb(236, 174, 72)")}; */
     color: rgb(236, 174, 72);
     /* border-bottom: 1px solid white; */
   }
@@ -307,7 +308,50 @@ const SearchInput = styled.input`
   padding-left: 10px;
   background-color: inherit;
   color: white;
+  outline: none;
 `;
+
+const SearchResultBox = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  height: 95px;
+  width: 170px;
+  right: 140px;
+  top: 60px;
+  z-index: 100;
+  /* border: 1px solid black; */
+  background-color: inherit;
+  color: white;
+  overflow: scroll;
+`;
+
+const SearchResultFriend = styled.div`
+  width: 100%;
+  height: 30px;
+  /* border: 1px solid white; */
+  margin-bottom: 4px;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+`;
+
+const SearchResultName = styled.div`
+  font-size: 14px;
+
+  :hover {
+    /* padding-left: 6px; */
+    color: rgba(225, 225, 225, 0.9);
+  }
+  transition: 0.2s;
+`;
+const SearchResultCountry = styled.div`
+  padding-right: 4px;
+  font-size: 13.5px;
+  color: rgba(225, 225, 225, 0.5);
+`;
+
 const LoginBtn = styled.div`
   height: 50px;
   width: 80px;
@@ -322,7 +366,7 @@ const LoginBtn = styled.div`
   }
 `;
 
-const OverlapBtn = styled.div<{ isShowingPoint: boolean }>`
+const OverlapBtn = styled.div<{ isShowingPoint: boolean; mapState: number }>`
   position: relative;
   /* top: 3px;
   right: 330px; */
@@ -337,8 +381,8 @@ const OverlapBtn = styled.div<{ isShowingPoint: boolean }>`
   /* background-color: rgba(0, 0, 0, 0.5); */
   /* filter: (3px); */
   backdrop-filter: blur(100px);
-
   background-color: rgba(225, 225, 225, 0.2);
+  /* background-color: ${(props) => (props.mapState === 2 ? "rgba(0,0,0,0.4)" : "rgba(225, 225, 225, 0.2)")}; */
 
   cursor: pointer;
   font-size: 16px;
@@ -348,6 +392,7 @@ const OverlapBtn = styled.div<{ isShowingPoint: boolean }>`
   /* color: ${(props) => (props.isShowingPoint === true ? "rgb(236,174,72)" : "white")}; */
 
   :hover {
+    /* color: ${(props) => (props.mapState === 2 ? "rgba(102,255,229,.8)" : "rgb(236, 174, 72)")}; */
     color: rgb(236, 174, 72);
     /* border-bottom: 1px solid white; */
   }
@@ -426,26 +471,35 @@ type HeaderType = {
   setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
   setCurrentMapName: React.Dispatch<React.SetStateAction<string>>;
   currentMapName: string;
+  setIsChangingMap: React.Dispatch<React.SetStateAction<boolean>>;
+  isChangingMap: boolean;
 };
 
-function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid, setUid, toLogIn, setToLogIn, countryList, setCountryList, isLoggedIn, setIsLoggedIn, setIsShowingPointNotes, getCountryFriends, isShowingFriends, setIsShowingFriends, setCountryId, setCountryName, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList, isShowingPopUp, setIsShowingPopUp, loginStatus, setLoginStatus, userName, setUserName, userImage, setMapId, mapNames, setMapNames, originalMapNames, setOriginalMapNames, mapId, setPopUpMsg, deleteMap, setDeleteMap, pointList, setNotificationInfo, setCurrentMapName, currentMapName }: HeaderType) {
+function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid, setUid, toLogIn, setToLogIn, countryList, setCountryList, isLoggedIn, setIsLoggedIn, setIsShowingPointNotes, getCountryFriends, isShowingFriends, setIsShowingFriends, setCountryId, setCountryName, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList, isShowingPopUp, setIsShowingPopUp, loginStatus, setLoginStatus, userName, setUserName, userImage, setMapId, mapNames, setMapNames, originalMapNames, setOriginalMapNames, mapId, setPopUpMsg, deleteMap, setDeleteMap, pointList, setNotificationInfo, setCurrentMapName, currentMapName, isChangingMap, setIsChangingMap }: HeaderType) {
   const [searchCountry, setSearchCountry] = useState<string>("");
   const [searchValue, setSearchValue] = useState<string>("");
-  const [isChangingMap, setIsChangingMap] = useState<boolean>(false);
   const [isEditingMap, setIsEditingMap] = useState<number>(-1);
   const [isReadOnly, setIsReadOnly] = useState<boolean>(true);
   const [isShowingOverlapBtn, setIsShowingOverlapBtn] = useState<boolean>(false);
   const [overlapName, setOverlapName] = useState<string>("Overlap with...");
   // console.log(overlapName);
+  const [searchNameResult, setSearchNameResult] = useState<friendListType[]>([]);
+  // console.log(searchNameResult);
+  const [isShowSearchResult, setIsShowingSearchResult] = useState<boolean>();
   const [map3Name, setMap3Name] = useState<string>("My Bucket List");
   const Map1NameRef = useRef<any>("Visited Countries");
   const Map2NameRef = useRef<any>("Friends Located");
   const Map3NameRef = useRef<any>("My Bucket List");
-
+  const searchInputRef = useRef<any>("");
+  // useEffect(() => {
+  //   if (searchValue !== "") {
+  //     searchCountries(searchValue);
+  //   }
+  // }, [searchValue]);
   // useEffect(() => {}, [mapNames]);
-  function searchCountries() {
+  function searchCountries(searchValue) {
     const result = countries.filter(function (obj) {
-      return obj.name.toLowerCase() == searchValue.toLowerCase();
+      return obj.name.toLowerCase() === searchValue.toLowerCase();
     });
     if (result[0]) {
       setCountryName(searchValue.charAt(0).toUpperCase() + searchValue.slice(1));
@@ -453,27 +507,56 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
       getCountryFriends(a);
       setCountryId(a);
       setIsShowingFriends(true);
+      // searchInputRef.current.value = "";
       // document.getElementById(a)!.style.scale = "2px";
       document.getElementById(a)!.style.fill = "rgb(236,174,72)";
     } else {
-      searchName();
+      // searchName(searchValue);
+      // setSearchNameResult("no result");
+      // setIsShowingSearchResult;
+      console.log("查無資料");
     }
 
     // setSearchCountry(a);
   }
-  async function searchName() {
-    const countriesRef = collection(db, "user", uid, "friendsLocatedCountries");
-    const q = query(countriesRef, where("searchName", "array-contains", searchValue));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      // console.log(doc.data());
-      getCountryFriends(doc.id);
-      setIsShowingFriends(true);
-      setCountryId(doc.id);
-      setCountryName(doc.data().friends[0].country);
-      // console.log("hi");
+
+  function searchName(searchValue) {
+    const result = friendsList.filter(function (obj) {
+      return obj.name.toLowerCase() === searchValue.toLowerCase();
     });
+    console.log(result);
+    if (!result[0]) {
+      // searchCountries(searchValue);
+      console.log("查無資料");
+      setIsShowingSearchResult(false);
+      setSearchNameResult([]);
+    } else {
+      setIsShowingSearchResult(true);
+      setSearchNameResult(result);
+      // } else if (result.length === 1) {
+      //   setCountryId(result[0].countryId);
+      //   setIsShowingFriends(true);
+      //   setCountryName(result[0].country);
+      //   getCountryFriends(result[0].countryId);
+      // } else {
+      //   setIsShowingSearchResult(true);
+      //   setSearchNameResult(result);
+    }
   }
+
+  // async function searchName() {
+  //   const countriesRef = collection(db, "user", uid, "friendsLocatedCountries");
+  //   const q = query(countriesRef, where("searchName", "array-contains", searchValue));
+  //   const querySnapshot = await getDocs(q);
+  //   querySnapshot.forEach((doc) => {
+  //     // console.log(doc.data());
+  //     getCountryFriends(doc.id);
+  //     setIsShowingFriends(true);
+  //     setCountryId(doc.id);
+  //     setCountryName(doc.data().friends[0].country);
+  //     // console.log("hi");
+  //   });
+  // }
   // countries.forEach((country)=>{
   // })
   async function writeNewMapToData(uid: string) {
@@ -512,6 +595,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
             <>
               {" "}
               <CurrentMap
+                mapState={mapState}
                 onClick={() => {
                   if (isChangingMap) {
                     setIsChangingMap(false);
@@ -737,6 +821,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
               </CurrentOverlap>
               <OverlapList isShowingOverlapBtn={isShowingOverlapBtn}>
                 <OverlapBtn
+                  mapState={mapState}
                   isShowingPoint={isShowingPoint}
                   onClick={() => {
                     if (!uid) {
@@ -759,6 +844,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                     return (
                       <>
                         <OverlapBtn
+                          mapState={mapState}
                           isShowingPoint={isShowingPoint}
                           onClick={() => {
                             // setPointList([]);
@@ -771,8 +857,15 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                             // } else {
                             //   setIsShowingPoint(true);
                             // }
-                            setIsShowingPointNotes(false);
                             setIsShowingPoint(true);
+
+                            setIsShowingPointNotes(false);
+                            // console.log(pointList);
+                            // if (pointList.length === 0) {
+                            //   setIsShowingPoint(false);
+                            // } else {
+                            //   setIsShowingPoint(true);
+                            // }
                           }}>
                           {mapName.name}
                         </OverlapBtn>
@@ -803,35 +896,93 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
           <>
             {mapState === 2 ? (
               <SearchInput
+                ref={searchInputRef}
                 placeholder="country / friend"
+                onClick={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  if (target.value === searchNameResult[0].name) {
+                    setIsShowingSearchResult(true);
+                  }
+                  // setIsShowingSearchResult;
+
+                  setSearchValue(target.value);
+                }}
                 onChange={(e) => {
                   setSearchValue(e.target.value);
+                  searchName(e.target.value);
                 }}
                 onKeyPress={(e) => {
                   if (e.key === "Enter") {
                     const target = e.target as HTMLInputElement;
-                    setSearchValue(target.value);
-                    searchCountries();
+                    // setSearchValue(target.value);
+                    // searchName(target.value);
+                    searchCountries(target.value);
+                    if (searchNameResult.length === 1) {
+                      setCountryId(searchNameResult[0].countryId);
+                      setIsShowingFriends(true);
+                      setCountryName(searchNameResult[0].country);
+                      getCountryFriends(searchNameResult[0].countryId);
+                      setIsShowingSearchResult(false);
+                      searchInputRef.current.value = "";
+                      setSearchNameResult([]);
+                    }
+
+                    // searchCountries(target.value);
                   }
                 }}></SearchInput>
             ) : (
               <SearchInput
                 placeholder="country"
                 onChange={(e) => {
-                  setSearchValue(e.target.value);
+                  searchCountries(e.target.value);
+                  // setSearchValue(e.target.value);
                 }}
                 onKeyPress={(e) => {
                   if (e.key === "Enter") {
                     const target = e.target as HTMLInputElement;
-                    setSearchValue(target.value);
-                    searchCountries();
+                    // setSearchValue(target.value);
+                    searchCountries(target.value);
+                    // setSearchNameResult([]);
                   }
                 }}></SearchInput>
+            )}
+            {isShowSearchResult ? (
+              <SearchResultBox>
+                {searchNameResult[0] &&
+                  searchNameResult.map((result) => (
+                    <SearchResultFriend
+                      onClick={() => {
+                        setCountryId(result.countryId);
+                        setIsShowingFriends(true);
+                        setCountryName(result.country);
+                        getCountryFriends(result.countryId);
+                        setIsShowingSearchResult(false);
+                        searchInputRef.current.value = "";
+                        setSearchNameResult([]);
+                      }}>
+                      <SearchResultName>{result.name}</SearchResultName>
+                      <SearchResultCountry>{result.country}</SearchResultCountry>
+                    </SearchResultFriend>
+                  ))}
+              </SearchResultBox>
+            ) : (
+              <></>
             )}
 
             <SearchBtn
               onClick={(e) => {
-                searchCountries();
+                console.log("hi");
+                // const target = e.target as HTMLInputElement;
+                searchCountries(searchValue);
+                if (searchNameResult.length === 1) {
+                  setCountryId(searchNameResult[0].countryId);
+                  setIsShowingFriends(true);
+                  setCountryName(searchNameResult[0].country);
+                  getCountryFriends(searchNameResult[0].countryId);
+                  setIsShowingSearchResult(false);
+                  setSearchNameResult([]);
+                  searchInputRef.current.value = "";
+                }
               }}></SearchBtn>
           </>
         )}

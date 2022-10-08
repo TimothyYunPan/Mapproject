@@ -99,7 +99,7 @@ function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatu
                 if (popUpMsg[4] === "signin") {
                   setLoginStatus("login");
                   setToLogIn(true);
-                } else if (popUpMsg[0] === "Sure to delete the pin?") {
+                } else if (popUpMsg[4] === "deletepin") {
                   setIsShowingPointNotes(false);
                   deleteNote();
                 } else if (popUpMsg[4] === "deletefriend") {
@@ -111,7 +111,7 @@ function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatu
                   console.log(popUpMsg[5]);
 
                   popUpMsg[5]();
-                } else if (popUpMsg[0] === "Sure to go back before saving it?") {
+                } else if (popUpMsg[4] === "goback") {
                   setIsEditing(false);
                 }
 

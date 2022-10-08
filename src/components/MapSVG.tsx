@@ -57,8 +57,8 @@ const Path = styled.path<Pathtype>`
 
   /* transition: translateY 0.3s; */
   &:hover {
-    fill: ${(props) => (props.mapState === 1 ? "rgb(236,174,72)" : props.mapState === 2 ? "#5CADAD" : "rgb(211,211,211)")};
-
+    fill: ${(props) => (props.mapState === 1 ? "rgb(236,174,72) !important" : props.mapState === 2 ? "#5CADAD" : "rgb(211,211,211)")};
+    /* !important; */
     /* fill:#4D80E6; */
     /* filter: drop-shadow(2px 2px 6px #000a); */
     /* transform: translate(0px,-1px); */
@@ -89,7 +89,7 @@ function MapSVG({ countryList, mapState, haveFriendList, allCountries, setIsHove
   useEffect(() => {
     if (mapState === 1) {
       // console.log(countryList);
-      // console.log(123);
+      console.log(123);
       let a = [];
       allCountries.forEach((country) => {
         // console.log(country);
