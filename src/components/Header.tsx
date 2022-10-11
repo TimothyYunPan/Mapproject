@@ -229,8 +229,14 @@ const Wrapper = styled.div`
   z-index: 100;
   /* align-items: center; */
   /* justify-content: center; */
+  /* background-color: rgb(42, 60, 77); */
   z-index: 1000;
 `;
+
+const Nav = styled.div`
+  width: 100%;
+`;
+
 const HeaderRightSet = styled.div`
   width: 520px;
   text-align: center;
@@ -323,7 +329,8 @@ const SearchResultBox = styled.div`
   /* border: 1px solid black; */
   background-color: inherit;
   color: white;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
 `;
 
 const SearchResultFriend = styled.div`
@@ -401,7 +408,7 @@ const OverlapBtn = styled.div<{ isShowingPoint: boolean; mapState: number }>`
 const OverlapList = styled.div<{ isShowingOverlapBtn: boolean }>`
   /* width: 80px; */
   position: absolute;
-  height: ${(props) => (props.isShowingOverlapBtn === true ? "220" : "0")}px;
+  height: ${(props) => (props.isShowingOverlapBtn === true ? "200" : "0")}px;
   display: flex;
   flex-direction: column;
   top: 60px;
@@ -412,7 +419,7 @@ const OverlapList = styled.div<{ isShowingOverlapBtn: boolean }>`
   }
 `;
 
-const CurrentOverlap = styled.div<{ isShowingPoint }>`
+const CurrentOverlap = styled.div<{ isShowingPoint: boolean }>`
   width: 100%;
   font-size: 16px;
   backdrop-filter: blur(100px);
@@ -473,9 +480,10 @@ type HeaderType = {
   currentMapName: string;
   setIsChangingMap: React.Dispatch<React.SetStateAction<boolean>>;
   isChangingMap: boolean;
+  setPointIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
-function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid, setUid, toLogIn, setToLogIn, countryList, setCountryList, isLoggedIn, setIsLoggedIn, setIsShowingPointNotes, getCountryFriends, isShowingFriends, setIsShowingFriends, setCountryId, setCountryName, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList, isShowingPopUp, setIsShowingPopUp, loginStatus, setLoginStatus, userName, setUserName, userImage, setMapId, mapNames, setMapNames, originalMapNames, setOriginalMapNames, mapId, setPopUpMsg, deleteMap, setDeleteMap, pointList, setNotificationInfo, setCurrentMapName, currentMapName, isChangingMap, setIsChangingMap }: HeaderType) {
+function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid, setUid, toLogIn, setToLogIn, countryList, setCountryList, isLoggedIn, setIsLoggedIn, setIsShowingPointNotes, getCountryFriends, isShowingFriends, setIsShowingFriends, setCountryId, setCountryName, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList, isShowingPopUp, setIsShowingPopUp, loginStatus, setLoginStatus, userName, setUserName, userImage, setMapId, mapNames, setMapNames, originalMapNames, setOriginalMapNames, mapId, setPopUpMsg, deleteMap, setDeleteMap, pointList, setNotificationInfo, setCurrentMapName, currentMapName, isChangingMap, setIsChangingMap, setPointIndex }: HeaderType) {
   const [searchCountry, setSearchCountry] = useState<string>("");
   const [searchValue, setSearchValue] = useState<string>("");
   const [isEditingMap, setIsEditingMap] = useState<number>(-1);
@@ -497,7 +505,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
   //   }
   // }, [searchValue]);
   // useEffect(() => {}, [mapNames]);
-  function searchCountries(searchValue) {
+  function searchCountries(searchValue: string) {
     const result = countries.filter(function (obj) {
       return obj.name.toLowerCase() === searchValue.toLowerCase();
     });
@@ -520,7 +528,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
     // setSearchCountry(a);
   }
 
-  function searchName(searchValue) {
+  function searchName(searchValue: string) {
     const result = friendsList.filter(function (obj) {
       return obj.name.toLowerCase() === searchValue.toLowerCase();
     });
@@ -588,6 +596,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
         <Logo
           mapState={mapState}
           onClick={() => {
+            setIsShowingFriends(false);
             setMapState(-1);
           }}></Logo>
         <MapList>
@@ -638,6 +647,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                         } else {
                           setIsChangingMap(true);
                         }
+                        setPointIndex(-1);
                         setCurrentMapName("Visited Countries Map");
                         setMapState(1);
                         setIsShowingPopUp(false);
@@ -674,7 +684,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                       onClick={() => {
                         if (!uid) {
                           setIsShowingPopUp(true);
-                          setPopUpMsg(["Sign in to explore your new map 😋 ", "Sign In", "Sign Up", "", "signin"]);
+                          setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
                           // setToLogIn(true);
                         } else {
                           if (isEditingMap === -1) {
@@ -682,6 +692,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                           } else {
                             setIsChangingMap(true);
                           }
+                          setPointIndex(-1);
                           setCurrentMapName("Friends Located Map");
                           setMapState(2);
                           setIsShowingFriends(false);
@@ -721,7 +732,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                       onClick={() => {
                         if (!uid) {
                           setIsShowingPopUp(true);
-                          setPopUpMsg(["Sign in to explore your new map 😋 ", "Sign In", "Sign Up", "", "signin"]);
+                          setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
                           // setToLogIn(true);
                         } else {
                           if (mapId !== "custimizedMap") {
@@ -733,6 +744,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                           } else {
                             setIsChangingMap(true);
                           }
+                          setPointIndex(-1);
                           setOverlapName("My Bucket List");
                           setCurrentMapName("My Bucket List");
                           setMapState(3);
@@ -767,7 +779,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                       // console.log(mapName);
                       return (
                         <>
-                          <ChangeMapBtn pointList={pointList} setIsShowingPopUp={setIsShowingPopUp} setPopUpMsg={setPopUpMsg} deleteMap={deleteMap} setDeleteMap={setDeleteMap} mapId={mapId} uid={uid} mapNames={mapNames} setMapNames={setMapNames} index={index} mapName={mapName} setIsShowingPointNotes={setIsShowingPointNotes} setPointList={setPointList} setIsChangingMap={setIsChangingMap} setMapId={setMapId} setMapState={setMapState} setIsShowingPoint={setIsShowingPoint} setCurrentMapName={setCurrentMapName} isEditingMap={isEditingMap} setIsEditingMap={setIsEditingMap} setOverlapName={setOverlapName}></ChangeMapBtn>
+                          <ChangeMapBtn setPointIndex={setPointIndex} setNotificationInfo={setNotificationInfo} pointList={pointList} setIsShowingPopUp={setIsShowingPopUp} setPopUpMsg={setPopUpMsg} deleteMap={deleteMap} setDeleteMap={setDeleteMap} mapId={mapId} uid={uid} mapNames={mapNames} setMapNames={setMapNames} index={index} mapName={mapName} setIsShowingPointNotes={setIsShowingPointNotes} setPointList={setPointList} setIsChangingMap={setIsChangingMap} setMapId={setMapId} setMapState={setMapState} setIsShowingPoint={setIsShowingPoint} setCurrentMapName={setCurrentMapName} isEditingMap={isEditingMap} setIsEditingMap={setIsEditingMap} setOverlapName={setOverlapName}></ChangeMapBtn>
                         </>
                       );
                     })}
@@ -777,8 +789,13 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                   onClick={() => {
                     if (!uid) {
                       setIsShowingPopUp(true);
-                      setPopUpMsg(["Sign in to explore your new map 😋 ", "Sign In", "Sign Up", "", "signin"]);
+                      setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
                       // setToLogIn(true);
+                    } else if (mapNames && mapNames.length > 7) {
+                      setNotificationInfo({ text: `You will only have 10 maps at the same time`, status: true });
+                      setTimeout(() => {
+                        setNotificationInfo({ text: "", status: false });
+                      }, 3000);
                     } else {
                       writeNewMapToData(uid);
                     }
@@ -798,24 +815,34 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
               <ShowOverLapBtn
                 isShowingPoint={isShowingPoint}
                 onClick={() => {
-                  if (isShowingPoint) {
-                    setIsShowingPoint(false);
+                  if (!uid) {
+                    setIsShowingPopUp(true);
+                    setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
                   } else {
-                    setIsShowingPoint(true);
+                    if (isShowingPoint) {
+                      setIsShowingPoint(false);
+                    } else {
+                      setIsShowingPoint(true);
+                    }
                   }
                 }}></ShowOverLapBtn>
               <CurrentOverlap
                 isShowingPoint={isShowingPoint}
                 onClick={() => {
-                  // setPointList([]);
-                  if (isShowingOverlapBtn) {
-                    setIsShowingOverlapBtn(false);
+                  if (!uid) {
+                    setIsShowingPopUp(true);
+                    setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
                   } else {
-                    setIsShowingOverlapBtn(true);
+                    // setPointList([]);
+                    if (isShowingOverlapBtn) {
+                      setIsShowingOverlapBtn(false);
+                    } else {
+                      setIsShowingOverlapBtn(true);
+                    }
+                    // setIsShowingOverlapBtn(false);
+                    setIsChangingMap(false);
+                    setIsShowingPointNotes(false);
                   }
-                  // setIsShowingOverlapBtn(false);
-                  setIsChangingMap(false);
-                  setIsShowingPointNotes(false);
                 }}>
                 {overlapName}
               </CurrentOverlap>
@@ -826,7 +853,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                   onClick={() => {
                     if (!uid) {
                       setIsShowingPopUp(true);
-                      setPopUpMsg(["Sign in to explore your new map 😋 ", "Sign In", "Sign Up", "", "signin"]);
+                      setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
                       // setToLogIn(true);
                     } else {
                       // setPointList([]);
@@ -877,12 +904,17 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
               <CheckOverLapBtn
                 isShowingOverlapBtn={isShowingOverlapBtn}
                 onClick={() => {
-                  if (isShowingOverlapBtn) {
-                    setIsShowingOverlapBtn(false);
+                  if (!uid) {
+                    setIsShowingPopUp(true);
+                    setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
                   } else {
-                    setIsShowingOverlapBtn(true);
+                    if (isShowingOverlapBtn) {
+                      setIsShowingOverlapBtn(false);
+                    } else {
+                      setIsShowingOverlapBtn(true);
+                    }
+                    setIsChangingMap(false);
                   }
-                  setIsChangingMap(false);
                 }}></CheckOverLapBtn>
             </>
           ) : (
@@ -941,6 +973,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                   if (e.key === "Enter") {
                     const target = e.target as HTMLInputElement;
                     // setSearchValue(target.value);
+                    setIsShowingPointNotes(false);
                     searchCountries(target.value);
                     // setSearchNameResult([]);
                   }
@@ -974,6 +1007,8 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                 console.log("hi");
                 // const target = e.target as HTMLInputElement;
                 searchCountries(searchValue);
+                setIsShowingPointNotes(false);
+
                 if (searchNameResult.length === 1) {
                   setCountryId(searchNameResult[0].countryId);
                   setIsShowingFriends(true);
@@ -981,6 +1016,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                   getCountryFriends(searchNameResult[0].countryId);
                   setIsShowingSearchResult(false);
                   setSearchNameResult([]);
+
                   searchInputRef.current.value = "";
                 }
               }}></SearchBtn>
@@ -998,6 +1034,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
         {}
       </HeaderRightSet>
       <Login setNotificationInfo={setNotificationInfo} friendsList={friendsList} setFriendsList={setFriendsList} setMapState={setMapState} uid={uid} toLogIn={toLogIn} setToLogIn={setToLogIn} countryList={countryList} setCountryList={setCountryList} setUid={setUid} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setHaveFriendList={setHaveFriendList} setFriendList={setFriendList} setPointList={setPointList} loginStatus={loginStatus} setLoginStatus={setLoginStatus} userName={userName} setUserName={setUserName} userImage={userImage} originalMapNames={originalMapNames} setMapNames={setMapNames}></Login>
+      {/* <Nav></Nav> */}
     </Wrapper>
   );
 }

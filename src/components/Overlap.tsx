@@ -4,6 +4,7 @@ import NoteImgUploadBtn from "../WorldMap";
 import { Point, PointNotes, PointSet, PointSole, PointNotesTitle, PointNote, PointNotesTextImg } from "../WorldMap";
 import { pointListType } from "../App";
 import parse from "html-react-parser";
+import { LittleCloseBtn } from "../WorldMap";
 
 type OverlapType = {
   pointList: pointListType[];
@@ -49,6 +50,7 @@ function Overlap({ mapState, pointList, isShowingPointNotes, pointIndex, preview
         return (
           <>
             <PointSet
+              isJumping={index === pointIndex}
               key={index}
               pointInfo={pointInfo}
               onClick={(e) => {
@@ -79,10 +81,15 @@ function Overlap({ mapState, pointList, isShowingPointNotes, pointIndex, preview
       })}
       {isShowingPointNotes && isShowingPointNotes ? (
         <PointNotes>
-          <PointNotesTitle>{pointList[pointIndex].title}</PointNotesTitle>
-          {previewImgUrl && previewImgUrl ? <PointNotesTextImg src={previewImgUrl} /> : <PointNotesTextImg src={pointList[pointIndex].imgUrl} />}
+          <PointNotesTitle>{pointList[pointIndex]?.title}</PointNotesTitle>
+          {previewImgUrl && previewImgUrl ? <PointNotesTextImg src={previewImgUrl} /> : <PointNotesTextImg src={pointList[pointIndex]?.imgUrl} />}
 
-          <PointNote>{pointList && parse(pointList[pointIndex].notes)}</PointNote>
+          <PointNote>{pointList && parse(pointList[pointIndex]?.notes)}</PointNote>
+          <LittleCloseBtn
+            onClick={() => {
+              setIsShowingPointNotes(false);
+              setPointIndex(-1);
+            }}></LittleCloseBtn>
         </PointNotes>
       ) : (
         <></>

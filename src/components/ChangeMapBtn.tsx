@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { MapNameInput, ChangeMapBtnSet, OkIcon, DeleteMapBtn, EditMapBtn } from "./Header";
-import { pointListType, mapNameType } from "../App";
+import { pointListType, mapNameType, notificationInfoType } from "../App";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../utils/firebaseConfig";
 
@@ -26,9 +26,11 @@ type ChangeMapBtnType = {
   setDeleteMap: React.Dispatch<React.SetStateAction<string>>;
   setPopUpMsg: React.Dispatch<React.SetStateAction<any[]>>;
   setIsShowingPopUp: React.Dispatch<React.SetStateAction<boolean>>;
+  setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
+  setPointIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
-function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, setMapId, setMapState, setIsShowingPoint, setCurrentMapName, mapName, isEditingMap, setIsEditingMap, index, uid, mapNames, setMapNames, setOverlapName, mapId, deleteMap, setDeleteMap, setPopUpMsg, setIsShowingPopUp, pointList }: ChangeMapBtnType) {
+function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, setMapId, setMapState, setIsShowingPoint, setCurrentMapName, mapName, isEditingMap, setIsEditingMap, index, uid, mapNames, setMapNames, setOverlapName, mapId, deleteMap, setDeleteMap, setPopUpMsg, setIsShowingPopUp, pointList, setNotificationInfo, setPointIndex }: ChangeMapBtnType) {
   // const [isEditingNewMap, setIsEditingNewMap] = useState<boolean>(false);
   const [isReadOnly, setIsReadOnly] = useState<boolean>(true);
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -60,6 +62,10 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
     console.log("有嗎");
     setDeleteMap("no");
     // console.log(deleteMap);
+    setNotificationInfo({ text: `map has been successfully deleted`, status: true });
+    setTimeout(() => {
+      setNotificationInfo({ text: "", status: false });
+    }, 3000);
   }
   useEffect(() => {
     MapNameRef.current!.value = mapName.name;
@@ -78,6 +84,7 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
   return (
     <ChangeMapBtnSet>
       <MapNameInput
+        maxLength={18}
         ref={MapNameRef}
         defaultValue={mapName.name}
         readOnly={isReadOnly}
@@ -97,6 +104,7 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
             setMapId(mapName.id);
           }
           setIsShowingPoint(true);
+          setPointIndex(-1);
 
           // if (!uid) {
           //   setIsShowingPopUp(true);
@@ -121,8 +129,15 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
                   setCurrentMapName(MapNameRef.current!.value);
                   setOverlapName(MapNameRef.current!.value);
                 }
+                setNotificationInfo({ text: `Successfully change your map name `, status: true });
+                setTimeout(() => {
+                  setNotificationInfo({ text: "", status: false });
+                }, 3000);
               } else {
-                console.log("popup");
+                setNotificationInfo({ text: `Map Name cannot be blank`, status: true });
+                setTimeout(() => {
+                  setNotificationInfo({ text: "", status: false });
+                }, 3000);
               }
             }}></OkIcon>
           <DeleteMapBtn

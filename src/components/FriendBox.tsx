@@ -78,26 +78,29 @@ const FriendFormdiv = styled.div`
   /* color: rgb(42, 61, 78); */
   display: block;
   color: white;
-  overflow: scroll;
+  line-height: 25px;
+
+  /* overflow: scroll; */
   display: flex;
   flex-direction: column;
 
   :nth-last-child(1) {
-    height: 150px;
+    height: 153px;
   }
   /* text-shadow: -1px -1px 0 rgb(42, 61, 78), 0px 0px 0 #000, 0px 0px 0 #000, 0px 0px 0 #000; */
 `;
 
-const FriendFormInput = styled.input`
+const FriendFormInput = styled.input<{ isEditingFriend: boolean }>`
   width: 150px;
   height: 40px;
   outline: none;
   border: none;
   background-color: inherit;
   color: white;
+  border-bottom: ${(props) => (props.isEditingFriend ? "1px solid rgba(225,225,225,0.5)" : "none")};
 `;
 
-const FriendFormTitle = styled.input`
+const FriendFormTitle = styled.input<{ isEditingFriend: boolean }>`
   width: 159px;
   height: 50px;
   padding-top: 20px;
@@ -106,11 +109,13 @@ const FriendFormTitle = styled.input`
   margin-bottom: 20px;
   margin: 0 auto;
   text-align: center;
-  overflow: scroll;
+  overflow-x: scroll;
+  overflow-y: hidden;
   background-color: inherit;
   border: none;
   outline: none;
   color: white;
+  /* border-bottom: ${(props) => (props.isEditingFriend ? "1px solid rgba(225,225,225,0.5)" : "none")}; */
 
   /* text-shadow: -1px -1px 0 rgb(42, 61, 78), 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; */
 `;
@@ -127,14 +132,15 @@ const FriendFormInfo = styled.input`
   width: 50%;
 `;
 
-const FriendFormTextarea = styled.textarea`
+const FriendFormTextarea = styled.textarea<{ isEditingFriend: boolean }>`
   width: 100%;
-  height: 100px;
+  height: 128px;
   resize: none;
   background-color: inherit;
   border: none;
   outline: none;
   color: white;
+  /* border-bottom: ${(props) => (props.isEditingFriend ? "1px solid rgba(225,225,225,0.5)" : "none")}; */
 `;
 type friendInsideBoxType = {
   uid: string;
@@ -316,20 +322,20 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
 
         {/* {friend.imgUrl ? <FriendProfilePic src={friend.imgUrl}></FriendProfilePic> : <FriendProfileNoPic></FriendProfileNoPic>} */}
 
-        <FriendFormTitle ref={NameRef} defaultValue={friend.name}></FriendFormTitle>
+        <FriendFormTitle maxLength={15} isEditingFriend={isEditingFriend} ref={NameRef} defaultValue={friend.name}></FriendFormTitle>
 
         <FriendSet>
           <FriendFormdiv>
             City: <br />
-            <FriendFormInput ref={CityRef} defaultValue={friend.city}></FriendFormInput>
+            <FriendFormInput maxLength={21} isEditingFriend={isEditingFriend} ref={CityRef} defaultValue={friend.city}></FriendFormInput>
           </FriendFormdiv>
           <FriendFormdiv>
             Instagram: <br />
-            <FriendFormInput ref={InstaRef} defaultValue={friend.insta}></FriendFormInput>
+            <FriendFormInput maxLength={21} isEditingFriend={isEditingFriend} ref={InstaRef} defaultValue={friend.insta}></FriendFormInput>
           </FriendFormdiv>
           <FriendFormdiv>
             Notes: <br />
-            <FriendFormTextarea ref={NotesRef} defaultValue={friend.notes}></FriendFormTextarea>
+            <FriendFormTextarea maxLength={125} isEditingFriend={isEditingFriend} ref={NotesRef} defaultValue={friend.notes}></FriendFormTextarea>
           </FriendFormdiv>
         </FriendSet>
       </FriendInsideBox>

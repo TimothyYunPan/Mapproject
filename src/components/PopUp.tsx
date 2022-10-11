@@ -12,6 +12,7 @@ const PopUpBlock = styled.div<{ isShowingPopUp: boolean }>`
   border: ${(props) => (props.isShowingPopUp === true ? 1 : 0)}px solid white;
   /* opacity: ${(props) => (props.isShowingPopUp === true ? 1 : 0)}; */
   visibility: ${(props) => (props.isShowingPopUp === true ? "visible" : "hidden")};
+  overflow: hidden;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 10px;
   /* background-color: ${(props) => (props.isShowingPopUp === true ? "white" : "inherit")}; */
@@ -33,7 +34,7 @@ const PopUpText = styled.div<{ isShowingPopUp: boolean }>`
   font-size: 24px;
   color: #222;
   opacity: ${(props) => (props.isShowingPopUp === true ? 1 : 0)};
-  transition: 0.1s;
+  transition: 0.3s;
 `;
 
 const PopUpBtn = styled.div<{ isShowingPopUp: boolean }>`
@@ -122,7 +123,7 @@ function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatu
             <PopUpBtn
               isShowingPopUp={isShowingPopUp}
               onClick={() => {
-                if (popUpMsg[0] === "Sign in to explore your new map") {
+                if (popUpMsg[4] === "signin") {
                   setLoginStatus("register");
                   setToLogIn(true);
                 }

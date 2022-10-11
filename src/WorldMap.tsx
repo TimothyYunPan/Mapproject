@@ -195,7 +195,7 @@ const ShowName = styled.div<{
   cursor: pointer;
 
   top: ${(props) => props.currentPos.y as number}px;
-  left: ${(props) => props.currentPos.x + 220}px;
+  left: ${(props) => (props.currentPos.x + 50) as number}px;
   /* top:0; */
   /* left:0 */
   transform: translate(-50%, -150%);
@@ -272,12 +272,17 @@ const FriendNum = styled.div`
   width: 400px;
   height: 20px;
   position: absolute;
-  right: 20px;
+  right: 5%;
   bottom: 25px;
   /* z-index: 100; */
   color: white;
   cursor: default;
+  text-align: right;
   /* background-color: black; */
+  @media (max-width: 1279px) {
+    left: 5%;
+    text-align: left;
+  }
 `;
 
 const AddFriendBtn = styled.div`
@@ -339,6 +344,11 @@ const CloseBtn = styled(IconBtnStyle)`
   height: 22px;
   width: 22px; */
   background-image: url(${noIcon});
+`;
+
+export const LittleCloseBtn = styled(CloseBtn)`
+  width: 15px;
+  height: 15px;
 `;
 const AddFriendBox = styled.div`
   position: absolute;
@@ -405,6 +415,20 @@ const FriendMiddleBox = styled.div`
   display: flex;
   overflow: scroll;
   margin: 0 24px 0 20px;
+  /* position: relative; */
+`;
+const AddFriendTip = styled.div`
+  /* position: absolute; */
+  width: 100%;
+  margin-top: 450px;
+  margin-left: 445px;
+  /* width: 500px; */
+  height: 20px;
+  bottom: 20px;
+  right: 20px;
+  /* color: black; */
+  text-align: right;
+  cursor: default;
 `;
 
 export const EditFriendBtn = styled.div`
@@ -503,7 +527,7 @@ const MapTitle = styled.div`
   z-index: 1000;
 `;
 
-export const PointSet = styled.div<{ pointInfo: pointListType }>`
+export const PointSet = styled.div<{ pointInfo: pointListType; isJumping: boolean }>`
   position: absolute;
   top: ${(props) => {
     return props.pointInfo.y - 100 + "px";
@@ -514,7 +538,18 @@ export const PointSet = styled.div<{ pointInfo: pointListType }>`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  animation: ${(props) => props.isJumping && "jumping 1s infinite"};
   /* border: 1px solid black; */
+  @keyframes jumping {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
 `;
 export const Point = styled.div<{ mapState: number }>`
   /* position: absolute; */
@@ -540,7 +575,7 @@ export const PointNotes = styled.div`
   position: absolute;
   border: 1px solid white;
   top: 60px;
-  right: 25px;
+  right: -12%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -553,8 +588,20 @@ export const PointNotes = styled.div`
 
 export const PointNotesTitle = styled.h2`
   margin: 20px 0 10px 0;
+  padding: 0 20px;
+  text-align: center;
   color: white;
 `;
+
+const PointNoteTip = styled.div`
+  font-size: 16px;
+  color: rgba(225, 225, 225, 0.7);
+  margin: 250px 0 10px -10px;
+  text-align: left;
+  cursor: default;
+  /* padding: 0 20px; */
+`;
+
 export const PointNotesTitleInput = styled.input`
   border: none;
   outline: none;
@@ -587,7 +634,8 @@ export const PointNote = styled.div`
   word-break: break-all;
   /* width: 90%; */
   max-height: 380px;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
   color: white;
   margin-bottom: 65px;
   /* padding: 20px; */
@@ -736,6 +784,8 @@ type WorldMapType = {
   setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
   setCurrentMapName: React.Dispatch<React.SetStateAction<string>>;
   setIsChangingMap: React.Dispatch<React.SetStateAction<boolean>>;
+  pointIndex: number;
+  setPointIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 export type countryCollectionArrType = {
   countryName: string;
@@ -743,7 +793,7 @@ export type countryCollectionArrType = {
   countryRegion: string;
 };
 
-function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, toLogIn, setToLogIn, uid, setUid, countryList, setCountryList, isLoggedIn, setIsLoggedIn, setIsShowingPointNotes, isShowingPointNotes, getCountryFriends, friendList, setFriendList, friendsList, setFriendsList, isShowingFriends, setIsShowingFriends, countryId, setCountryId, countryName, setCountryName, haveFriendList, setHaveFriendList, pointList, setPointList, isShowingPopUp, setIsShowingPopUp, loginStatus, setLoginStatus, setUserName, setUserImg, mapId, setMapNames, mapNames, setOriginalMapNames, popUpMsg, setPopUpMsg, setDeleteMap, setNotificationInfo, setCurrentMapName, setIsChangingMap }: WorldMapType) {
+function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, toLogIn, setToLogIn, uid, setUid, countryList, setCountryList, isLoggedIn, setIsLoggedIn, setIsShowingPointNotes, isShowingPointNotes, getCountryFriends, friendList, setFriendList, friendsList, setFriendsList, isShowingFriends, setIsShowingFriends, countryId, setCountryId, countryName, setCountryName, haveFriendList, setHaveFriendList, pointList, setPointList, isShowingPopUp, setIsShowingPopUp, loginStatus, setLoginStatus, setUserName, setUserImg, mapId, setMapNames, mapNames, setOriginalMapNames, popUpMsg, setPopUpMsg, setDeleteMap, setNotificationInfo, setCurrentMapName, setIsChangingMap, pointIndex, setPointIndex }: WorldMapType) {
   // console.log(mapState);
   // console.log(isHovering);
   const [isHovering, setIsHovering] = useState<boolean>(false);
@@ -776,6 +826,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   const mouseRef = useRef<any>(null);
   const [currentPos, setCurrentPos] = useState<mousePosType>({ x: null, y: null });
   const [largeTipTap, setLargeTipTap] = useState<boolean>(true);
+  // const [isJumping, setIsJumping] = useState<boolean>(false);
   // console.log(largeTipTap);
   // console.log(xy);
   // const contentImageUpload = useRef();
@@ -803,7 +854,6 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     y: number | undefined;
   }>({ x: 0, y: 0 });
   // console.log(mousePlace);
-  const [pointIndex, setPointIndex] = useState<number>(-1);
 
   const [selectPointIndex, setSelectPointIndex] = useState<number>(-1);
   // console.log(selectPointIndex);
@@ -1521,7 +1571,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                       if (!uid) {
                         // setToLogIn(true);
                         setIsShowingPopUp(true);
-                        setPopUpMsg(["Sign in to explore your new map 😋", "Sign In", "Sign Up", "", "signin"]);
+                        setPopUpMsg(["Sign in to start your map journey 😋", "Sign In", "Sign Up", "", "signin"]);
                       } else {
                         setMapState(2);
                         setIsShowingPoint(false);
@@ -1537,7 +1587,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                     onClick={() => {
                       if (!uid) {
                         setIsShowingPopUp(true);
-                        setPopUpMsg(["Sign in to explore your new map 😋 ", "Sign In", "Sign Up", "", "signin"]);
+                        setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
                       } else {
                         setMapState(3);
                         setIsShowingPoint(true);
@@ -1635,7 +1685,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
             </Map>
             <PopUp setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} deleteFriend={deleteFriend} deleteNote={deleteNote} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
 
-            {(countryList && countryList.length === 0) || countryList.length === 1 ? <FriendNum>You've visited {countryList.length} country / area</FriendNum> : <FriendNum>You've visited {countryList.length} countries / area</FriendNum>}
+            {(countryList && countryList.length === 0) || countryList.length === 1 ? <FriendNum>You have visited {countryList.length} country / area</FriendNum> : <FriendNum>You have visited {countryList.length} countries / area</FriendNum>}
             <CountryCheckList uid={uid} writeUserMap1Data={writeUserMap1Data} countryCollection={countryCollection} setCountryList={setCountryList} setCountryCollection={setCountryCollection} countryList={countryList}></CountryCheckList>
           </>
         ) : mapState === 2 ? (
@@ -1678,11 +1728,19 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                 <FriendBg>
                   <FriendOutsideBox>
                     <FriendMiddleBox>
-                      {friendList.map((friend: { imgUrl: string; name: string; city: string; insta: string; notes: string; key: string }, index) => {
-                        // console.log(friend.name);
-                        return <FriendBox setNotificationInfo={setNotificationInfo} setIsShowingPopUp={setIsShowingPopUp} setPopUpMsg={setPopUpMsg} key={friend.key} countryName={countryName} index={index} countryId={countryId} friend={friend} uid={uid} friendList={friendList} setFriendList={setFriendList} friendsList={friendsList} haveFriendList={haveFriendList} setHaveFriendList={setHaveFriendList} setFriendsList={setFriendsList}></FriendBox>;
-                        // onChange={(e)=>{setEditNotes(e.target.value)}}
-                      })}
+                      <>
+                        {friendList.length < 1 ? (
+                          <AddFriendTip>add your first friend in this country</AddFriendTip>
+                        ) : (
+                          <>
+                            {friendList.map((friend: { imgUrl: string; name: string; city: string; insta: string; notes: string; key: string }, index) => {
+                              // console.log(friend.name);
+                              return <FriendBox setNotificationInfo={setNotificationInfo} setIsShowingPopUp={setIsShowingPopUp} setPopUpMsg={setPopUpMsg} key={friend.key} countryName={countryName} index={index} countryId={countryId} friend={friend} uid={uid} friendList={friendList} setFriendList={setFriendList} friendsList={friendsList} haveFriendList={haveFriendList} setHaveFriendList={setHaveFriendList} setFriendsList={setFriendsList}></FriendBox>;
+                              // onChange={(e)=>{setEditNotes(e.target.value)}}
+                            })}
+                          </>
+                        )}
+                      </>
                     </FriendMiddleBox>
                     <CloseBtn
                       onClick={() => {
@@ -1747,7 +1805,10 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                                 notes: "",
                               });
                             } else {
-                              console.log("popup");
+                              setNotificationInfo({ text: `Friend's Name could not be blank `, status: true });
+                              setTimeout(() => {
+                                setNotificationInfo({ text: "", status: false });
+                              }, 3000);
                             }
                           }}>
                           Create
@@ -1796,6 +1857,11 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                 if (target.tagName !== "path") {
                   return;
                 }
+
+                let ColorChange = "rgb(236, 174, 72)";
+                if (target.style.fill == ColorChange) {
+                  target.style.fill = "inherit";
+                }
                 setCountryId(target.id);
                 setIsShowingPointNotes(false);
 
@@ -1814,14 +1880,14 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                   countryId: target.id,
                   imgUrl: "",
                   notes: "",
-                  x: a.x + 221,
+                  x: a.x + 50,
                   y: a.y + 73,
                 };
                 // console.log(a.x);
                 // setPointIndex(pointList.length + 1);
                 setPointList([...pointList, newObj]);
                 if (pointList.length === 0) {
-                  setNotificationInfo({ text: "click on your pin to add some notes", status: true });
+                  setNotificationInfo({ text: "click on your pin to add some notes...", status: true });
                   setTimeout(() => {
                     setNotificationInfo({ text: "", status: false });
                   }, 4000);
@@ -1834,6 +1900,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                     return (
                       <>
                         <PointSet
+                          isJumping={index === pointIndex}
                           key={index}
                           pointInfo={pointInfo}
                           onClick={(e) => {
@@ -1843,6 +1910,11 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                             mapState={mapState}
                             id={pointInfo.countryId}
                             onClick={(e) => {
+                              console.log(index);
+                              console.log(pointIndex);
+                              // if (index === ) {
+                              //   setIsJumping(true);
+                              // }
                               // if (previewImgUrl || pointInfo.imgUrl) {
                               //   setLargeTipTap(false);
                               // } else {
@@ -1862,12 +1934,12 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                               setNotePhoto(pointInfo.imgUrl);
                               // console.log(pointInfo.imgUrl);
                               setPointNotes("");
-                              if (pointList.length === 1) {
-                                setNotificationInfo({ text: "add some notes to save pin on your map", status: true });
-                                setTimeout(() => {
-                                  setNotificationInfo({ text: "", status: false });
-                                }, 4000);
-                              }
+                              // if (pointList.length === 1) {
+                              //   setNotificationInfo({ text: "add some notes to save pin on your map", status: true });
+                              //   setTimeout(() => {
+                              //     setNotificationInfo({ text: "", status: false });
+                              //   }, 4000);
+                              // }
                             }}></Point>
                           <PointSole></PointSole>
                         </PointSet>
@@ -1883,6 +1955,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                 <PointNotes>
                   {isEditing ? (
                     <PointNotesTitleInput
+                      maxLength={20}
                       placeholder="Title"
                       defaultValue={pointList[pointIndex].title}
                       // defaultValue={pointList[pointIndex].title}
@@ -1890,7 +1963,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                       // onChange={()=>{setPointNoteTitle()}}
                     ></PointNotesTitleInput>
                   ) : (
-                    <PointNotesTitle>{pointList[pointIndex].title}</PointNotesTitle>
+                    <>{pointList && pointList[pointIndex].title ? <PointNotesTitle>{pointList[pointIndex].title}</PointNotesTitle> : <PointNoteTip>write something to save the pin...</PointNoteTip>}</>
                   )}
                   {previewImgUrl ? <PointNotesTextImg src={previewImgUrl} /> : <PointNotesTextImg src={pointList[pointIndex].imgUrl} />}
 
@@ -1996,6 +2069,11 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                               setIsEditing(false);
                               setPointPhoto(null);
                               setPointNotes("");
+                            } else {
+                              setNotificationInfo({ text: `Note title cannot be blank`, status: true });
+                              setTimeout(() => {
+                                setNotificationInfo({ text: "", status: false });
+                              }, 3000);
                             }
 
                             // writeUserMap3Data(countryId, newObj);
@@ -2011,6 +2089,11 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                     )}
                   </NotesFlex>
                   <NoteFlag src={`https://countryflagsapi.com/png/${countryId}`}></NoteFlag>
+                  <LittleCloseBtn
+                    onClick={() => {
+                      setIsShowingPointNotes(false);
+                      setPointIndex(-1);
+                    }}></LittleCloseBtn>
                 </PointNotes>
               ) : (
                 <></>

@@ -8,7 +8,7 @@ import useWindowDimensions from "./WindowDimensions";
 import { Element } from "html-react-parser";
 
 const SVGBox = styled.svg<{ windowHeight: number; windowWidth: number }>`
-  width: 1440px;
+  width: 1100px;
   height: 650px;
   /* position: relative; */
   /* position: absolute;

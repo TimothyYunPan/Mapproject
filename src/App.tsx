@@ -96,6 +96,7 @@ function App() {
   const [countryName, setCountryName] = useState<string>("");
   const [haveFriendList, setHaveFriendList] = useState<haveFriendListType[]>([]);
   const [pointList, setPointList] = useState<pointListType[]>([]);
+  console.log(pointList);
   const [isShowingPopUp, setIsShowingPopUp] = useState<boolean>(false);
   const [loginStatus, setLoginStatus] = useState("login");
   const [userName, setUserName] = useState<string>("");
@@ -115,6 +116,8 @@ function App() {
     { id: "friendsLocatedCountries", name: "Friends Located Map" },
     { id: "custimizedMapCountries", name: "My Bucket List" },
   ]);
+  const [pointIndex, setPointIndex] = useState<number>(-1);
+
   // console.log(originalMapNames);
   // console.log(pointList);
   // console.log(mapNames);
@@ -144,6 +147,7 @@ function App() {
       {/* <Reset /> */}
       <GlobalStyleComponent />
       <Header
+        setPointIndex={setPointIndex}
         toLogIn={toLogIn}
         setToLogIn={setToLogIn}
         isLoggedIn={isLoggedIn}
@@ -236,6 +240,8 @@ function App() {
         setNotificationInfo={setNotificationInfo}
         setCurrentMapName={setCurrentMapName}
         setIsChangingMap={setIsChangingMap}
+        pointIndex={pointIndex}
+        setPointIndex={setPointIndex}
       />
       <Notification setNotificationInfo={setNotificationInfo} notificationInfo={notificationInfo}></Notification>
     </>

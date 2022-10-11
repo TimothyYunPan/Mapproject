@@ -12,6 +12,9 @@ const CountrySelectSet = styled.div`
   /* margin-top: 25px; */
   width: 20%;
   color: rgb(232, 233, 234);
+  @media (max-width: 1279px) {
+    display: none;
+  }
 `;
 const CountryRegions = styled.div`
   margin-left: 20px;
@@ -37,7 +40,8 @@ const CountrySelectListSet = styled.div`
   display: flex;
   flex-direction: column;
   max-height: 510px;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
   /* justify-content: flex-end; */
 `;
 const CountrySelectList = styled.div`

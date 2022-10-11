@@ -17,6 +17,7 @@ import back from "./back.png";
 import noIcon from "./noIcon.png";
 import closeGrey from "./closeGrey.png";
 const storage = getStorage(app);
+const validEmail = new RegExp("^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$");
 // import getJwtToken from '../../utils/getJwtToken';
 
 const auth = getAuth(app);
@@ -28,7 +29,7 @@ const Wrapper = styled.div<{ toLogIn: boolean }>`
   height: 100vh;
   /* width: ${(props) => (props.toLogIn ? "100vw" : 0)}; */
   height: ${(props) => (props.toLogIn ? "100vh;" : 0)};
-
+  /* overflow: hidden; */
   /* padding: 100px 20px; */
   top: 0%;
   left: 0%;
@@ -39,7 +40,7 @@ const Wrapper = styled.div<{ toLogIn: boolean }>`
   /* z-index: 1000; */
 `;
 
-const LogginPopUp = styled.div`
+const LogginPopUp = styled.div<{ toLogIn: boolean }>`
   display: flex;
   border-radius: 2px;
   /* border: 32px solid rgb(42, 61, 78); */
@@ -101,7 +102,7 @@ const ProfileTitle = styled.div<{ toLogIn: boolean }>`
   opacity: ${(props) => (props.toLogIn === true ? 1 : 0)};
   color: #222;
   margin-top: 8px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   font-size: 24px;
   white-space: nowrap;
 `;
@@ -143,7 +144,7 @@ const AddProfilePicInput = styled.input`
   display: none;
   /* opacity: 1; */
 `;
-const ProfileNoPic = styled.div<{ toLogIn: boolean }>`
+const ProfileNoPic = styled.div<{ toLogIn: boolean; isEditingProfile: boolean }>`
   width: 150px;
   height: 150px;
   padding: 10px;
@@ -155,7 +156,8 @@ const ProfileNoPic = styled.div<{ toLogIn: boolean }>`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  cursor: pointer;
+  cursor: ${(props) => (props.isEditingProfile ? "pointer" : "default")};
+  /* cursor: pointer; */
   visibility: ${(props) => (props.toLogIn ? "visible" : "hidden")};
 `;
 
@@ -172,10 +174,18 @@ const ProfileInputSet = styled.label`
   flex-direction: column;
   align-items: flex-start;
   color: #222;
+  position: relative;
 `;
 
 const AccountWord = styled.p`
   white-space: nowrap;
+`;
+const WarningWord = styled(AccountWord)`
+  position: absolute;
+  bottom: -3px;
+  padding-left: 2px;
+  font-size: 12px;
+  color: rgb(231, 70, 70);
 `;
 
 const ProfileInput = styled.input`
@@ -188,6 +198,7 @@ const ProfileInput = styled.input`
   border-radius: 4px;
   height: 32px;
   color: #222;
+  outline: none;
 `;
 
 const ProfileCheckSet = styled.div`
@@ -269,7 +280,11 @@ const ProfileRegisterBtn = styled.button`
   ${"" /* display: ${registerBtnStatus} */};
 `;
 
-const ProfileLogoutBtn = styled.button`
+const ProfileLogoutBtn = styled.button<{ toLogIn: boolean }>`
+  visibility: ${(props) => (props.toLogIn ? "visible" : "hidden")};
+  /* width: ${(props) => (props.toLogIn ? "251" : "0")}px; */
+  /* font-size: ${(props) => (props.toLogIn ? "16" : "0")}px; */
+
   width: 251px;
   height: 40px;
   border-radius: 4px;
@@ -281,8 +296,9 @@ const ProfileLogoutBtn = styled.button`
   box-sizing: border-box;
   background-color: inherit;
   border: none;
-  transition: 0.1s;
+  transition: 0.02s;
   font-size: 16px;
+  overflow: hidden;
   &:hover {
     background-color: rgb(211, 211, 211);
     color: rgb(42, 61, 78);
@@ -370,7 +386,6 @@ type LoginType = {
   setMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
   setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
 };
-
 function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList, toLogIn, setToLogIn, uid, setMapState, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList, loginStatus, setLoginStatus, userName, setUserName, userImage, originalMapNames, setMapNames, setNotificationInfo }: LoginType) {
   const [profile, setProfile] = useState();
   // console.log(loginStatus);
@@ -378,7 +393,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
   const previewProfileImgUrl = imageUpload ? URL.createObjectURL(imageUpload) : userImage ? userImage : "";
   const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false);
   // console.log(isLoggedIn);
-
+  const [errorMsg, setErrorMsg] = useState<string[]>([]);
   const imageListRef = ref(storage, "images/");
   const [imageList, setImageList] = useState<string[]>([]);
   // const [ memberInfo, setMemberInfo ] = useState([])
@@ -386,7 +401,14 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
   const [accountInputValue, setAccountInputValue] = useState("");
   const [passwordInputValue, setPasswordInputValue] = useState("");
   const userNameInputRef = useRef<HTMLInputElement>(null);
-
+  //   const validate = () => {
+  //     if (!validEmail.test(email)) {
+  //        setEmailErr(true);
+  //     }
+  //     if (!validPassword.test(password)) {
+  //        setPwdError(true);
+  //     }
+  //  };
   // console.log(uid)
   async function writeOriginMapToData(uid: string) {
     // const originalMap = [
@@ -429,10 +451,18 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
           writeUserMap1Data(user.uid);
           writeUserNameToData(user.uid);
           writeOriginMapToData(user.uid);
-
+          setErrorMsg([]);
           // ...
         })
         .catch((error) => {
+          if (error.message === "Firebase: Error (auth/email-already-in-use).") {
+            setErrorMsg(["2", "* email is already registered"]);
+          } else if (error.message === "Firebase: Password should be at least 6 characters (auth/weak-password).") {
+            setErrorMsg(["6", "* password should be at least 6 characters"]);
+          } else if (error.message === "Firebase: Error (auth/invalid-email).") {
+            setErrorMsg(["7", "this is not a valid email"]);
+          }
+          console.log(error.message);
           const errorCode = error.code;
           const errorMessage = error.message;
           // ..
@@ -454,8 +484,24 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
             setNotificationInfo({ text: "", status: false });
           }, 3000);
           // setMapState(2);
+          setErrorMsg([]);
         })
         .catch((error) => {
+          if (error.message === "Firebase: Error (auth/wrong-password).") {
+            setErrorMsg(["3", "* password is wrong"]);
+          } else if (error.message === "Firebase: Error (auth/user-not-found).") {
+            setErrorMsg(["4", "* account not found"]);
+          } else if (error.message === "Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests).") {
+            setErrorMsg(["5", "* too many attempts, please try again later"]);
+            // setNotificationInfo({ text: `* too many attempt, please try again later"`, status: true });
+            // setTimeout(() => {
+            //   setNotificationInfo({ text: "", status: false });
+            // }, 3000);
+          } else if (error.message === "Firebase: Error (auth/invalid-email).") {
+            setErrorMsg(["7", "this is not a valid email"]);
+          }
+          console.log(error.message);
+
           const errorCode = error.code;
           const errorMessage = error.message;
         });
@@ -546,9 +592,11 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
   // console.log(memberRole);
   // console.log(userName);
   // console.log(userNameInputRef.current);
+  console.log(toLogIn);
+
   return (
     <Wrapper toLogIn={toLogIn}>
-      <LogginPopUp>
+      <LogginPopUp toLogIn={toLogIn}>
         <ProfilePanel toLogIn={toLogIn}>
           {isLoggedIn === false && loginStatus === "login" && <ProfileTitle toLogIn={toLogIn}>Welcome Back</ProfileTitle>}
           {isLoggedIn === false && loginStatus === "register" && <ProfileTitle toLogIn={toLogIn}>Let's Map the World</ProfileTitle>}
@@ -566,7 +614,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
                 ) : (
                   <ProfileTitle toLogIn={toLogIn}>Hi {userName}</ProfileTitle>
                 )}
-                <AddProfilePicLabel htmlFor="addProfilePic">{previewProfileImgUrl && previewProfileImgUrl ? <ProfileUserInfoImg src={previewProfileImgUrl} toLogIn={toLogIn}></ProfileUserInfoImg> : userImage && userImage ? <ProfileUserInfoImg src={userImage} toLogIn={toLogIn}></ProfileUserInfoImg> : <ProfileNoPic toLogIn={toLogIn}></ProfileNoPic>}</AddProfilePicLabel>
+                <AddProfilePicLabel htmlFor="addProfilePic">{previewProfileImgUrl && previewProfileImgUrl ? <ProfileUserInfoImg src={previewProfileImgUrl} toLogIn={toLogIn}></ProfileUserInfoImg> : userImage && userImage ? <ProfileUserInfoImg src={userImage} toLogIn={toLogIn}></ProfileUserInfoImg> : <ProfileNoPic isEditingProfile={isEditingProfile} toLogIn={toLogIn}></ProfileNoPic>}</AddProfilePicLabel>
 
                 {isEditingProfile ? (
                   <>
@@ -603,17 +651,20 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
                   <AccountWord>Name</AccountWord>
                   <ProfileInput value={nameInputValue} onChange={(e) => setNameInputValue(e.target.value)} />
                   {/* {console.log(nameInputValue)} */}
+                  {errorMsg[0] === "1" ? <WarningWord>{errorMsg[1]}</WarningWord> : <></>}
                 </ProfileInputSet>
               )}
               <ProfileInputSet>
                 <AccountWord>Email</AccountWord>
                 <ProfileInput value={accountInputValue} onChange={(e) => setAccountInputValue(e.target.value)} />
                 {/* {console.log(accountInputValue)} */}
+                {errorMsg[0] === "2" ? <WarningWord>{errorMsg[1]}</WarningWord> : errorMsg[0] === "4" ? <WarningWord>{errorMsg[1]}</WarningWord> : errorMsg[0] === "7" ? <WarningWord>{errorMsg[1]}</WarningWord> : <></>}
               </ProfileInputSet>
               <ProfileInputSet>
                 <AccountWord>Password</AccountWord>
                 <ProfileInput type={"password"} value={passwordInputValue} onChange={(e) => setPasswordInputValue(e.target.value)} />
                 {/* {console.log(passwordInputValue)} */}
+                {errorMsg[0] === "3" ? <WarningWord>{errorMsg[1]}</WarningWord> : errorMsg[0] === "5" ? <WarningWord>{errorMsg[1]}</WarningWord> : errorMsg[0] === "6" ? <WarningWord>{errorMsg[1]}</WarningWord> : <></>}
               </ProfileInputSet>
 
               <ProfileCheckSet>
@@ -625,6 +676,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
                   <ProfileNoAcount
                     onClick={() => {
                       setLoginStatus("register");
+                      setErrorMsg([]);
                     }}>
                     sign up?
                   </ProfileNoAcount>
@@ -633,6 +685,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
                   <ProfileWithAcount
                     onClick={() => {
                       setLoginStatus("login");
+                      setErrorMsg([]);
                     }}>
                     sign in?
                   </ProfileWithAcount>
@@ -649,7 +702,11 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
               {loginStatus === "register" && (
                 <ProfileRegisterBtn
                   onClick={() => {
-                    onSubmit();
+                    if (nameInputValue.trim() !== "") {
+                      onSubmit();
+                    } else {
+                      setErrorMsg(["1", "* name required"]);
+                    }
                   }}>
                   SIGN UP
                 </ProfileRegisterBtn>
@@ -667,6 +724,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
 
           {isLoggedIn === true && (
             <ProfileLogoutBtn
+              toLogIn={toLogIn}
               onClick={() => {
                 setIsLoggedIn(false);
                 // localStorage.clear();

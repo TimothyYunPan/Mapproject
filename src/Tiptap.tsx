@@ -24,7 +24,8 @@ const TipTapBox = styled.div`
 
 const EditorContentBox = styled.div<{ largeTipTap: boolean }>`
   height: ${(props) => (props.largeTipTap ? 340 : 180)}px;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
 `;
 
 const MenuBar = ({ editor }: any) => {
