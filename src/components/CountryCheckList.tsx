@@ -2,16 +2,19 @@ import React, { Dispatch, useEffect, useState } from "react";
 import styled from "styled-components";
 import regions from "../utils/regions";
 import countries from "../utils/countries";
-import { doc, setDoc, collection, getFirestore, getDoc, getDocs, deleteField, updateDoc } from "firebase/firestore";
+import { doc, setDoc, collection, getFirestore, getDoc, getDocs, deleteField, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../utils/firebaseConfig";
 import { countryListType } from "../App";
 import { countryCollectionArrType } from "../WorldMap";
 const CountrySelectSet = styled.div`
   position: absolute;
-  bottom: 0px;
-  margin-top: 20px;
+  bottom: 8px;
+  /* margin-top: 25px; */
   width: 20%;
   color: rgb(232, 233, 234);
+  @media (max-width: 1279px) {
+    display: none;
+  }
 `;
 const CountryRegions = styled.div`
   margin-left: 20px;
@@ -37,7 +40,8 @@ const CountrySelectListSet = styled.div`
   display: flex;
   flex-direction: column;
   max-height: 510px;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
   /* justify-content: flex-end; */
 `;
 const CountrySelectList = styled.div`
@@ -66,19 +70,28 @@ const CountryVisitedCount = styled.input`
   margin: 0 10px;
 `;
 
+const Mask = styled.input`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 200px;
+`;
+
 type CountryCheckListType = {
   countryCollection: countryCollectionArrType[];
   countryList: countryListType[];
   setCountryList: React.Dispatch<React.SetStateAction<countryListType[]>>;
   setCountryCollection: React.Dispatch<React.SetStateAction<countryCollectionArrType[]>>;
   writeUserMap1Data: (country: string) => Promise<void>;
+  uid: string;
 };
 
-function CountryCheckList({ countryCollection, setCountryList, setCountryCollection, countryList, writeUserMap1Data }: CountryCheckListType) {
+function CountryCheckList({ countryCollection, setCountryList, setCountryCollection, countryList, writeUserMap1Data, uid }: CountryCheckListType) {
+  const [isShowingCountry, setIsShowingCountry] = useState<boolean>(false);
   function getCountriesCollection(regionCode: string) {
     let countryCollectionArr: countryCollectionArrType[] = [];
     countries.forEach((countryObj) => {
-      let a = { countryName: countryObj.name, countryId: countryObj.code };
+      let a = { countryName: countryObj.name, countryId: countryObj.code, countryRegion: countryObj.region };
       if (countryObj.region === regionCode) {
         countryCollectionArr.push(a);
       }
@@ -115,18 +128,21 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
       //   return object;
       // });
       setCountryList(newCountryList);
+      console.log(countryList);
       // let newArr = [...countryList]
     }
   }
   async function updateUserMap1Data(country: string) {
-    // console.log("delete")
-    await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
-      visited: false,
-    });
+    console.log("delete");
+    await deleteDoc(doc(db, "user", uid, "visitedCountries", country));
+
+    // await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
+    //   visited: false,
+    // });
   }
 
   async function deleteUserMap1Data(country: string) {
-    console.log("delete");
+    // console.log("delete");
     await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
       visited: deleteField(),
     });
@@ -138,42 +154,60 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
   }
   return (
     <CountrySelectSet>
-      <CountrySelectListSet>
-        {countryCollection.map((country: countryCollectionArrType) => {
-          return (
-            <CountrySelectList key={country.countryName}>
-              <span>
-                <CountrySelectCheck
-                  type="checkbox"
-                  // {countryList.map(country)=>{country.id ===}}
-                  // {countryList.map((selectedCountry)=>{
-                  //   let a = false
-                  //   if (selectedCountry.countryId === country)
-                  //   a = true})}
-                  // checked={country === countryList[i].countryId}
-                  vertical-align="middle"
-                  checked={isCountrySelected(country)}
-                  style={{ accentColor: "rgb(236,174,72)" }}
-                  value={country.countryName}
-                  id={country.countryName}
-                  onChange={(e) => {
-                    editCheckedToMap(e.target);
-                  }}></CountrySelectCheck>
-                <CountrySelectName htmlFor={country.countryName} vertical-align="middle">
-                  {country.countryName}
-                </CountrySelectName>
-              </span>
-              {/* <CountryText>visited times</CountryText> */}
-              {/* <CountryVisitedCount></CountryVisitedCount> */}
-            </CountrySelectList>
-          );
-        })}
-      </CountrySelectListSet>
+      {isShowingCountry ? (
+        <CountrySelectListSet>
+          {countryCollection.map((country: countryCollectionArrType) => {
+            return (
+              <CountrySelectList key={country.countryName}>
+                <span>
+                  <CountrySelectCheck
+                    type="checkbox"
+                    // {countryList.map(country)=>{country.id ===}}
+                    // {countryList.map((selectedCountry)=>{
+                    //   let a = false
+                    //   if (selectedCountry.countryId === country)
+                    //   a = true})}
+                    // checked={country === countryList[i].countryId}
+                    vertical-align="middle"
+                    checked={isCountrySelected(country)}
+                    style={{ accentColor: "rgb(236,174,72)" }}
+                    value={country.countryName}
+                    id={country.countryName}
+                    onChange={(e) => {
+                      editCheckedToMap(e.target);
+                    }}></CountrySelectCheck>
+                  <CountrySelectName htmlFor={country.countryName} vertical-align="middle">
+                    {country.countryName}
+                  </CountrySelectName>
+                </span>
+                {/* <CountryText>visited times</CountryText> */}
+                {/* <CountryVisitedCount></CountryVisitedCount> */}
+              </CountrySelectList>
+            );
+          })}
+        </CountrySelectListSet>
+      ) : (
+        <></>
+      )}
       <CountryRegions>
         {regions.map((region) => {
           return (
             <CountryRegion
               onClick={() => {
+                if (isShowingCountry) {
+                  if (countryCollection[0].countryRegion === region.code) {
+                    setIsShowingCountry(false);
+                  }
+                  // countries.forEach((countryObj) => {
+                  //   if (countryObj.region === region.code) {
+                  //     console.log(countryObj.region);
+                  // console.log(region.code);
+                  //   }
+                  // });
+                } else {
+                  setIsShowingCountry(true);
+                }
+
                 getCountriesCollection(region.code);
                 // if(isShowingCountries){
                 //   setIsShowingCountries(false)

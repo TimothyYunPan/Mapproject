@@ -12,6 +12,7 @@ const PopUpBlock = styled.div<{ isShowingPopUp: boolean }>`
   border: ${(props) => (props.isShowingPopUp === true ? 1 : 0)}px solid white;
   /* opacity: ${(props) => (props.isShowingPopUp === true ? 1 : 0)}; */
   visibility: ${(props) => (props.isShowingPopUp === true ? "visible" : "hidden")};
+  overflow: hidden;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 10px;
   /* background-color: ${(props) => (props.isShowingPopUp === true ? "white" : "inherit")}; */
@@ -19,18 +20,30 @@ const PopUpBlock = styled.div<{ isShowingPopUp: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
+  @media (max-width: 570px) {
+    width: 300px;
+  }
 `;
 
 const PopUpSet = styled.div`
   display: flex;
   flex-direction: column;
+  width: 400px;
+  text-align: center;
+  @media (max-width: 570px) {
+    padding: 0 30px;
+  }
 `;
 
 const PopUpText = styled.div<{ isShowingPopUp: boolean }>`
   font-size: 24px;
   color: #222;
   opacity: ${(props) => (props.isShowingPopUp === true ? 1 : 0)};
-  transition: 0.1s;
+  transition: 0.3s;
+  @media (max-width: 570px) {
+    font-size: 18px;
+  }
 `;
 
 const PopUpBtn = styled.div<{ isShowingPopUp: boolean }>`
@@ -57,12 +70,12 @@ const PopUpBg = styled.div<{ isShowingPopUp: boolean; toLogIn: boolean }>`
   width: ${(props) => (props.isShowingPopUp || props.toLogIn ? 100 : 0)}%;
   height: ${(props) => (props.isShowingPopUp || props.toLogIn ? 100 : 0)}%;
   background-color: rgba(128, 128, 128, 0.5);
+  z-index: 900;
   /* transition: 0.5s; */
 `;
 
 const PopupBtnSet = styled.div`
   display: flex;
-
   justify-content: space-around;
 `;
 
@@ -73,33 +86,63 @@ type PopUpType = {
   setLoginStatus: React.Dispatch<React.SetStateAction<string>>;
   toLogIn: boolean;
   setToLogIn: React.Dispatch<React.SetStateAction<boolean>>;
+  popUpMsg: (string | { (): void })[];
+  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void })[]>>;
+  setIsShowingPointNotes: React.Dispatch<React.SetStateAction<boolean>>;
+  deleteNote: () => void;
+  deleteFriend: (index: number) => void;
+  setDeleteMap: React.Dispatch<React.SetStateAction<string>>;
+  setPointIndex: React.Dispatch<React.SetStateAction<number>>;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsChangingMap: React.Dispatch<React.SetStateAction<boolean>>;
 };
-
-function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatus, toLogIn, setToLogIn }: PopUpType) {
+function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatus, toLogIn, setToLogIn, popUpMsg, setPopUpMsg, setIsShowingPointNotes, deleteNote, deleteFriend, setDeleteMap, setIsEditing, setPointIndex, setIsChangingMap }: PopUpType) {
   return (
     <>
       <PopUpBg isShowingPopUp={isShowingPopUp} toLogIn={toLogIn}></PopUpBg>
       <PopUpBlock isShowingPopUp={isShowingPopUp}>
         <PopUpSet>
-          <PopUpText isShowingPopUp={isShowingPopUp}>Sign in to explore your new map</PopUpText>
+          <PopUpText isShowingPopUp={isShowingPopUp}>{popUpMsg[0] as string}</PopUpText>
           <PopupBtnSet>
             <PopUpBtn
               isShowingPopUp={isShowingPopUp}
               onClick={() => {
+                if (popUpMsg[4] === "signin") {
+                  setLoginStatus("login");
+                  setToLogIn(true);
+                } else if (popUpMsg[4] === "deletepin") {
+                  setIsShowingPointNotes(false);
+                  setPointIndex(-1);
+                  deleteNote();
+                } else if (popUpMsg[4] === "deletefriend") {
+                  // console.log(popUpMsg);
+                  deleteFriend(Number(popUpMsg[3]));
+                } else if (popUpMsg[4] === "deletemap") {
+                  // setDeleteMap("yes");
+                  console.log("hi");
+                  console.log(popUpMsg[5]);
+                  let deleteFunc = popUpMsg[5] as () => void;
+                  deleteFunc();
+                } else if (popUpMsg[4] === "goback") {
+                  setIsEditing(false);
+                }
+
                 setIsShowingPopUp(false);
-                setLoginStatus("login");
-                setToLogIn(true);
+                // setIsChangingMap(false);
               }}>
-              Sign In
+              {popUpMsg[1] as string}
             </PopUpBtn>
             <PopUpBtn
               isShowingPopUp={isShowingPopUp}
               onClick={() => {
+                if (popUpMsg[4] === "signin") {
+                  setLoginStatus("register");
+                  setToLogIn(true);
+                }
                 setIsShowingPopUp(false);
-                setLoginStatus("register");
-                setToLogIn(true);
+                setIsChangingMap(false);
               }}>
-              Sign Up
+              {popUpMsg[2] as string}
             </PopUpBtn>
           </PopupBtnSet>
         </PopUpSet>
