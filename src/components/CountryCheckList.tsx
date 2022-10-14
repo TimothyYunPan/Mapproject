@@ -128,6 +128,7 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
       //   return object;
       // });
       setCountryList(newCountryList);
+      console.log(countryList);
       // let newArr = [...countryList]
     }
   }
@@ -200,7 +201,7 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
                   // countries.forEach((countryObj) => {
                   //   if (countryObj.region === region.code) {
                   //     console.log(countryObj.region);
-                  console.log(region.code);
+                  // console.log(region.code);
                   //   }
                   // });
                 } else {

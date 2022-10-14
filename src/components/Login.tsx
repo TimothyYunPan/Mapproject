@@ -77,18 +77,6 @@ const ProfilePanel = styled.div<{ toLogIn: boolean }>`
   background-color: rgba(255, 255, 255, 0.8);
   /* transition: 0.1s; */
   overflow: hidden;
-  @media (max-width: 1279px) {
-    color: black;
-    box-sizing: border-box;
-    padding: 32px 40px 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    background-color: #313538;
-    border: none;
-    border-radius: 4px;
-  }
 `;
 
 const MemberInfoLine = styled.div`
@@ -302,9 +290,6 @@ const ProfileLogoutBtn = styled.button<{ toLogIn: boolean }>`
   &:hover {
     background-color: rgb(211, 211, 211);
     color: rgb(42, 61, 78);
-  }
-  ${"" /* display: none; */} @media (max-width: 1279px) {
-    display: none;
   }
 `;
 const EditProfileBtn = styled.div`

@@ -21,6 +21,14 @@ const NotificationBox = styled.div<{ notificationInfo: notificationInfoType }>`
   color: white;
   width: ${(props) => (props.notificationInfo.status ? 500 : 0)}px;
   transition: 1s ease;
+  @media (max-width: 700px) {
+    width: ${(props) => (props.notificationInfo.status ? 308 : 0)}px;
+    white-space: wrap;
+    font-size: 14px;
+
+    /* height: auto; */
+    /* overflow: auto; */
+  }
 `;
 
 // const Box = styled.div`

@@ -154,7 +154,7 @@ type friendInsideBoxType = {
   countryId: string;
   index: number;
   countryName: string;
-  setPopUpMsg: React.Dispatch<React.SetStateAction<string[]>>;
+  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void })[]>>;
   setIsShowingPopUp: React.Dispatch<React.SetStateAction<boolean>>;
   setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
   // setSearchFriendList: React.Dispatch<React.SetStateAction<string[]>>;

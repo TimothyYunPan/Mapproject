@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, MouseEvent } from "react";
 import styled from "styled-components";
 import { GlobalStyleComponent } from "styled-components";
 import countries from "./utils/countries";
@@ -93,7 +93,8 @@ const Wrapper = styled.div<{ mapState: number }>`
   flex-direction: column;
   /* background-image: url(https://images.unsplash.com/photo-1476673160081-cf065607f449?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1772&q=80); */
   background-color: rgb(42, 61, 78);
-  overflow: scroll;
+  overflow-y: scroll;
+  /* overflow-x: hidden; */
   /* background-color: ${(props) => (props.mapState === 1 ? "rgb(42, 61, 78)" : "white")}; */
   /* background-image: url(https://www.sow.org.tw/sites/sow/files/u11282/wallpaper-2675683.jpg);
   background-repeat: no-repeat;
@@ -178,11 +179,18 @@ const SelectMapText = styled.div`
   color: white;
   font-size: 40px;
   cursor: pointer;
+  text-align: center;
+  @media (max-width: 996px) {
+    font-size: 32px;
+  }
+  @media (max-width: 770px) {
+    font-size: 24px;
+  }
 `;
 
 type mousePlaceType = {
-  x?: number | undefined;
-  y?: number | undefined;
+  x?: number | null | undefined;
+  y?: number | null | undefined;
 };
 
 const ShowName = styled.div<{
@@ -195,7 +203,7 @@ const ShowName = styled.div<{
   cursor: pointer;
 
   top: ${(props) => props.currentPos.y as number}px;
-  left: ${(props) => (props.currentPos.x + 50) as number}px;
+  left: ${(props) => ((props.currentPos.x as number) + 50) as number}px;
   /* top:0; */
   /* left:0 */
   transform: translate(-50%, -150%);
@@ -279,9 +287,14 @@ const FriendNum = styled.div`
   cursor: default;
   text-align: right;
   /* background-color: black; */
+
   @media (max-width: 1279px) {
     left: 5%;
     text-align: left;
+    width: auto;
+  }
+  @media (max-width: 450px) {
+    font-size: 14px;
   }
 `;
 
@@ -525,6 +538,15 @@ const MapTitle = styled.div`
   color: white;
   /* background-color: rgba(225, 225, 255, 0.5); */
   z-index: 1000;
+  transition: 0.5s;
+  @media (max-width: 1250px) {
+    left: 240px;
+  }
+  @media (max-width: 1020px) {
+    left: 160px;
+    top: 86px;
+    font-size: 24px;
+  }
 `;
 
 export const PointSet = styled.div<{ pointInfo: pointListType; isJumping: boolean }>`
@@ -575,13 +597,35 @@ export const PointNotes = styled.div`
   position: absolute;
   border: 1px solid white;
   top: 60px;
-  right: -12%;
+  right: -20%;
   display: flex;
   flex-direction: column;
   align-items: center;
   border-radius: 10px;
   background-color: rgb(124, 134, 146, 0.7);
+  z-index: 1000;
   /* border: 1px solid black; */
+  transition: 0.5s;
+  @media (max-width: 1550px) {
+    right: -10%;
+  }
+  @media (max-width: 1350px) {
+    right: 10px;
+  }
+
+  @media (max-width: 700px) {
+    transition: none;
+
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
+    top: 100px;
+    /* margin: 0 auto;
+    right: 0; */
+
+    /* display: none; */
+  }
 `;
 
 // const PointInfoBox =
@@ -735,8 +779,8 @@ const UploadBtn = styled.div`
 `;
 
 type mousePosType = {
-  x: number | null;
-  y: number | null;
+  x: number | null | undefined;
+  y: number | null | undefined;
 };
 type WorldMapType = {
   mapState: number;
@@ -778,8 +822,8 @@ type WorldMapType = {
   mapNames: mapNameType[];
   setMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
   setOriginalMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
-  popUpMsg: any[];
-  setPopUpMsg: React.Dispatch<React.SetStateAction<any[]>>;
+  popUpMsg: (string | { (): void })[];
+  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void })[]>>;
   setDeleteMap: React.Dispatch<React.SetStateAction<string>>;
   setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
   setCurrentMapName: React.Dispatch<React.SetStateAction<string>>;
@@ -826,6 +870,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   const mouseRef = useRef<any>(null);
   const [currentPos, setCurrentPos] = useState<mousePosType>({ x: null, y: null });
   const [largeTipTap, setLargeTipTap] = useState<boolean>(true);
+  const [isColorHovering, setIsColorHovering] = useState<boolean>(true);
   // const [isJumping, setIsJumping] = useState<boolean>(false);
   // console.log(largeTipTap);
   // console.log(xy);
@@ -908,7 +953,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
 
   // console.log(singlePointList);
   //
-  const getPosition = (e) => {
+  function getPosition(e: MouseEvent) {
     let rect = mouseRef.current.getBoundingClientRect();
     let x = e.clientX - rect.left; //x position within the element.
     let y = e.clientY - rect.top; //y position within the element.
@@ -918,7 +963,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     // const y = mouseRef.current?.offsetTop;
     // console.log(mouseRef.current.offsetLeft);
     // console.log(mouseRef.current);
-  };
+  }
 
   function getUserData(userUid: string) {
     getUserMap1Data(userUid);
@@ -942,6 +987,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     }
   }
   useEffect(() => {
+    // window.scrollTo(500, 0);
     setMapState(-1);
   }, []);
   useEffect(() => {
@@ -1597,7 +1643,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                   <SelectMapText>ᴍʏ ᴍᴀᴘs</SelectMapText>
                 </WallPaperSet>
               </HomePageContainer>
-              <PopUp setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} deleteFriend={deleteFriend} deleteNote={deleteNote} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
+              <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} deleteFriend={deleteFriend} deleteNote={deleteNote} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
             </HomePage>
           </>
         ) : mapState === 1 ? (
@@ -1640,6 +1686,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                 } else if (target.style.fill === ColorChange) {
                   target.style.fill = ColorOrigin;
                   updateUserMap1Data(target.id);
+                  setIsColorHovering(false);
                   // const newCountryList = countryList.filter((object) => {
                   //   return object.countryId !== target.id;
                   // });
@@ -1673,7 +1720,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                 // }}
               >
                 {" "}
-                <MapSVG countryId={countryId} mouseRef={mouseRef} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
+                <MapSVG setIsColorHovering={setIsColorHovering} isColorHovering={isColorHovering} countryId={countryId} mouseRef={mouseRef} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
               </div>
               {/* <button
                 onClick={() => {
@@ -1683,7 +1730,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
               </button> */}
               {isShowingPoint ? <Overlap setNotePhoto={setNotePhoto} setPointPhoto={setPointPhoto} mapState={mapState} pointList={pointList} isShowingPointNotes={isShowingPointNotes} pointIndex={pointIndex} previewImgUrl={previewImgUrl} setPointIndex={setPointIndex} setIsShowingPointNotes={setIsShowingPointNotes} setCountryId={setCountryId}></Overlap> : <></>}
             </Map>
-            <PopUp setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} deleteFriend={deleteFriend} deleteNote={deleteNote} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
+            <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} deleteFriend={deleteFriend} deleteNote={deleteNote} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
 
             {(countryList && countryList.length === 0) || countryList.length === 1 ? <FriendNum>You have visited {countryList.length} country / area</FriendNum> : <FriendNum>You have visited {countryList.length} countries / area</FriendNum>}
             <CountryCheckList uid={uid} writeUserMap1Data={writeUserMap1Data} countryCollection={countryCollection} setCountryList={setCountryList} setCountryCollection={setCountryCollection} countryList={countryList}></CountryCheckList>
@@ -1702,6 +1749,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                 setIsShowingFriends(true);
                 getCountryFriends(target.id);
                 setIsShowingPointNotes(false);
+                setPointIndex(-1);
               }}>
               <MapCover
               // onMouseOver={(e) => {
@@ -1721,7 +1769,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                   // }}
                 >
                   {" "}
-                  <MapSVG countryId={countryId} mouseRef={mouseRef} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
+                  <MapSVG setIsColorHovering={setIsColorHovering} isColorHovering={isColorHovering} countryId={countryId} mouseRef={mouseRef} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
                 </div>
               </MapCover>
               {isShowingFriends && isShowingFriends === true ? (
@@ -1773,6 +1821,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                             <AddFriendFormLabel>{label}</AddFriendFormLabel>
                             {key === "notes" ? (
                               <AddFriendFormTextarea
+                                maxLength={125}
                                 onChange={(e) =>
                                   setAddFriendState({
                                     ...addFriendState,
@@ -1829,7 +1878,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
               {isHovering ? <ShowName currentPos={currentPos}>{countryName}</ShowName> : <></>}
               {isShowingPoint ? <Overlap setNotePhoto={setNotePhoto} setPointPhoto={setPointPhoto} mapState={mapState} pointList={pointList} isShowingPointNotes={isShowingPointNotes} pointIndex={pointIndex} previewImgUrl={previewImgUrl} setPointIndex={setPointIndex} setIsShowingPointNotes={setIsShowingPointNotes} setCountryId={setCountryId}></Overlap> : <></>}
             </Map>
-            <PopUp setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} deleteFriend={deleteFriend} deleteNote={deleteNote} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
+            <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} deleteFriend={deleteFriend} deleteNote={deleteNote} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
 
             {(friendsList && friendsList.length <= 0) || friendsList.length === 1 ? (
               <FriendNum>
@@ -1864,7 +1913,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                 }
                 setCountryId(target.id);
                 setIsShowingPointNotes(false);
-
+                setPointIndex(-1);
                 // let a = getSvgP(e)
                 // const svg = document.getElementById("CtySVG")
                 // if(svg){
@@ -1880,8 +1929,8 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                   countryId: target.id,
                   imgUrl: "",
                   notes: "",
-                  x: a.x + 50,
-                  y: a.y + 73,
+                  x: (a.x as number) + 50,
+                  y: (a.y as number) + 73,
                 };
                 // console.log(a.x);
                 // setPointIndex(pointList.length + 1);
@@ -2107,11 +2156,11 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                 // }}
               >
                 {" "}
-                <MapSVG countryId={countryId} mouseRef={mouseRef} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
+                <MapSVG setIsColorHovering={setIsColorHovering} isColorHovering={isColorHovering} countryId={countryId} mouseRef={mouseRef} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
               </div>
               {isHovering ? <ShowName currentPos={currentPos}>{countryName}</ShowName> : <></>}
             </Map>
-            <PopUp setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} deleteFriend={deleteFriend} deleteNote={deleteNote} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
+            <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} deleteFriend={deleteFriend} deleteNote={deleteNote} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
           </>
         ) : mapState === 4 ? (
           <>{/* <Login countryList={countryList} setUid={setUid} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}></Login> */}</>

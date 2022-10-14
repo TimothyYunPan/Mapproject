@@ -105,7 +105,7 @@ function App() {
   // console.log(mapId);
   const [deleteMap, setDeleteMap] = useState<string>("no");
   const [mapNames, setMapNames] = useState<mapNameType[]>([]);
-  const [popUpMsg, setPopUpMsg] = useState<any[]>([]);
+  const [popUpMsg, setPopUpMsg] = useState<(string | { (): void })[]>([]);
   const [isChangingMap, setIsChangingMap] = useState<boolean>(false);
   // console.log(popUpMsg);
   const [notificationInfo, setNotificationInfo] = useState<notificationInfoType>({ text: "", status: false });

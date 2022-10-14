@@ -18,10 +18,12 @@ import deleteHoverIcon from "./trashCanHover.png";
 import okIcon from "./okIcon.png";
 import ChangeMapBtn from "./ChangeMapBtn";
 import { ChevronsDownLeft } from "tabler-icons-react";
-import Overlap from "./Overlap";
 import eyeOpened from "../components/eyeOpened.png";
 import eyeClosed from "../components/eyeClosed.png";
-
+import OverlapSet from "./OverlapSet";
+import SearchBar from "./SearchBar";
+import SearchResult from "./SearchResult";
+import userProfile from "./userProfile.png";
 const Logo = styled.div<{ mapState: number }>`
   margin-top: ${(props) => (props.mapState === -1 ? "20px" : "0px")};
   width: ${(props) => (props.mapState === -1 ? "100px" : "70px")};
@@ -32,6 +34,22 @@ const Logo = styled.div<{ mapState: number }>`
   background-size: cover;
   background-position: center center;
   cursor: pointer;
+  @media (max-width: 1020px) {
+    display: none;
+  }
+`;
+const Logo1 = styled(Logo)`
+  display: none;
+  @media (max-width: 1020px) {
+    display: block;
+    height: 50px;
+    width: 50px;
+    /* border: 1px solid white;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-size: 20px; */
+    margin-top: 10px;
+  }
 `;
 
 export const MapNameInput = styled.input`
@@ -86,23 +104,6 @@ export const ChangeMapBtnSet = styled.div`
   /* margin-top: 20px; */
 `;
 
-const ShowOverLapBtn = styled.div<{ isShowingPoint: boolean }>`
-  height: 20px;
-  width: 20px;
-  position: absolute;
-  left: -35px;
-  top: 22px;
-  background-position: center;
-  background-size: cover;
-  /* background-image: url(${eyeOpened}); */
-  cursor: pointer;
-  background-image: ${(props) => (props.isShowingPoint ? `url(${eyeOpened})` : `url(${eyeClosed})`)};
-  transition: 0.3s;
-  :hover {
-    /* background-image: url(${eyeClosed}); */
-  }
-`;
-
 const CheckMapsBtn = styled.div<{ isChangingMap: boolean }>`
   height: 12px;
   width: 12px;
@@ -115,31 +116,14 @@ const CheckMapsBtn = styled.div<{ isChangingMap: boolean }>`
   cursor: pointer;
   transform: ${(props) => (props.isChangingMap ? "rotate(180deg)" : "rotate(0deg)")};
   transition: 0.3s;
-  /* transform: rotate(180deg); */
-`;
+  @media (max-width: 1020px) {
+    left: 80px;
+  }
+  @media (max-width: 640px) {
+    display: none;
+  }
 
-const CheckOverLapBtn = styled.div<{ isShowingOverlapBtn: boolean }>`
-  position: absolute;
-  left: 160px;
-  height: 12px;
-  width: 12px;
-  margin-top: 28px;
-  background-position: center;
-  background-size: cover;
-  background-image: url(${sortDown});
-  cursor: pointer;
-  z-index: 200;
-  transform: ${(props) => (props.isShowingOverlapBtn ? "rotate(180deg)" : "rotate(0deg)")};
-  transition: 0.3s;
   /* transform: rotate(180deg); */
-  /* margin-right: 10px; */
-`;
-
-const OverlapSet = styled.div`
-  display: flex;
-  /* align-items: center; */
-  width: 150px;
-  justify-content: space-between;
 `;
 
 const HeaderBtnStyle = styled.div`
@@ -211,6 +195,9 @@ const CurrentMap = styled.div<{ mapState: number }>`
     color: rgb(236, 174, 72);
     /* border-bottom: 1px solid white; */
   }
+  @media (max-width: 1020px) {
+    display: none;
+  }
 `;
 
 const MapList = styled.div`
@@ -238,7 +225,7 @@ const Nav = styled.div`
 `;
 
 const HeaderRightSet = styled.div`
-  width: 520px;
+  width: 480px;
   text-align: center;
   display: flex;
   position: relative;
@@ -283,6 +270,9 @@ const AllMapSelections = styled.div<{ isChangingMap: boolean }>`
   /* height: 20px; */
   overflow: ${(props) => (props.isChangingMap ? "visible" : "hidden")};
   transition: 0.4s;
+  @media (max-width: 1020px) {
+    left: 0px;
+  }
 
   /* overflow: hidden; */
 `;
@@ -292,7 +282,7 @@ const SearchBtn = styled.div`
   height: 20px;
   width: 20px;
   top: 22px;
-  right: 100px;
+  right: 60px;
   z-index: 150;
   border-radius: 5%;
   line-height: 24px;
@@ -300,138 +290,40 @@ const SearchBtn = styled.div`
   padding-top: 8px;
   background-image: url(${search});
   background-size: cover;
-`;
-const SearchInput = styled.input`
-  position: absolute;
-  height: 30px;
-  width: 180px;
-  right: 140px;
-  border-radius: 20px;
-  top: 18px;
-  z-index: 100;
-  color: rgb(42, 60, 77);
-  border: 1px solid white;
-  padding-left: 10px;
-  background-color: inherit;
-  color: white;
-  outline: none;
-`;
+  /* transition: 0.5s; */
+  @media (max-width: 550px) {
+    height: 28px;
+    width: 28px;
+    /* left: 120px; */
+    top: 20px;
+    border-radius: 50%;
+    border: 1px solid white;
+    background-size: 16px;
+    background-repeat: no-repeat;
+    background-position: center;
 
-const SearchResultBox = styled.div`
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  height: 95px;
-  width: 170px;
-  right: 140px;
-  top: 60px;
-  z-index: 100;
-  /* border: 1px solid black; */
-  background-color: inherit;
-  color: white;
-  overflow-y: scroll;
-  overflow-x: hidden;
-`;
-
-const SearchResultFriend = styled.div`
-  width: 100%;
-  height: 30px;
-  /* border: 1px solid white; */
-  margin-bottom: 4px;
-  text-align: left;
-  display: flex;
-  justify-content: space-between;
-  cursor: pointer;
-`;
-
-const SearchResultName = styled.div`
-  font-size: 14px;
-
-  :hover {
-    /* padding-left: 6px; */
-    color: rgba(225, 225, 225, 0.9);
+    /* right: 105px; */
+    /* text-align: left; */
   }
-  transition: 0.2s;
-`;
-const SearchResultCountry = styled.div`
-  padding-right: 4px;
-  font-size: 13.5px;
-  color: rgba(225, 225, 225, 0.5);
 `;
 
 const LoginBtn = styled.div`
-  height: 50px;
-  width: 80px;
+  height: 28px;
+  width: 28px;
   padding-top: 21px;
   padding-bottom: 14px;
   font-size: 16px;
+  margin-top: 17px;
   /* margin-top: 15px; */
   cursor: pointer;
   color: white;
+  background-image: url(${userProfile});
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
   :hover {
-    border-bottom: 1px solid white;
-  }
-`;
-
-const OverlapBtn = styled.div<{ isShowingPoint: boolean; mapState: number }>`
-  position: relative;
-  /* top: 3px;
-  right: 330px; */
-  /* height: 50px; */
-  width: 150px;
-  /* padding-bottom: 16px; */
-  margin-bottom: 10px;
-  padding-left: 10px;
-  border: 1px solid white;
-  border-radius: 8px;
-  /* text-align: center; */
-  /* background-color: rgba(0, 0, 0, 0.5); */
-  /* filter: (3px); */
-  backdrop-filter: blur(100px);
-  background-color: rgba(225, 225, 225, 0.2);
-  /* background-color: ${(props) => (props.mapState === 2 ? "rgba(0,0,0,0.4)" : "rgba(225, 225, 225, 0.2)")}; */
-
-  cursor: pointer;
-  font-size: 16px;
-  text-align: left;
-  /* font-weight: ${(props) => (props.isShowingPoint === true ? "400" : "900")}; */
-  color: white;
-  /* color: ${(props) => (props.isShowingPoint === true ? "rgb(236,174,72)" : "white")}; */
-
-  :hover {
-    /* color: ${(props) => (props.mapState === 2 ? "rgba(102,255,229,.8)" : "rgb(236, 174, 72)")}; */
-    color: rgb(236, 174, 72);
     /* border-bottom: 1px solid white; */
   }
-`;
-
-const OverlapList = styled.div<{ isShowingOverlapBtn: boolean }>`
-  /* width: 80px; */
-  position: absolute;
-  height: ${(props) => (props.isShowingOverlapBtn === true ? "200" : "0")}px;
-  display: flex;
-  flex-direction: column;
-  top: 60px;
-  overflow: ${(props) => (props.isShowingOverlapBtn === true ? "scroll" : "hidden")};
-  transition: 0.3s;
-  ::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const CurrentOverlap = styled.div<{ isShowingPoint: boolean }>`
-  width: 100%;
-  font-size: 16px;
-  backdrop-filter: blur(100px);
-  border: 1px solid white;
-  border-radius: 8px;
-  background-color: rgba(225, 225, 225, 0.2);
-  margin-top: 20px;
-  padding-left: 10px;
-  height: 25px;
-  cursor: pointer;
-  text-align: left;
-  color: white;
 `;
 
 type HeaderType = {
@@ -472,7 +364,7 @@ type HeaderType = {
   setMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
   originalMapNames: mapNameType[];
   setOriginalMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
-  setPopUpMsg: React.Dispatch<React.SetStateAction<any[]>>;
+  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void })[]>>;
   deleteMap: string;
   setDeleteMap: React.Dispatch<React.SetStateAction<string>>;
   setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
@@ -493,11 +385,12 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
   // console.log(overlapName);
   const [searchNameResult, setSearchNameResult] = useState<friendListType[]>([]);
   // console.log(searchNameResult);
+  const [isShowingSearchBarMB, setIsShowingSearchBarMB] = useState<boolean>(false);
   const [isShowSearchResult, setIsShowingSearchResult] = useState<boolean>();
   const [map3Name, setMap3Name] = useState<string>("My Bucket List");
-  const Map1NameRef = useRef<any>("Visited Countries");
-  const Map2NameRef = useRef<any>("Friends Located");
-  const Map3NameRef = useRef<any>("My Bucket List");
+  const Map1NameRef = useRef<HTMLInputElement>(null);
+  const Map2NameRef = useRef<HTMLInputElement>(null);
+  const Map3NameRef = useRef<HTMLInputElement>(null);
   const searchInputRef = useRef<any>("");
   // useEffect(() => {
   //   if (searchValue !== "") {
@@ -534,7 +427,6 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
     });
     console.log(result);
     if (!result[0]) {
-      // searchCountries(searchValue);
       console.log("查無資料");
       setIsShowingSearchResult(false);
       setSearchNameResult([]);
@@ -550,6 +442,22 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
       //   setIsShowingSearchResult(true);
       //   setSearchNameResult(result);
     }
+  }
+
+  function showOneResultFriend() {
+    if (searchNameResult.length === 1) {
+      setCountryId(searchNameResult[0].countryId);
+      setIsShowingFriends(true);
+      setCountryName(searchNameResult[0].country);
+      getCountryFriends(searchNameResult[0].countryId);
+      setIsShowingSearchResult(false);
+      setSearchNameResult([]);
+      setMapState(2);
+      setCurrentMapName("Friends Located Map");
+      setIsShowingPointNotes(false);
+      searchInputRef.current.value = "";
+    }
+    setPointIndex(-1);
   }
 
   // async function searchName() {
@@ -588,8 +496,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
     // let newMap = { id: newId, name: "new Map" };
     setOriginalMapNames(newNames);
   }
-  // console.log(mapNames);
-  // console.log(Map1NameRef);
+
   return (
     <Wrapper>
       <HeaderLeftSet>
@@ -599,6 +506,18 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
             setIsShowingFriends(false);
             setMapState(-1);
           }}></Logo>
+        <Logo1
+          mapState={mapState}
+          onClick={() => {
+            if (isChangingMap) {
+              setIsChangingMap(false);
+            } else {
+              setIsChangingMap(true);
+            }
+            setIsShowingOverlapBtn(false);
+            setIsShowingSearchBarMB(false);
+            setIsShowingSearchResult(false);
+          }}></Logo1>
         <MapList>
           {mapState && mapState !== -1 ? (
             <>
@@ -653,6 +572,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                         setIsShowingPopUp(false);
                         if (mapState !== 2) {
                           setIsShowingPointNotes(false);
+                          setPointIndex(-1);
                           setIsShowingPoint(false);
                         }
                       }}>
@@ -698,6 +618,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                           setIsShowingFriends(false);
                           if (mapState !== 1) {
                             setIsShowingPointNotes(false);
+                            setPointIndex(-1);
                             setIsShowingPoint(false);
                           }
                         }
@@ -750,6 +671,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                           setMapState(3);
                           setIsShowingPoint(true);
                           setIsShowingPointNotes(false);
+                          setPointIndex(-1);
                           // setIsShowingPoint(false);
                         }
                       }}>
@@ -773,7 +695,6 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                       )} */}
                   </ChangeMapBtnSet>
 
-                  {/* names=[{ name: 'Map1', id: 'aaa' }, { name: 'Map2', id: 'bbb' }]*/}
                   {mapNames &&
                     mapNames.map((mapName, index) => {
                       // console.log(mapName);
@@ -809,227 +730,46 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
         {/* <MapNameInput>Overlap</MapNameInput> */}
       </HeaderLeftSet>
       <HeaderRightSet>
-        <OverlapSet>
-          {mapState && mapState <= 2 && mapState !== -1 ? (
-            <>
-              <ShowOverLapBtn
-                isShowingPoint={isShowingPoint}
-                onClick={() => {
-                  if (!uid) {
-                    setIsShowingPopUp(true);
-                    setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
-                  } else {
-                    if (isShowingPoint) {
-                      setIsShowingPoint(false);
-                    } else {
-                      setIsShowingPoint(true);
-                    }
-                  }
-                }}></ShowOverLapBtn>
-              <CurrentOverlap
-                isShowingPoint={isShowingPoint}
-                onClick={() => {
-                  if (!uid) {
-                    setIsShowingPopUp(true);
-                    setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
-                  } else {
-                    // setPointList([]);
-                    if (isShowingOverlapBtn) {
-                      setIsShowingOverlapBtn(false);
-                    } else {
-                      setIsShowingOverlapBtn(true);
-                    }
-                    // setIsShowingOverlapBtn(false);
-                    setIsChangingMap(false);
-                    setIsShowingPointNotes(false);
-                  }
-                }}>
-                {overlapName}
-              </CurrentOverlap>
-              <OverlapList isShowingOverlapBtn={isShowingOverlapBtn}>
-                <OverlapBtn
-                  mapState={mapState}
-                  isShowingPoint={isShowingPoint}
-                  onClick={() => {
-                    if (!uid) {
-                      setIsShowingPopUp(true);
-                      setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
-                      // setToLogIn(true);
-                    } else {
-                      // setPointList([]);
-                      setMapId("custimizedMap");
-                      setOverlapName("My Bucket List");
-                      setIsShowingOverlapBtn(false);
-                      setIsShowingPoint(true);
-                    }
-                  }}>
-                  My Bucket List
-                  {/* {Map1NameRef.current.value} */}
-                </OverlapBtn>
-                {mapNames &&
-                  mapNames.map((mapName, index) => {
-                    return (
-                      <>
-                        <OverlapBtn
-                          mapState={mapState}
-                          isShowingPoint={isShowingPoint}
-                          onClick={() => {
-                            // setPointList([]);
-                            setMapId(mapName.id);
-                            setOverlapName(mapName.name);
-                            setIsShowingPointNotes(false);
-                            setIsShowingOverlapBtn(false);
-                            // if (isShowingPoint) {
-                            //   setIsShowingPoint(false);
-                            // } else {
-                            //   setIsShowingPoint(true);
-                            // }
-                            setIsShowingPoint(true);
-
-                            setIsShowingPointNotes(false);
-                            // console.log(pointList);
-                            // if (pointList.length === 0) {
-                            //   setIsShowingPoint(false);
-                            // } else {
-                            //   setIsShowingPoint(true);
-                            // }
-                          }}>
-                          {mapName.name}
-                        </OverlapBtn>
-                        {/* <ChangeMapBtn uid={uid} mapNames={mapNames} setMapNames={setMapNames} index={index} mapName={mapName} setIsShowingPointNotes={setIsShowingPointNotes} setPointList={setPointList} setIsChangingMap={setIsChangingMap} setMapId={setMapId} setMapState={setMapState} setIsShowingPoint={setIsShowingPoint} setCurrentMapName={setCurrentMapName} isEditingMap={isEditingMap} setIsEditingMap={setIsEditingMap}></ChangeMapBtn> */}
-                      </>
-                    );
-                  })}
-              </OverlapList>
-              <CheckOverLapBtn
-                isShowingOverlapBtn={isShowingOverlapBtn}
-                onClick={() => {
-                  if (!uid) {
-                    setIsShowingPopUp(true);
-                    setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
-                  } else {
-                    if (isShowingOverlapBtn) {
-                      setIsShowingOverlapBtn(false);
-                    } else {
-                      setIsShowingOverlapBtn(true);
-                    }
-                    setIsChangingMap(false);
-                  }
-                }}></CheckOverLapBtn>
-            </>
-          ) : (
-            <></>
-          )}
-        </OverlapSet>
+        <OverlapSet setPointIndex={setPointIndex} setIsShowingSearchResult={setIsShowingSearchResult} setIsShowingSearchBarMB={setIsShowingSearchBarMB} mapState={mapState} isShowingPoint={isShowingPoint} setMapId={setMapId} setOverlapName={setOverlapName} setIsShowingOverlapBtn={setIsShowingOverlapBtn} setIsShowingPoint={setIsShowingPoint} setPopUpMsg={setPopUpMsg} uid={uid} isShowingOverlapBtn={isShowingOverlapBtn} setIsChangingMap={setIsChangingMap} overlapName={overlapName} mapNames={mapNames} setIsShowingPointNotes={setIsShowingPointNotes} setIsShowingPopUp={setIsShowingPopUp}></OverlapSet>
 
         {(mapState && mapState === -1) || mapState === 4 ? (
           <></>
         ) : (
           <>
-            {mapState === 2 ? (
-              <SearchInput
-                ref={searchInputRef}
-                placeholder="country / friend"
-                onClick={(e) => {
-                  const target = e.target as HTMLInputElement;
-                  if (target.value === searchNameResult[0].name) {
-                    setIsShowingSearchResult(true);
-                  }
-                  // setIsShowingSearchResult;
+            <SearchBar setPointIndex={setPointIndex} isShowingSearchBarMB={isShowingSearchBarMB} searchInputRef={searchInputRef} searchNameResult={searchNameResult} setIsShowingSearchResult={setIsShowingSearchResult} setSearchValue={setSearchValue} searchName={searchName} searchCountries={searchCountries} setMapState={setMapState} setCurrentMapName={setCurrentMapName} setCountryId={setCountryId} setIsShowingFriends={setIsShowingFriends} setCountryName={setCountryName} getCountryFriends={getCountryFriends} setIsShowingPointNotes={setIsShowingPointNotes} setSearchNameResult={setSearchNameResult}></SearchBar>
 
-                  setSearchValue(target.value);
-                }}
-                onChange={(e) => {
-                  setSearchValue(e.target.value);
-                  searchName(e.target.value);
-                }}
-                onKeyPress={(e) => {
-                  if (e.key === "Enter") {
-                    const target = e.target as HTMLInputElement;
-                    // setSearchValue(target.value);
-                    // searchName(target.value);
-                    searchCountries(target.value);
-                    if (searchNameResult.length === 1) {
-                      setCountryId(searchNameResult[0].countryId);
-                      setIsShowingFriends(true);
-                      setCountryName(searchNameResult[0].country);
-                      getCountryFriends(searchNameResult[0].countryId);
-                      setIsShowingSearchResult(false);
-                      searchInputRef.current.value = "";
-                      setSearchNameResult([]);
-                    }
-
-                    // searchCountries(target.value);
-                  }
-                }}></SearchInput>
-            ) : (
-              <SearchInput
-                placeholder="country"
-                onChange={(e) => {
-                  searchCountries(e.target.value);
-                  // setSearchValue(e.target.value);
-                }}
-                onKeyPress={(e) => {
-                  if (e.key === "Enter") {
-                    const target = e.target as HTMLInputElement;
-                    // setSearchValue(target.value);
-                    setIsShowingPointNotes(false);
-                    searchCountries(target.value);
-                    // setSearchNameResult([]);
-                  }
-                }}></SearchInput>
-            )}
-            {isShowSearchResult ? (
-              <SearchResultBox>
-                {searchNameResult[0] &&
-                  searchNameResult.map((result) => (
-                    <SearchResultFriend
-                      onClick={() => {
-                        setCountryId(result.countryId);
-                        setIsShowingFriends(true);
-                        setCountryName(result.country);
-                        getCountryFriends(result.countryId);
-                        setIsShowingSearchResult(false);
-                        searchInputRef.current.value = "";
-                        setSearchNameResult([]);
-                      }}>
-                      <SearchResultName>{result.name}</SearchResultName>
-                      <SearchResultCountry>{result.country}</SearchResultCountry>
-                    </SearchResultFriend>
-                  ))}
-              </SearchResultBox>
-            ) : (
-              <></>
-            )}
+            {isShowSearchResult ? <SearchResult setPointIndex={setPointIndex} setIsShowingSearchBarMB={setIsShowingSearchBarMB} searchInputRef={searchInputRef} searchNameResult={searchNameResult} setIsShowingSearchResult={setIsShowingSearchResult} setMapState={setMapState} setCurrentMapName={setCurrentMapName} setCountryId={setCountryId} setIsShowingFriends={setIsShowingFriends} setCountryName={setCountryName} getCountryFriends={getCountryFriends} setIsShowingPointNotes={setIsShowingPointNotes} setSearchNameResult={setSearchNameResult}></SearchResult> : <></>}
 
             <SearchBtn
               onClick={(e) => {
                 console.log("hi");
-                // const target = e.target as HTMLInputElement;
                 searchCountries(searchValue);
                 setIsShowingPointNotes(false);
-
-                if (searchNameResult.length === 1) {
-                  setCountryId(searchNameResult[0].countryId);
-                  setIsShowingFriends(true);
-                  setCountryName(searchNameResult[0].country);
-                  getCountryFriends(searchNameResult[0].countryId);
-                  setIsShowingSearchResult(false);
-                  setSearchNameResult([]);
-
-                  searchInputRef.current.value = "";
+                setPointIndex(-1);
+                showOneResultFriend();
+                if (isShowingSearchBarMB === true && searchValue === "") {
+                  setIsShowingSearchBarMB(false);
+                } else {
+                  setIsShowingSearchBarMB(true);
                 }
               }}></SearchBtn>
           </>
         )}
-        <LoginBtn
-          onClick={() => {
-            // setMapState(4);
-            setIsShowingPopUp(false);
-            setToLogIn(true);
-          }}>
-          {uid && uid ? "Sign Out" : "Sign In"}
-        </LoginBtn>
+        {mapState && mapState !== -1 ? (
+          <LoginBtn
+            onClick={() => {
+              setIsShowingPopUp(false);
+              if (toLogIn) {
+                setToLogIn(false);
+              } else {
+                setToLogIn(true);
+              }
+            }}>
+            {/* {uid && uid ? "Sign Out" : "Sign In"} */}
+          </LoginBtn>
+        ) : (
+          <></>
+        )}
 
         {}
       </HeaderRightSet>

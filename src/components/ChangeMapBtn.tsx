@@ -24,7 +24,7 @@ type ChangeMapBtnType = {
   setOverlapName: React.Dispatch<React.SetStateAction<string>>;
   deleteMap: string;
   setDeleteMap: React.Dispatch<React.SetStateAction<string>>;
-  setPopUpMsg: React.Dispatch<React.SetStateAction<any[]>>;
+  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void })[]>>;
   setIsShowingPopUp: React.Dispatch<React.SetStateAction<boolean>>;
   setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
   setPointIndex: React.Dispatch<React.SetStateAction<number>>;

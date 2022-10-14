@@ -21,6 +21,9 @@ const PopUpBlock = styled.div<{ isShowingPopUp: boolean }>`
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  @media (max-width: 570px) {
+    width: 300px;
+  }
 `;
 
 const PopUpSet = styled.div`
@@ -28,6 +31,9 @@ const PopUpSet = styled.div`
   flex-direction: column;
   width: 400px;
   text-align: center;
+  @media (max-width: 570px) {
+    padding: 0 30px;
+  }
 `;
 
 const PopUpText = styled.div<{ isShowingPopUp: boolean }>`
@@ -35,6 +41,9 @@ const PopUpText = styled.div<{ isShowingPopUp: boolean }>`
   color: #222;
   opacity: ${(props) => (props.isShowingPopUp === true ? 1 : 0)};
   transition: 0.3s;
+  @media (max-width: 570px) {
+    font-size: 18px;
+  }
 `;
 
 const PopUpBtn = styled.div<{ isShowingPopUp: boolean }>`
@@ -77,22 +86,23 @@ type PopUpType = {
   setLoginStatus: React.Dispatch<React.SetStateAction<string>>;
   toLogIn: boolean;
   setToLogIn: React.Dispatch<React.SetStateAction<boolean>>;
-  popUpMsg: any[];
-  setPopUpMsg: React.Dispatch<React.SetStateAction<any[]>>;
+  popUpMsg: (string | { (): void })[];
+  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void })[]>>;
   setIsShowingPointNotes: React.Dispatch<React.SetStateAction<boolean>>;
   deleteNote: () => void;
   deleteFriend: (index: number) => void;
   setDeleteMap: React.Dispatch<React.SetStateAction<string>>;
+  setPointIndex: React.Dispatch<React.SetStateAction<number>>;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsChangingMap: React.Dispatch<React.SetStateAction<boolean>>;
 };
-
-function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatus, toLogIn, setToLogIn, popUpMsg, setPopUpMsg, setIsShowingPointNotes, deleteNote, deleteFriend, setDeleteMap, setIsEditing }: PopUpType) {
+function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatus, toLogIn, setToLogIn, popUpMsg, setPopUpMsg, setIsShowingPointNotes, deleteNote, deleteFriend, setDeleteMap, setIsEditing, setPointIndex, setIsChangingMap }: PopUpType) {
   return (
     <>
       <PopUpBg isShowingPopUp={isShowingPopUp} toLogIn={toLogIn}></PopUpBg>
       <PopUpBlock isShowingPopUp={isShowingPopUp}>
         <PopUpSet>
-          <PopUpText isShowingPopUp={isShowingPopUp}>{popUpMsg[0]}</PopUpText>
+          <PopUpText isShowingPopUp={isShowingPopUp}>{popUpMsg[0] as string}</PopUpText>
           <PopupBtnSet>
             <PopUpBtn
               isShowingPopUp={isShowingPopUp}
@@ -102,6 +112,7 @@ function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatu
                   setToLogIn(true);
                 } else if (popUpMsg[4] === "deletepin") {
                   setIsShowingPointNotes(false);
+                  setPointIndex(-1);
                   deleteNote();
                 } else if (popUpMsg[4] === "deletefriend") {
                   // console.log(popUpMsg);
@@ -110,15 +121,16 @@ function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatu
                   // setDeleteMap("yes");
                   console.log("hi");
                   console.log(popUpMsg[5]);
-
-                  popUpMsg[5]();
+                  let deleteFunc = popUpMsg[5] as () => void;
+                  deleteFunc();
                 } else if (popUpMsg[4] === "goback") {
                   setIsEditing(false);
                 }
 
                 setIsShowingPopUp(false);
+                // setIsChangingMap(false);
               }}>
-              {popUpMsg[1]}
+              {popUpMsg[1] as string}
             </PopUpBtn>
             <PopUpBtn
               isShowingPopUp={isShowingPopUp}
@@ -128,8 +140,9 @@ function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatu
                   setToLogIn(true);
                 }
                 setIsShowingPopUp(false);
+                setIsChangingMap(false);
               }}>
-              {popUpMsg[2]}
+              {popUpMsg[2] as string}
             </PopUpBtn>
           </PopupBtnSet>
         </PopUpSet>
