@@ -387,21 +387,52 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
   // console.log(searchNameResult);
   const [isShowingSearchBarMB, setIsShowingSearchBarMB] = useState<boolean>(false);
   const [isShowSearchResult, setIsShowingSearchResult] = useState<boolean>();
+  const [hasCountry, setHasCountry] = useState<boolean>(true);
+  const [hasName, setHasName] = useState<boolean>(true);
+  console.log(hasName);
+  console.log(hasCountry);
   const [map3Name, setMap3Name] = useState<string>("My Bucket List");
   const Map1NameRef = useRef<HTMLInputElement>(null);
   const Map2NameRef = useRef<HTMLInputElement>(null);
   const Map3NameRef = useRef<HTMLInputElement>(null);
   const searchInputRef = useRef<any>("");
   // useEffect(() => {
-  //   if (searchValue !== "") {
-  //     searchCountries(searchValue);
+  //   console.log("hi");
+  //   if (!hasName && !hasCountry) {
+  //     console.log("hi");
+  //     setHasCountry(true);
+  //     setHasName(true);
+  //     console.log("hi2");
+
+  //     setNotificationInfo({ text: "no result", status: true });
+  //     console.log("hi3");
+
+  //     setTimeout(() => {
+  //       setNotificationInfo({ text: "", status: false });
+  //     }, 2000);
   //   }
-  // }, [searchValue]);
-  // useEffect(() => {}, [mapNames]);
+  // }, [hasCountry]);
+  function checkResult() {
+    if (!hasName && !hasCountry) {
+      console.log("hi");
+      setHasCountry(true);
+      setHasName(true);
+      console.log("hi2");
+
+      setNotificationInfo({ text: "no result", status: true });
+      console.log("hi3");
+
+      setTimeout(() => {
+        setNotificationInfo({ text: "", status: false });
+      }, 2000);
+    }
+  }
+  // useEffect(() => {}, [hasName]);
   function searchCountries(searchValue: string) {
     const result = countries.filter(function (obj) {
       return obj.name.toLowerCase() === searchValue.toLowerCase();
     });
+    console.log(result);
     if (result[0]) {
       setCountryName(searchValue.charAt(0).toUpperCase() + searchValue.slice(1));
       let a = result[0].code;
@@ -411,11 +442,13 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
       // searchInputRef.current.value = "";
       // document.getElementById(a)!.style.scale = "2px";
       document.getElementById(a)!.style.fill = "rgb(236,174,72)";
+      setHasCountry(true);
     } else {
       // searchName(searchValue);
       // setSearchNameResult("no result");
       // setIsShowingSearchResult;
       console.log("查無資料");
+      setHasCountry(false);
     }
 
     // setSearchCountry(a);
@@ -427,12 +460,15 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
     });
     console.log(result);
     if (!result[0]) {
+      setHasName(false);
       console.log("查無資料");
       setIsShowingSearchResult(false);
       setSearchNameResult([]);
     } else {
       setIsShowingSearchResult(true);
       setSearchNameResult(result);
+      setHasName(true);
+
       // } else if (result.length === 1) {
       //   setCountryId(result[0].countryId);
       //   setIsShowingFriends(true);
@@ -456,6 +492,8 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
       setCurrentMapName("Friends Located Map");
       setIsShowingPointNotes(false);
       searchInputRef.current.value = "";
+    } else {
+      console.log("查無資料");
     }
     setPointIndex(-1);
   }
@@ -496,7 +534,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
     // let newMap = { id: newId, name: "new Map" };
     setOriginalMapNames(newNames);
   }
-
+  console.log(pointList);
   return (
     <Wrapper>
       <HeaderLeftSet>
@@ -730,22 +768,26 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
         {/* <MapNameInput>Overlap</MapNameInput> */}
       </HeaderLeftSet>
       <HeaderRightSet>
-        <OverlapSet setPointIndex={setPointIndex} setIsShowingSearchResult={setIsShowingSearchResult} setIsShowingSearchBarMB={setIsShowingSearchBarMB} mapState={mapState} isShowingPoint={isShowingPoint} setMapId={setMapId} setOverlapName={setOverlapName} setIsShowingOverlapBtn={setIsShowingOverlapBtn} setIsShowingPoint={setIsShowingPoint} setPopUpMsg={setPopUpMsg} uid={uid} isShowingOverlapBtn={isShowingOverlapBtn} setIsChangingMap={setIsChangingMap} overlapName={overlapName} mapNames={mapNames} setIsShowingPointNotes={setIsShowingPointNotes} setIsShowingPopUp={setIsShowingPopUp}></OverlapSet>
+        <OverlapSet pointList={pointList} setPointIndex={setPointIndex} setIsShowingSearchResult={setIsShowingSearchResult} setIsShowingSearchBarMB={setIsShowingSearchBarMB} mapState={mapState} isShowingPoint={isShowingPoint} setMapId={setMapId} setOverlapName={setOverlapName} setIsShowingOverlapBtn={setIsShowingOverlapBtn} setIsShowingPoint={setIsShowingPoint} setPopUpMsg={setPopUpMsg} uid={uid} isShowingOverlapBtn={isShowingOverlapBtn} setIsChangingMap={setIsChangingMap} overlapName={overlapName} mapNames={mapNames} setIsShowingPointNotes={setIsShowingPointNotes} setIsShowingPopUp={setIsShowingPopUp}></OverlapSet>
 
         {(mapState && mapState === -1) || mapState === 4 ? (
           <></>
         ) : (
           <>
-            <SearchBar setPointIndex={setPointIndex} isShowingSearchBarMB={isShowingSearchBarMB} searchInputRef={searchInputRef} searchNameResult={searchNameResult} setIsShowingSearchResult={setIsShowingSearchResult} setSearchValue={setSearchValue} searchName={searchName} searchCountries={searchCountries} setMapState={setMapState} setCurrentMapName={setCurrentMapName} setCountryId={setCountryId} setIsShowingFriends={setIsShowingFriends} setCountryName={setCountryName} getCountryFriends={getCountryFriends} setIsShowingPointNotes={setIsShowingPointNotes} setSearchNameResult={setSearchNameResult}></SearchBar>
+            <SearchBar checkResult={checkResult} setPointIndex={setPointIndex} isShowingSearchBarMB={isShowingSearchBarMB} searchInputRef={searchInputRef} searchNameResult={searchNameResult} setIsShowingSearchResult={setIsShowingSearchResult} setSearchValue={setSearchValue} searchName={searchName} searchCountries={searchCountries} setMapState={setMapState} setCurrentMapName={setCurrentMapName} setCountryId={setCountryId} setIsShowingFriends={setIsShowingFriends} setCountryName={setCountryName} getCountryFriends={getCountryFriends} setIsShowingPointNotes={setIsShowingPointNotes} setSearchNameResult={setSearchNameResult}></SearchBar>
 
             {isShowSearchResult ? <SearchResult setPointIndex={setPointIndex} setIsShowingSearchBarMB={setIsShowingSearchBarMB} searchInputRef={searchInputRef} searchNameResult={searchNameResult} setIsShowingSearchResult={setIsShowingSearchResult} setMapState={setMapState} setCurrentMapName={setCurrentMapName} setCountryId={setCountryId} setIsShowingFriends={setIsShowingFriends} setCountryName={setCountryName} getCountryFriends={getCountryFriends} setIsShowingPointNotes={setIsShowingPointNotes} setSearchNameResult={setSearchNameResult}></SearchResult> : <></>}
 
             <SearchBtn
+              // onChange={(e) => {
+              //   searchCountries(e.target.value);
+              // }}
               onClick={(e) => {
-                console.log("hi");
-                searchCountries(searchValue);
+                // console.log("hi");
+                checkResult();
                 setIsShowingPointNotes(false);
                 setPointIndex(-1);
+                searchCountries(searchValue);
                 showOneResultFriend();
                 if (isShowingSearchBarMB === true && searchValue === "") {
                   setIsShowingSearchBarMB(false);

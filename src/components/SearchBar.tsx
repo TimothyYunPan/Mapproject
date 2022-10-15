@@ -42,9 +42,10 @@ type SearchBar = {
   searchCountries: (searchValue: string) => void;
   isShowingSearchBarMB: boolean;
   setPointIndex: React.Dispatch<React.SetStateAction<number>>;
+  checkResult: () => void;
 };
 
-function SearchBar({ searchInputRef, searchNameResult, setIsShowingSearchResult, setSearchValue, searchName, searchCountries, setMapState, setCurrentMapName, setCountryId, setIsShowingFriends, setCountryName, getCountryFriends, setIsShowingPointNotes, setSearchNameResult, isShowingSearchBarMB, setPointIndex }: SearchBar) {
+function SearchBar({ searchInputRef, searchNameResult, setIsShowingSearchResult, setSearchValue, searchName, searchCountries, setMapState, setCurrentMapName, setCountryId, setIsShowingFriends, setCountryName, getCountryFriends, setIsShowingPointNotes, setSearchNameResult, isShowingSearchBarMB, setPointIndex, checkResult }: SearchBar) {
   return (
     <SearchInput
       isShowingSearchBarMB={isShowingSearchBarMB}
@@ -52,7 +53,7 @@ function SearchBar({ searchInputRef, searchNameResult, setIsShowingSearchResult,
       placeholder="country / friend"
       onClick={(e) => {
         const target = e.target as HTMLInputElement;
-        if (target.value === searchNameResult[0].name) {
+        if (target.value === searchNameResult[0]?.name) {
           setIsShowingSearchResult(true);
         }
         // setIsShowingSearchResult;
@@ -62,13 +63,15 @@ function SearchBar({ searchInputRef, searchNameResult, setIsShowingSearchResult,
       onChange={(e) => {
         setSearchValue(e.target.value);
         searchName(e.target.value);
+        searchCountries(e.target.value);
       }}
       onKeyPress={(e) => {
         if (e.key === "Enter") {
           const target = e.target as HTMLInputElement;
           // setSearchValue(target.value);
           // searchName(target.value);
-          searchCountries(target.value);
+          // searchCountries(target.value);
+          checkResult();
           if (searchNameResult.length === 1) {
             setMapState(2);
             setCurrentMapName("Friends Located Map");

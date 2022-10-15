@@ -103,7 +103,7 @@ const FriendFormInput = styled.input<{ isEditingFriend: boolean }>`
 const FriendFormTitle = styled.input<{ isEditingFriend: boolean }>`
   width: 159px;
   height: 50px;
-  padding-top: 20px;
+  padding-top: 10px;
   /* line-height: 65px; */
   font-size: 20px;
   margin-bottom: 20px;
@@ -176,7 +176,6 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
 
   async function updateFriendInfo(index: number, newObj: friendListType) {
     // searchFriendList.splice(index, 1, newObj.name);
-
     // console.log(newSearhingName);
     console.log(newObj);
     friendList[index] = newObj;
@@ -190,7 +189,7 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
 
     setFriendsList(newfriendsList);
 
-    await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), { merge: true });
+    await setDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), { friends: friendList }, { merge: true });
     setNotificationInfo({ text: "Successfully edit your friends info!", status: true });
     setTimeout(() => {
       setNotificationInfo({ text: "", status: false });
@@ -288,20 +287,26 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
         {isEditingFriend ? (
           <FriendUpdateBtn
             onClick={() => {
-              let key = friendList[index].key;
-              let newObj = {
-                city: CityRef.current!.value,
-                country: countryName,
-                countryId: countryId,
-                imgUrl: "",
-                insta: InstaRef.current!.value,
-                name: NameRef.current!.value,
-                notes: NotesRef.current!.value,
-                key: key,
-              };
-
-              sendEditFriendInfo(index, newObj);
-              setIsEditingFriend(false);
+              if (NameRef.current!.value.trim() !== "") {
+                let key = friendList[index].key;
+                let newObj = {
+                  city: CityRef.current!.value,
+                  country: countryName,
+                  countryId: countryId,
+                  imgUrl: "",
+                  insta: InstaRef.current!.value,
+                  name: NameRef.current!.value,
+                  notes: NotesRef.current!.value,
+                  key: key,
+                };
+                sendEditFriendInfo(index, newObj);
+                setIsEditingFriend(false);
+              } else {
+                setNotificationInfo({ text: `Friend's name could not be blank `, status: true });
+                setTimeout(() => {
+                  setNotificationInfo({ text: "", status: false });
+                }, 3000);
+              }
             }}></FriendUpdateBtn>
         ) : (
           <EditFriendBtn
