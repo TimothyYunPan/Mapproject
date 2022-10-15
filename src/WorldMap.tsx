@@ -360,6 +360,8 @@ const CloseBtn = styled(IconBtnStyle)`
 `;
 
 export const LittleCloseBtn = styled(CloseBtn)`
+  top: 14px;
+  right: 14px;
   width: 15px;
   height: 15px;
 `;
@@ -427,7 +429,7 @@ const AddFriendFormTextarea = styled.textarea`
 const FriendMiddleBox = styled.div`
   display: flex;
   overflow: scroll;
-  margin: 0 24px 0 20px;
+  margin: 0 28px 0 20px;
   /* position: relative; */
 `;
 const AddFriendTip = styled.div`
@@ -536,6 +538,7 @@ const MapTitle = styled.div`
   text-align: center;
   transform: translate(-50%, -50%);
   color: white;
+  cursor: default;
   /* background-color: rgba(225, 225, 255, 0.5); */
   z-index: 1000;
   transition: 0.5s;
@@ -1607,7 +1610,12 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                       setIsShowingPoint(false);
                       setCurrentMapName("Visited Countries Map");
                     }}></WallPaper>
-                  <SelectMapText>ᴠɪsɪᴛᴇᴅ ᴍᴀᴘ</SelectMapText>
+                  <SelectMapText
+                    onClick={() => {
+                      setMapState(1);
+                    }}>
+                    ᴠɪsɪᴛᴇᴅ ᴍᴀᴘ
+                  </SelectMapText>
                 </WallPaperSet>
               </HomePageContainer>
               <HomePageContainer>
@@ -1624,7 +1632,12 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                         setCurrentMapName("Friends Located Map");
                       }
                     }}></WallPaper2>
-                  <SelectMapText>ғʀɪᴇɴᴅ ᴍᴀᴘ</SelectMapText>
+                  <SelectMapText
+                    onClick={() => {
+                      setMapState(2);
+                    }}>
+                    ғʀɪᴇɴᴅ ᴍᴀᴘ
+                  </SelectMapText>
                 </WallPaperSet>
               </HomePageContainer>
               <HomePageContainer>
@@ -1640,7 +1653,12 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                         setCurrentMapName("My Bucket List");
                       }
                     }}></WallPaper3>
-                  <SelectMapText>ᴍʏ ᴍᴀᴘs</SelectMapText>
+                  <SelectMapText
+                    onClick={() => {
+                      setMapState(3);
+                    }}>
+                    ᴍʏ ᴍᴀᴘs
+                  </SelectMapText>
                 </WallPaperSet>
               </HomePageContainer>
               <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} deleteFriend={deleteFriend} deleteNote={deleteNote} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
@@ -1790,11 +1808,11 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                         )}
                       </>
                     </FriendMiddleBox>
-                    <CloseBtn
+                    <LittleCloseBtn
                       onClick={() => {
                         setIsShowingFriends(false);
                         setIsAddingFriend(false);
-                      }}></CloseBtn>
+                      }}></LittleCloseBtn>
                     <AddFriendBtn
                       onClick={() => {
                         setIsAddingFriend(true);
@@ -1831,6 +1849,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                               />
                             ) : (
                               <AddFriendFormInput
+                                maxLength={21}
                                 onChange={(e) =>
                                   setAddFriendState({
                                     ...addFriendState,
@@ -1854,7 +1873,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                                 notes: "",
                               });
                             } else {
-                              setNotificationInfo({ text: `Friend's Name could not be blank `, status: true });
+                              setNotificationInfo({ text: `Friend's name could not be blank `, status: true });
                               setTimeout(() => {
                                 setNotificationInfo({ text: "", status: false });
                               }, 3000);
@@ -2012,7 +2031,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                       // onChange={()=>{setPointNoteTitle()}}
                     ></PointNotesTitleInput>
                   ) : (
-                    <>{pointList && pointList[pointIndex].title ? <PointNotesTitle>{pointList[pointIndex].title}</PointNotesTitle> : <PointNoteTip>write something to save the pin...</PointNoteTip>}</>
+                    <>{pointList && pointList[pointIndex].title ? <PointNotesTitle>{pointList[pointIndex].title}</PointNotesTitle> : <PointNoteTip>write something to save the pin</PointNoteTip>}</>
                   )}
                   {previewImgUrl ? <PointNotesTextImg src={previewImgUrl} /> : <PointNotesTextImg src={pointList[pointIndex].imgUrl} />}
 
