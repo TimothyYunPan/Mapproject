@@ -4,6 +4,8 @@ Maphub is a map website that helps people personalize their
 international experiences by pinning, coloring, and
 managing all of their customized maps.
 
+visit website: https://maphub-b1531.web.app/
+
 # Tech
 
 ![React](https://img.shields.io/badge/React-61DAFB.svg?style=for-the-badge&logo=React&logoColor=black) ![CreateReactApp](https://img.shields.io/badge/Create%20React%20App-09D3AC.svg?style=for-the-badge&logo=Create-React-App&logoColor=white)
@@ -43,10 +45,8 @@ on this website, users can...
 ∙ List of articles in customized maps 
 
 
-    2. Intro
-    3. Link
-    4. Tech
-    5. Flow chart
-    6. Demo(gif)
-    7. Future Features(optional)
-    8. Contact(optional)
+# Contact
+
+Email: s093261s@gmail.com
+
+    
