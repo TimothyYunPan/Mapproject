@@ -6,6 +6,18 @@ import { pointListType } from "../App";
 import parse from "html-react-parser";
 import { LittleCloseBtn } from "../WorldMap";
 
+const ViewModeMsg = styled.div`
+  font-size: 14px;
+  color: rgba(225, 225, 225, 0.7);
+  margin: 250px 0 10px -10px;
+  text-align: left;
+  cursor: default;
+  /* right: 25px; */
+  bottom: 10px;
+  position: absolute;
+  /* padding: 0 20px; */
+`;
+
 type OverlapType = {
   pointList: pointListType[];
   isShowingPointNotes: boolean;
@@ -90,6 +102,7 @@ function Overlap({ mapState, pointList, isShowingPointNotes, pointIndex, preview
               setIsShowingPointNotes(false);
               setPointIndex(-1);
             }}></LittleCloseBtn>
+          <ViewModeMsg>View mode</ViewModeMsg>
         </PointNotes>
       ) : (
         <></>

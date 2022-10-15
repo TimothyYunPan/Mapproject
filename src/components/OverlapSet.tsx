@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, SetStateAction } from "react";
 import styled from "styled-components";
-import { mapNameType } from "../App";
+import { mapNameType, pointListType } from "../App";
 import sortDown from "./sortDown.png";
 import eyeOpened from "../components/eyeOpened.png";
 import eyeClosed from "../components/eyeClosed.png";
@@ -142,9 +142,10 @@ type OverlapSetType = {
   setIsShowingSearchBarMB: React.Dispatch<React.SetStateAction<boolean>>;
   setIsShowingSearchResult: React.Dispatch<React.SetStateAction<boolean | undefined>>;
   setPointIndex: React.Dispatch<React.SetStateAction<number>>;
+  pointList: pointListType[];
 };
 
-function OverlapSet({ mapState, setPopUpMsg, uid, setIsShowingPoint, isShowingOverlapBtn, setIsShowingOverlapBtn, setIsChangingMap, overlapName, mapNames, setMapId, setOverlapName, setIsShowingPointNotes, isShowingPoint, setIsShowingPopUp, setIsShowingSearchBarMB, setIsShowingSearchResult, setPointIndex }: OverlapSetType) {
+function OverlapSet({ mapState, setPopUpMsg, uid, setIsShowingPoint, isShowingOverlapBtn, setIsShowingOverlapBtn, setIsChangingMap, overlapName, mapNames, setMapId, setOverlapName, setIsShowingPointNotes, isShowingPoint, setIsShowingPopUp, setIsShowingSearchBarMB, setIsShowingSearchResult, setPointIndex, pointList }: OverlapSetType) {
   return (
     <OverlapSetBox>
       {mapState && mapState <= 2 && mapState !== -1 ? (
@@ -201,6 +202,8 @@ function OverlapSet({ mapState, setPopUpMsg, uid, setIsShowingPoint, isShowingOv
                   setOverlapName("My Bucket List");
                   setIsShowingOverlapBtn(false);
                   setIsShowingPoint(true);
+                  setIsShowingPointNotes(false);
+                  setPointIndex(-1);
                 }
               }}>
               My Bucket List

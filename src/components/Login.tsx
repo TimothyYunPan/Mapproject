@@ -383,8 +383,8 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
   const [imageList, setImageList] = useState<string[]>([]);
   // const [ memberInfo, setMemberInfo ] = useState([])
   const [nameInputValue, setNameInputValue] = useState("");
-  const [accountInputValue, setAccountInputValue] = useState("");
-  const [passwordInputValue, setPasswordInputValue] = useState("");
+  const [accountInputValue, setAccountInputValue] = useState("Welcome@gmail.com");
+  const [passwordInputValue, setPasswordInputValue] = useState("enjoy your day!");
   const userNameInputRef = useRef<HTMLInputElement>(null);
   //   const validate = () => {
   //     if (!validEmail.test(email)) {
@@ -445,7 +445,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
           } else if (error.message === "Firebase: Password should be at least 6 characters (auth/weak-password).") {
             setErrorMsg(["6", "* password should be at least 6 characters"]);
           } else if (error.message === "Firebase: Error (auth/invalid-email).") {
-            setErrorMsg(["7", "this is not a valid email"]);
+            setErrorMsg(["7", "* this is not a valid email"]);
           }
           console.log(error.message);
           const errorCode = error.code;
@@ -483,7 +483,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
             //   setNotificationInfo({ text: "", status: false });
             // }, 3000);
           } else if (error.message === "Firebase: Error (auth/invalid-email).") {
-            setErrorMsg(["7", "this is not a valid email"]);
+            setErrorMsg(["7", "* this is not a valid email"]);
           }
           console.log(error.message);
 
@@ -662,6 +662,8 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
                     onClick={() => {
                       setLoginStatus("register");
                       setErrorMsg([]);
+                      setPasswordInputValue("");
+                      setAccountInputValue("");
                     }}>
                     sign up?
                   </ProfileNoAcount>
@@ -671,6 +673,8 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
                     onClick={() => {
                       setLoginStatus("login");
                       setErrorMsg([]);
+                      setAccountInputValue("Welcome@gmail.com");
+                      setPasswordInputValue("enjoy your day!");
                     }}>
                     sign in?
                   </ProfileWithAcount>
