@@ -16,6 +16,10 @@ import { PointNotesTitleInput } from "../WorldMap";
 import back from "./back.png";
 import noIcon from "./noIcon.png";
 import closeGrey from "./closeGrey.png";
+import okGrey from "./okGrey.png";
+import editGrey from "./editGrey.png";
+import editGreyHover from "./editGreyHover.png";
+
 const storage = getStorage(app);
 const validEmail = new RegExp("^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$");
 // import getJwtToken from '../../utils/getJwtToken';
@@ -90,7 +94,7 @@ const ProfileTitle = styled.div<{ toLogIn: boolean }>`
   opacity: ${(props) => (props.toLogIn === true ? 1 : 0)};
   color: #222;
   margin-top: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   font-size: 24px;
   white-space: nowrap;
 `;
@@ -297,13 +301,13 @@ const EditProfileBtn = styled.div`
   height: 20px;
   top: 20px;
   right: 0px;
-  background-image: url(${edit});
+  background-image: url(${editGrey});
   background-size: cover;
   position: absolute;
   cursor: pointer;
 
   :hover {
-    background-image: url(${editHover});
+    background-image: url(${editGreyHover});
     width: 24px;
     height: 24px;
     bottom: 15px;
@@ -316,7 +320,7 @@ const UpdateProfileBtn = styled.div`
   background-size: cover;
   position: absolute;
   cursor: pointer;
-  background-image: url(${okIcon});
+  background-image: url(${okGrey});
   top: 18px;
   :hover {
     top: 16px;
@@ -367,11 +371,12 @@ type LoginType = {
   userName: string;
   setUserName: React.Dispatch<React.SetStateAction<string>>;
   userImage: string;
+  setUserImg: React.Dispatch<React.SetStateAction<string>>;
   originalMapNames: mapNameType[];
   setMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
   setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
 };
-function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList, toLogIn, setToLogIn, uid, setMapState, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList, loginStatus, setLoginStatus, userName, setUserName, userImage, originalMapNames, setMapNames, setNotificationInfo }: LoginType) {
+function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList, toLogIn, setToLogIn, uid, setMapState, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList, loginStatus, setLoginStatus, userName, setUserName, userImage, originalMapNames, setMapNames, setNotificationInfo, setUserImg }: LoginType) {
   const [profile, setProfile] = useState();
   // console.log(loginStatus);
   const [imageUpload, setImageUpload] = useState<File | null>(null);
@@ -549,6 +554,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
         { merge: true }
       );
       setIsEditingProfile(false);
+      setUserImg("");
     } else {
       // console.log(imageUpload);
       // console.log(userNameInputRef.current!.value);
@@ -569,6 +575,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
             { merge: true }
           );
           setIsEditingProfile(false);
+          setUserImg(url);
         });
       });
     }

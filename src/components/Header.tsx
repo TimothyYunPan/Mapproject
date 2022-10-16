@@ -249,7 +249,7 @@ const MapBlockSet = styled.div<{ isChangingMap: boolean }>`
   margin-top: 20px;
   display: flex;
   flex-direction: column;
-  max-height: ${(props) => (props.isChangingMap ? 350 : 0)}px;
+  max-height: ${(props) => (props.isChangingMap ? 484 : 0)}px;
   transition: 0.4s;
   /* background-color: rgba(42, 60, 77); */
   /* height: 100%; */
@@ -307,22 +307,30 @@ const SearchBtn = styled.div`
   }
 `;
 
-const LoginBtn = styled.div`
-  height: 28px;
-  width: 28px;
+const LoginBtn = styled.div<{ userImage: string }>`
+  height: 42px;
+  width: 42px;
   padding-top: 21px;
-  padding-bottom: 14px;
+  margin: 10px -12px 14px 0px;
   font-size: 16px;
-  margin-top: 17px;
+  border-radius: 50%;
+  border: 1px solid white;
   /* margin-top: 15px; */
   cursor: pointer;
   color: white;
-  background-image: url(${userProfile});
-  background-size: contain;
+  background-image: ${(props) => (props.userImage ? `url(${props.userImage})` : `url(${userProfile})`)};
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  transition: 0.5s;
   :hover {
     /* border-bottom: 1px solid white; */
+  }
+  @media (max-width: 550px) {
+    /* margin-right: 0; */
+    margin: 20px 5px 0 0;
+    height: 28px;
+    width: 28px;
   }
 `;
 
@@ -373,9 +381,10 @@ type HeaderType = {
   setIsChangingMap: React.Dispatch<React.SetStateAction<boolean>>;
   isChangingMap: boolean;
   setPointIndex: React.Dispatch<React.SetStateAction<number>>;
+  setUserImg: React.Dispatch<React.SetStateAction<string>>;
 };
 
-function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid, setUid, toLogIn, setToLogIn, countryList, setCountryList, isLoggedIn, setIsLoggedIn, setIsShowingPointNotes, getCountryFriends, isShowingFriends, setIsShowingFriends, setCountryId, setCountryName, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList, isShowingPopUp, setIsShowingPopUp, loginStatus, setLoginStatus, userName, setUserName, userImage, setMapId, mapNames, setMapNames, originalMapNames, setOriginalMapNames, mapId, setPopUpMsg, deleteMap, setDeleteMap, pointList, setNotificationInfo, setCurrentMapName, currentMapName, isChangingMap, setIsChangingMap, setPointIndex }: HeaderType) {
+function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid, setUid, toLogIn, setToLogIn, countryList, setCountryList, isLoggedIn, setIsLoggedIn, setIsShowingPointNotes, getCountryFriends, isShowingFriends, setIsShowingFriends, setCountryId, setCountryName, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList, isShowingPopUp, setIsShowingPopUp, loginStatus, setLoginStatus, userName, setUserName, userImage, setMapId, mapNames, setMapNames, originalMapNames, setOriginalMapNames, mapId, setPopUpMsg, deleteMap, setDeleteMap, pointList, setNotificationInfo, setCurrentMapName, currentMapName, isChangingMap, setIsChangingMap, setPointIndex, setUserImg }: HeaderType) {
   const [searchCountry, setSearchCountry] = useState<string>("");
   const [searchValue, setSearchValue] = useState<string>("");
   const [isEditingMap, setIsEditingMap] = useState<number>(-1);
@@ -392,7 +401,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
   console.log(hasName);
   console.log(hasCountry);
   const [map3Name, setMap3Name] = useState<string>("My Bucket List");
-  const Map1NameRef = useRef<HTMLInputElement>(null);
+  const Map1NameRef = useRef<any>("Visited Countries Map");
   const Map2NameRef = useRef<HTMLInputElement>(null);
   const Map3NameRef = useRef<HTMLInputElement>(null);
   const searchInputRef = useRef<any>("");
@@ -642,7 +651,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                       onClick={() => {
                         if (!uid) {
                           setIsShowingPopUp(true);
-                          setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
+                          setPopUpMsg(["Sign up to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
                           // setToLogIn(true);
                         } else {
                           if (isEditingMap === -1) {
@@ -691,7 +700,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                       onClick={() => {
                         if (!uid) {
                           setIsShowingPopUp(true);
-                          setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
+                          setPopUpMsg(["Sign up to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
                           // setToLogIn(true);
                         } else {
                           if (mapId !== "custimizedMap") {
@@ -748,10 +757,10 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                   onClick={() => {
                     if (!uid) {
                       setIsShowingPopUp(true);
-                      setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
+                      setPopUpMsg(["Sign up to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
                       // setToLogIn(true);
-                    } else if (mapNames && mapNames.length > 7) {
-                      setNotificationInfo({ text: `You will only have 10 maps at the same time`, status: true });
+                    } else if (mapNames && mapNames.length > 6) {
+                      setNotificationInfo({ text: `You have maximum of 10 maps only`, status: true });
                       setTimeout(() => {
                         setNotificationInfo({ text: "", status: false });
                       }, 3000);
@@ -799,6 +808,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
         )}
         {mapState && mapState !== -1 ? (
           <LoginBtn
+            userImage={userImage}
             onClick={() => {
               setIsShowingPopUp(false);
               if (toLogIn) {
@@ -806,6 +816,9 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
               } else {
                 setToLogIn(true);
               }
+              setIsChangingMap(false);
+              setIsShowingOverlapBtn(false);
+              setIsShowingSearchBarMB(false);
             }}>
             {/* {uid && uid ? "Sign Out" : "Sign In"} */}
           </LoginBtn>
@@ -815,7 +828,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
 
         {}
       </HeaderRightSet>
-      <Login setNotificationInfo={setNotificationInfo} friendsList={friendsList} setFriendsList={setFriendsList} setMapState={setMapState} uid={uid} toLogIn={toLogIn} setToLogIn={setToLogIn} countryList={countryList} setCountryList={setCountryList} setUid={setUid} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setHaveFriendList={setHaveFriendList} setFriendList={setFriendList} setPointList={setPointList} loginStatus={loginStatus} setLoginStatus={setLoginStatus} userName={userName} setUserName={setUserName} userImage={userImage} originalMapNames={originalMapNames} setMapNames={setMapNames}></Login>
+      <Login setUserImg={setUserImg} setNotificationInfo={setNotificationInfo} friendsList={friendsList} setFriendsList={setFriendsList} setMapState={setMapState} uid={uid} toLogIn={toLogIn} setToLogIn={setToLogIn} countryList={countryList} setCountryList={setCountryList} setUid={setUid} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setHaveFriendList={setHaveFriendList} setFriendList={setFriendList} setPointList={setPointList} loginStatus={loginStatus} setLoginStatus={setLoginStatus} userName={userName} setUserName={setUserName} userImage={userImage} originalMapNames={originalMapNames} setMapNames={setMapNames}></Login>
       {/* <Nav></Nav> */}
     </Wrapper>
   );

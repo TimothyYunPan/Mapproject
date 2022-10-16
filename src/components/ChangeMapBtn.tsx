@@ -62,7 +62,7 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
     console.log("有嗎");
     setDeleteMap("no");
     // console.log(deleteMap);
-    setNotificationInfo({ text: `map has been successfully deleted`, status: true });
+    setNotificationInfo({ text: `Map has been successfully deleted`, status: true });
     setTimeout(() => {
       setNotificationInfo({ text: "", status: false });
     }, 3000);
@@ -129,12 +129,12 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
                   setCurrentMapName(MapNameRef.current!.value);
                   setOverlapName(MapNameRef.current!.value);
                 }
-                setNotificationInfo({ text: `Successfully change your map name `, status: true });
+                setNotificationInfo({ text: `Successfully update your map name `, status: true });
                 setTimeout(() => {
                   setNotificationInfo({ text: "", status: false });
                 }, 3000);
               } else {
-                setNotificationInfo({ text: `Map Name cannot be blank`, status: true });
+                setNotificationInfo({ text: `Map name cannot be blank`, status: true });
                 setTimeout(() => {
                   setNotificationInfo({ text: "", status: false });
                 }, 3000);
@@ -145,7 +145,7 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
             onClick={() => {
               CurrentMapIdRef.current = mapName.id;
               setIsShowingPopUp(true);
-              setPopUpMsg([`Are you sure you want to delete the map "${mapName.name}" ?`, "Yes", "No", "", "deletemap", deleteNewMap]);
+              setPopUpMsg([`Are you sure you want to delete the map "${mapName.name}"?`, "Yes", "No", "", "deletemap", deleteNewMap]);
               setIsEditing(false);
 
               // console.log(index);

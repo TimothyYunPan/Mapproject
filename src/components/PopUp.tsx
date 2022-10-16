@@ -125,6 +125,9 @@ function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatu
                   deleteFunc();
                 } else if (popUpMsg[4] === "goback") {
                   setIsEditing(false);
+                } else if (popUpMsg[4] === "closenote") {
+                  setIsShowingPointNotes(false);
+                  setPointIndex(-1);
                 }
 
                 setIsShowingPopUp(false);

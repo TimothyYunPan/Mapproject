@@ -48,7 +48,8 @@ const OverlapBtn = styled.div<{ isShowingPoint: boolean; mapState: number }>`
   width: 150px;
   /* padding-bottom: 16px; */
   margin-bottom: 10px;
-  padding-left: 10px;
+  /* padding-left: 10px; */
+  padding: 2px 0 2px 10px;
   border: 1px solid white;
   border-radius: 8px;
   /* text-align: center; */
@@ -75,7 +76,7 @@ const OverlapBtn = styled.div<{ isShowingPoint: boolean; mapState: number }>`
 const OverlapList = styled.div<{ isShowingOverlapBtn: boolean }>`
   /* width: 80px; */
   position: absolute;
-  height: ${(props) => (props.isShowingOverlapBtn === true ? "200" : "0")}px;
+  height: ${(props) => (props.isShowingOverlapBtn === true ? "308" : "0")}px;
   display: flex;
   flex-direction: column;
   top: 60px;
@@ -93,9 +94,10 @@ const CurrentOverlap = styled.div<{ isShowingPoint: boolean }>`
   border: 1px solid white;
   border-radius: 8px;
   background-color: rgba(225, 225, 225, 0.2);
-  margin-top: 20px;
-  padding-left: 10px;
-  height: 25px;
+  margin-top: 18px;
+  /* padding-left: 10px; */
+  padding: 2px 0 2px 10px;
+  height: 28px;
   cursor: pointer;
   text-align: left;
   color: white;
@@ -133,7 +135,7 @@ type OverlapSetType = {
   setIsShowingPopUp: React.Dispatch<React.SetStateAction<boolean>>;
   setMapId: React.Dispatch<React.SetStateAction<string>>;
   mapNames: mapNameType[];
-  setPopUpMsg: React.Dispatch<React.SetStateAction<any[]>>;
+  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void })[]>>;
   setIsChangingMap: React.Dispatch<React.SetStateAction<boolean>>;
   isShowingOverlapBtn: boolean;
   setIsShowingOverlapBtn: React.Dispatch<React.SetStateAction<boolean>>;
@@ -155,7 +157,7 @@ function OverlapSet({ mapState, setPopUpMsg, uid, setIsShowingPoint, isShowingOv
             onClick={() => {
               if (!uid) {
                 setIsShowingPopUp(true);
-                setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
+                setPopUpMsg(["Sign up to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
               } else {
                 if (isShowingPoint) {
                   setIsShowingPoint(false);
@@ -171,7 +173,7 @@ function OverlapSet({ mapState, setPopUpMsg, uid, setIsShowingPoint, isShowingOv
             onClick={() => {
               if (!uid) {
                 setIsShowingPopUp(true);
-                setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
+                setPopUpMsg(["Sign up to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
               } else {
                 // setPointList([]);
                 if (isShowingOverlapBtn) {
@@ -194,7 +196,7 @@ function OverlapSet({ mapState, setPopUpMsg, uid, setIsShowingPoint, isShowingOv
               onClick={() => {
                 if (!uid) {
                   setIsShowingPopUp(true);
-                  setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
+                  setPopUpMsg(["Sign up to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
                   // setToLogIn(true);
                 } else {
                   // setPointList([]);
@@ -237,7 +239,7 @@ function OverlapSet({ mapState, setPopUpMsg, uid, setIsShowingPoint, isShowingOv
             onClick={() => {
               if (!uid) {
                 setIsShowingPopUp(true);
-                setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
+                setPopUpMsg(["Sign up to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
               } else {
                 if (isShowingOverlapBtn) {
                   setIsShowingOverlapBtn(false);

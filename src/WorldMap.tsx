@@ -428,7 +428,8 @@ const AddFriendFormTextarea = styled.textarea`
 `;
 const FriendMiddleBox = styled.div`
   display: flex;
-  overflow: scroll;
+  overflow-x: scroll;
+  overflow-y: hidden;
   margin: 0 28px 0 20px;
   /* position: relative; */
 `;
@@ -1125,7 +1126,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
       friends: arrayRemove(friendList[index]),
       haveFriend: friendList.length - 1,
     });
-    setNotificationInfo({ text: "Successfully delete this person from your friendlist 😈 ", status: true });
+    setNotificationInfo({ text: "Successfully remove this person from your friend list 😈 ", status: true });
     setTimeout(() => {
       setNotificationInfo({ text: "", status: false });
     }, 3000);
@@ -1251,7 +1252,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
       // console.log(newFriendsList);
     });
   }
-  async function getUserMap3Data(userUid: string, mapId: any) {
+  async function getUserMap3Data(userUid: string, mapId: string) {
     const q = collection(db, "user", userUid, mapId);
     const querySnapshot = await getDocs(q);
     let newPointList: pointListType[] = [];
@@ -1955,7 +1956,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                 // setPointIndex(pointList.length + 1);
                 setPointList([...pointList, newObj]);
                 if (pointList.length === 0) {
-                  setNotificationInfo({ text: "click on your pin to add some notes...", status: true });
+                  setNotificationInfo({ text: "click on the pin to add some notes!", status: true });
                   setTimeout(() => {
                     setNotificationInfo({ text: "", status: false });
                   }, 4000);
@@ -2081,7 +2082,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                         onClick={(e) => {
                           e.stopPropagation();
                           setIsShowingPopUp(true);
-                          setPopUpMsg(["Are you sure you want to go back before saving it?", "Yes", "No", "", "goback"]);
+                          setPopUpMsg(["Are you sure you want to leave before saving changes?", "Yes", "No", "", "goback"]);
                         }}></NoteCancelBtn>
                     ) : (
                       <>
@@ -2138,7 +2139,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                               setPointPhoto(null);
                               setPointNotes("");
                             } else {
-                              setNotificationInfo({ text: `Note title cannot be blank`, status: true });
+                              setNotificationInfo({ text: `Title cannot be blank`, status: true });
                               setTimeout(() => {
                                 setNotificationInfo({ text: "", status: false });
                               }, 3000);
@@ -2159,8 +2160,13 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                   <NoteFlag src={`https://countryflagsapi.com/png/${countryId}`}></NoteFlag>
                   <LittleCloseBtn
                     onClick={() => {
-                      setIsShowingPointNotes(false);
-                      setPointIndex(-1);
+                      if (isEditing) {
+                        setIsShowingPopUp(true);
+                        setPopUpMsg(["Are you sure you want to leave before saving changes?", "Yes", "No", "", "closenote"]);
+                      } else {
+                        setIsShowingPointNotes(false);
+                        setPointIndex(-1);
+                      }
                     }}></LittleCloseBtn>
                 </PointNotes>
               ) : (

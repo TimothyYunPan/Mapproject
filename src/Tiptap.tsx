@@ -1,5 +1,5 @@
 import "./styles.css";
-import { EditorContent, useEditor } from "@tiptap/react";
+import { Editor, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import React from "react";
 import { pointListType } from "./App";
@@ -8,7 +8,6 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { Bold, Italic, H1, H2, H3, H4, H5, ListNumbers, Menu } from "tabler-icons-react";
 
 const MenuBarStyle = styled.div`
-  /* border: 1px solid white; */
   justify-content: space-between;
   display: flex;
   border-bottom: 1px solid white;
@@ -28,7 +27,7 @@ const EditorContentBox = styled.div<{ largeTipTap: boolean }>`
   overflow-x: hidden;
 `;
 
-const MenuBar = ({ editor }: any) => {
+const MenuBar: React.FC<{ editor: Editor | null }> = ({ editor }) => {
   if (!editor) {
     return null;
   }

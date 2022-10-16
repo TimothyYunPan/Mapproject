@@ -50,7 +50,7 @@ const FriendMask = styled.div`
 const FriendSet = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 10px;
+  /* margin-top: 10px; */
 `;
 
 const FriendUpdateBtn = styled(IconBtnStyle)`
@@ -103,7 +103,7 @@ const FriendFormInput = styled.input<{ isEditingFriend: boolean }>`
 const FriendFormTitle = styled.input<{ isEditingFriend: boolean }>`
   width: 159px;
   height: 50px;
-  padding-top: 10px;
+  /* padding-top: 10px; */
   /* line-height: 65px; */
   font-size: 20px;
   margin-bottom: 20px;
@@ -190,7 +190,7 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
     setFriendsList(newfriendsList);
 
     await setDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), { friends: friendList }, { merge: true });
-    setNotificationInfo({ text: "Successfully edit your friends info!", status: true });
+    setNotificationInfo({ text: "Successfully update your friend profile!", status: true });
     setTimeout(() => {
       setNotificationInfo({ text: "", status: false });
     }, 2000);
@@ -282,7 +282,7 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
         <DeleteFriendBtn
           onClick={(e) => {
             setIsShowingPopUp(true);
-            setPopUpMsg([`Are you sure  you want to delete the friend "${friendList[index].name}" 😭 ?`, "Yes", "No", `${index}`, `deletefriend`]);
+            setPopUpMsg([`Are you sure you want to remove "${friendList[index].name}" from your friend list? 😭`, "Yes", "No", `${index}`, `deletefriend`]);
           }}></DeleteFriendBtn>
         {isEditingFriend ? (
           <FriendUpdateBtn

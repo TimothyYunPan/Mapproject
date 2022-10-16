@@ -18,6 +18,9 @@ const GlobalStyleComponent = createGlobalStyle`
     /* font-weight: 800; */
     font-family: 'Noto Sans TC', sans-serif;
     font-family: 'Oswald', sans-serif;
+    ::-webkit-scrollbar {
+    display: none;
+    }
     
     
     /* display: flex;
@@ -193,6 +196,7 @@ function App() {
         currentMapName={currentMapName}
         isChangingMap={isChangingMap}
         setIsChangingMap={setIsChangingMap}
+        setUserImg={setUserImg}
       />
       <WorldMap
         isLoggedIn={isLoggedIn}
