@@ -55,9 +55,7 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
     setMapNames(newMapList);
 
     await setDoc(doc(db, "user", uid), { names: newMapList }, { merge: true });
-    // console.log("有嗎");
     setDeleteMap("no");
-    // console.log(deleteMap);
     setNotificationInfo({ text: `Map has been successfully deleted`, status: true });
     setTimeout(() => {
       setNotificationInfo({ text: "", status: false });
@@ -66,13 +64,6 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
   useEffect(() => {
     MapNameRef.current!.value = mapName.name;
   }, [mapName.name]);
-
-  // useEffect(() => {
-  //   console.log(deleteMap);
-  //   if (deleteMap === "yes" && CurrentMapIdRef.current !== null) {
-  //     deleteNewMap();
-  //   }
-  // }, [deleteMap]);
 
   return (
     <ChangeMapBtnSet>
@@ -98,14 +89,6 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
           }
           setIsShowingPoint(true);
           setPointIndex(-1);
-
-          // if (!uid) {
-          //   setIsShowingPopUp(true);
-          //   // setToLogIn(true);
-          // } else {
-          //   setMapState(3);
-          //   setIsShowingPoint(true);
-          // }
         }}>
         {/* {mapName.name} */}
       </MapNameInput>

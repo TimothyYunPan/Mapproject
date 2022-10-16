@@ -7,7 +7,6 @@ import { countryListType, friendListType, haveFriendListType, pointListType, map
 import Login from "./Login";
 import { collection, query, where, getDocs, doc, getDoc, setDoc, arrayUnion } from "firebase/firestore";
 import { db } from "../utils/firebaseConfig";
-import PopUp from "./PopUp";
 import { v4 as uuidv4 } from "uuid";
 import sortDown from "./sortDown.png";
 import addIcon from "./addIcon.png";
@@ -17,9 +16,6 @@ import deleteIcon from "./trashCan.png";
 import deleteHoverIcon from "./trashCanHover.png";
 import okIcon from "./okIcon.png";
 import ChangeMapBtn from "./ChangeMapBtn";
-import { ChevronsDownLeft } from "tabler-icons-react";
-import eyeOpened from "../components/eyeOpened.png";
-import eyeClosed from "../components/eyeClosed.png";
 import OverlapSet from "./OverlapSet";
 import SearchBar from "./SearchBar";
 import SearchResult from "./SearchResult";
@@ -28,7 +24,6 @@ const Logo = styled.div<{ mapState: number }>`
   margin-top: ${(props) => (props.mapState === -1 ? "20px" : "0px")};
   width: ${(props) => (props.mapState === -1 ? "100px" : "70px")};
   height: ${(props) => (props.mapState === -1 ? "100px" : "70px")};
-  /* border: 1px solid black; */
   margin-right: 32px;
   background-image: url(${continent});
   background-size: cover;
@@ -44,10 +39,6 @@ const Logo1 = styled(Logo)`
     display: block;
     height: 50px;
     width: 50px;
-    /* border: 1px solid white;
-    border-radius: 50%;
-    background-repeat: no-repeat;
-    background-size: 20px; */
     margin-top: 10px;
   }
 `;
@@ -56,35 +47,22 @@ export const MapNameInput = styled.input`
   height: 30px;
   width: 200px;
   margin-top: 10px;
-  /* maxlength: 11; */
-  /* padding-bottom: 16px; */
   padding-left: 10px;
-  /* padding-top: 20px; */
   cursor: pointer;
   word-spacing: 6px;
   font-size: 16px;
   color: white;
   text-align: left;
   outline: none;
-  /* border: none; */
-  /* color: rgb(42, 60, 77); */
-  /* -webkit-text-stroke: 0.3px #fff; */
   border: 1px solid white;
   border-radius: 8px;
-  /* text-align: center; */
   background-color: rgba(225, 225, 225, 0.2);
-  /* background-color: rgba(0, 0, 0, 0.5); */
   backdrop-filter: blur(100px);
-  /* line-height: 5px; */
-  /* background-color: transparent; */
-  /* border: 1px solid white; */
   &:nth-child(1) {
-    /* margin-top: 0px; */
   }
 
   :hover {
     color: rgb(236, 174, 72);
-    /* border-bottom: 1px solid white; */
   }
 `;
 
@@ -95,13 +73,7 @@ const MapNameInputFirst = styled(MapNameInput)`
 export const ChangeMapBtnSet = styled.div`
   display: flex;
   align-items: center;
-  /* border: 1px solid black; */
   position: relative;
-  /* border-radius: 15px; */
-  /* padding-left: 10px; */
-
-  /* width: 100%; */
-  /* margin-top: 20px; */
 `;
 
 const CheckMapsBtn = styled.div<{ isChangingMap: boolean }>`
@@ -122,29 +94,24 @@ const CheckMapsBtn = styled.div<{ isChangingMap: boolean }>`
   @media (max-width: 640px) {
     display: none;
   }
-
-  /* transform: rotate(180deg); */
 `;
 
 const HeaderBtnStyle = styled.div`
   margin-top: 20px;
   height: 14px;
   width: 14px;
-  /* padding-left: 5px; */
   background-position: center;
   background-size: cover;
   cursor: pointer;
 `;
 
 const AddMapBtn = styled(HeaderBtnStyle)<{ isChangingMap: boolean }>`
-  /* margin: 0 auto; */
   background-image: url(${addIcon});
   display: ${(props) => (props.isChangingMap ? "block" : "none")};
 `;
 
 export const EditMapBtn = styled(HeaderBtnStyle)`
   background-image: url(${editIcon});
-  /* margin-left: 20px; */
   position: absolute;
   top: 20px;
   right: 0px;
@@ -157,7 +124,6 @@ export const EditMapBtn = styled(HeaderBtnStyle)`
 
 export const DeleteMapBtn = styled(HeaderBtnStyle)`
   background-image: url(${deleteIcon});
-  /* margin-left: 20px; */
   margin-top: 0px;
   top: 20px;
   position: absolute;
@@ -173,7 +139,6 @@ export const OkIcon = styled(HeaderBtnStyle)`
   top: 20px;
   background-image: url(${okIcon});
   margin-top: 0px;
-  /* margin-right: 10px; */
   :hover {
     top: 18px;
   }
@@ -182,7 +147,6 @@ export const OkIcon = styled(HeaderBtnStyle)`
 const CurrentMap = styled.div<{ mapState: number }>`
   height: 60px;
   width: 220px;
-  /* margin: 0 10px; */
   padding-bottom: 16px;
   padding-top: 20px;
   word-spacing: 6px;
@@ -191,9 +155,7 @@ const CurrentMap = styled.div<{ mapState: number }>`
   text-align: left;
   cursor: pointer;
   :hover {
-    /* color: ${(props) => (props.mapState === 2 ? "rgba(102,255,229,.8)" : "rgb(236, 174, 72)")}; */
     color: rgb(236, 174, 72);
-    /* border-bottom: 1px solid white; */
   }
   @media (max-width: 1020px) {
     display: none;
@@ -214,9 +176,6 @@ const Wrapper = styled.div`
   justify-content: space-between;
   width: 90%;
   z-index: 100;
-  /* align-items: center; */
-  /* justify-content: center; */
-  /* background-color: rgb(42, 60, 77); */
   z-index: 1000;
 `;
 
@@ -240,9 +199,6 @@ const Back = styled.div`
 `;
 const HeaderLeftSet = styled.div`
   display: flex;
-  /* width: 100%; */
-  /* align-items: center; */
-  /* justify-content: center; */
 `;
 
 const MapBlockSet = styled.div<{ isChangingMap: boolean }>`
@@ -251,30 +207,23 @@ const MapBlockSet = styled.div<{ isChangingMap: boolean }>`
   flex-direction: column;
   max-height: ${(props) => (props.isChangingMap ? 484 : 0)}px;
   transition: 0.4s;
-  /* background-color: rgba(42, 60, 77); */
-  /* height: 100%; */
   overflow: scroll;
   ::-webkit-scrollbar {
     display: none;
   }
   width: 220px;
-  /* height: ; */
 `;
 
 const AllMapSelections = styled.div<{ isChangingMap: boolean }>`
   width: 220px;
   position: absolute;
   top: 45px;
-  /* height: 100px; */
   /* height: ${(props) => (props.isChangingMap ? 200 : 0)}px; */
-  /* height: 20px; */
   overflow: ${(props) => (props.isChangingMap ? "visible" : "hidden")};
   transition: 0.4s;
   @media (max-width: 1020px) {
     left: 0px;
   }
-
-  /* overflow: hidden; */
 `;
 
 const SearchBtn = styled.div`
@@ -290,20 +239,15 @@ const SearchBtn = styled.div`
   padding-top: 8px;
   background-image: url(${search});
   background-size: cover;
-  /* transition: 0.5s; */
   @media (max-width: 550px) {
     height: 28px;
     width: 28px;
-    /* left: 120px; */
     top: 20px;
     border-radius: 50%;
     border: 1px solid white;
     background-size: 16px;
     background-repeat: no-repeat;
     background-position: center;
-
-    /* right: 105px; */
-    /* text-align: left; */
   }
 `;
 
@@ -315,7 +259,6 @@ const LoginBtn = styled.div<{ userImage: string }>`
   font-size: 16px;
   border-radius: 50%;
   border: ${(props) => (props.userImage ? "1px solid white" : "none")};
-  /* margin-top: 15px; */
   cursor: pointer;
   color: white;
   background-image: ${(props) => (props.userImage ? `url(${props.userImage})` : `url(${userProfile})`)};
@@ -324,10 +267,8 @@ const LoginBtn = styled.div<{ userImage: string }>`
   background-repeat: no-repeat;
   transition: 0.5s;
   :hover {
-    /* border-bottom: 1px solid white; */
   }
   @media (max-width: 550px) {
-    /* margin-right: 0; */
     margin: 20px 5px 0 0;
     height: 28px;
     width: 28px;
@@ -401,18 +342,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
   const Map2NameRef = useRef<HTMLInputElement>(null);
   const Map3NameRef = useRef<HTMLInputElement>(null);
   const searchInputRef = useRef<any>("");
-  // useEffect(() => {
-  //   if (!hasName && !hasCountry) {
-  //     setHasCountry(true);
-  //     setHasName(true);
 
-  //     setNotificationInfo({ text: "no result", status: true });
-
-  //     setTimeout(() => {
-  //       setNotificationInfo({ text: "", status: false });
-  //     }, 2000);
-  //   }
-  // }, [hasCountry]);
   function checkResult() {
     if (!hasName && !hasCountry) {
       setHasCountry(true);
@@ -423,7 +353,6 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
       }, 2000);
     }
   }
-  // useEffect(() => {}, [hasName]);
   function searchCountries(searchValue: string) {
     const result = countries.filter(function (obj) {
       return obj.name.toLowerCase() === searchValue.toLowerCase();
@@ -434,19 +363,12 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
       getCountryFriends(a);
       setCountryId(a);
       setIsShowingFriends(true);
-      // searchInputRef.current.value = "";
-      // document.getElementById(a)!.style.scale = "2px";
       document.getElementById(a)!.style.fill = "rgb(236,174,72)";
       setHasCountry(true);
     } else {
-      // searchName(searchValue);
-      // setSearchNameResult("no result");
-      // setIsShowingSearchResult;
       // console.log("查無資料");
       setHasCountry(false);
     }
-
-    // setSearchCountry(a);
   }
 
   function searchName(searchValue: string) {
@@ -462,15 +384,6 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
       setIsShowingSearchResult(true);
       setSearchNameResult(result);
       setHasName(true);
-
-      // } else if (result.length === 1) {
-      //   setCountryId(result[0].countryId);
-      //   setIsShowingFriends(true);
-      //   setCountryName(result[0].country);
-      //   getCountryFriends(result[0].countryId);
-      // } else {
-      //   setIsShowingSearchResult(true);
-      //   setSearchNameResult(result);
     }
   }
 
@@ -492,25 +405,10 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
     setPointIndex(-1);
   }
 
-  // async function searchName() {
-  //   const countriesRef = collection(db, "user", uid, "friendsLocatedCountries");
-  //   const q = query(countriesRef, where("searchName", "array-contains", searchValue));
-  //   const querySnapshot = await getDocs(q);
-  //   querySnapshot.forEach((doc) => {
-  //     getCountryFriends(doc.id);
-  //     setIsShowingFriends(true);
-  //     setCountryId(doc.id);
-  //     setCountryName(doc.data().friends[0].country);
-  //   });
-  // }
-  // countries.forEach((country)=>{
-  // })
   async function writeNewMapToData(uid: string) {
     let newId = uuidv4();
-    // mapNames.push({ id: newId, name: "new Map" });
     let name = { id: newId, name: "new Map" };
     await setDoc(doc(db, "user", uid), { names: arrayUnion(name) }, { merge: true });
-    // let newMap = { id: newId, name: "new Map" };
     if (mapNames === undefined) {
       setMapNames([name]);
     } else {
@@ -747,7 +645,6 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                     } else {
                       writeNewMapToData(uid);
                     }
-                    // setMapNames("mymap1");
                   }}></AddMapBtn>
               </AllMapSelections>
             </>
@@ -798,9 +695,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
               setIsChangingMap(false);
               setIsShowingOverlapBtn(false);
               setIsShowingSearchBarMB(false);
-            }}>
-            {/* {uid && uid ? "Sign Out" : "Sign In"} */}
-          </LoginBtn>
+            }}></LoginBtn>
         ) : (
           <></>
         )}
@@ -808,7 +703,6 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
         {}
       </HeaderRightSet>
       <Login setUserImg={setUserImg} setNotificationInfo={setNotificationInfo} friendsList={friendsList} setFriendsList={setFriendsList} setMapState={setMapState} uid={uid} toLogIn={toLogIn} setToLogIn={setToLogIn} countryList={countryList} setCountryList={setCountryList} setUid={setUid} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setHaveFriendList={setHaveFriendList} setFriendList={setFriendList} setPointList={setPointList} loginStatus={loginStatus} setLoginStatus={setLoginStatus} userName={userName} setUserName={setUserName} userImage={userImage} originalMapNames={originalMapNames} setMapNames={setMapNames}></Login>
-      {/* <Nav></Nav> */}
     </Wrapper>
   );
 }

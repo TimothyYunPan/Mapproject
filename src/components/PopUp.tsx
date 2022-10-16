@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction, useState } from "react";
 import styled from "styled-components";
 
 const PopUpBlock = styled.div<{ isShowingPopUp: boolean }>`
@@ -8,14 +7,11 @@ const PopUpBlock = styled.div<{ isShowingPopUp: boolean }>`
   transform: translate(-50%, -50%);
   height: ${(props) => (props.isShowingPopUp === true ? 250 : 0)}px;
   width: 500px;
-  /* width: ${(props) => (props.isShowingPopUp === true ? 500 : 0)}px; */
   border: ${(props) => (props.isShowingPopUp === true ? 1 : 0)}px solid white;
-  /* opacity: ${(props) => (props.isShowingPopUp === true ? 1 : 0)}; */
   visibility: ${(props) => (props.isShowingPopUp === true ? "visible" : "hidden")};
   overflow: hidden;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 10px;
-  /* background-color: ${(props) => (props.isShowingPopUp === true ? "white" : "inherit")}; */
   transition: 0.5s;
   display: flex;
   justify-content: center;
@@ -48,8 +44,6 @@ const PopUpText = styled.div<{ isShowingPopUp: boolean }>`
 
 const PopUpBtn = styled.div<{ isShowingPopUp: boolean }>`
   width: 100px;
-  /* width: ${(props) => (props.isShowingPopUp === true ? 100 : 0)}px;
-  height: ${(props) => (props.isShowingPopUp === true ? "auto" : 0)}px; */
   opacity: ${(props) => (props.isShowingPopUp === true ? 1 : 0)};
   transition: 0.1s;
   cursor: pointer;
@@ -71,7 +65,6 @@ const PopUpBg = styled.div<{ isShowingPopUp: boolean; toLogIn: boolean }>`
   height: ${(props) => (props.isShowingPopUp || props.toLogIn ? 100 : 0)}%;
   background-color: rgba(128, 128, 128, 0.5);
   z-index: 900;
-  /* transition: 0.5s; */
 `;
 
 const PopupBtnSet = styled.div`
@@ -127,7 +120,6 @@ function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatu
                 }
 
                 setIsShowingPopUp(false);
-                // setIsChangingMap(false);
               }}>
               {popUpMsg[1] as string}
             </PopUpBtn>

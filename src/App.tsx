@@ -7,47 +7,19 @@ import { createGlobalStyle } from "styled-components";
 import Notification from "./components/Notafication";
 import "typeface-quicksand";
 
-// import ReactHover, { Trigger, Hover } from 'react-hover'
-// import TriggerComponent from './components/TriggerComponent'
-// import HoverComponent from './components/HoverComponent'
-
 const GlobalStyleComponent = createGlobalStyle`
   *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* font-weight: 800; */
-    /* font-family: 'Noto Sans TC', sans-serif; */
     font-family: 'Oswald', sans-serif, 'Noto Sans TC', sans-serif;
-    /* font-family: 'Oswald', sans-serif; */
-    /* font-family: 'Quicksand'; */
-
     ::-webkit-scrollbar {
     display: none;
     }
     
-    
-    /* display: flex;
-    justify-content: center;
-    flex-direction: column; */
-    /* border:1px solid black */
-    /* outline:1px solid black; */
-    /* margin: 20px; */
-    /* background-color: red; */
   }
   
-  /* ::-webkit-scrollbar-track {
-	background-color: #F5F5F5;
-  }
-
-    ::-webkit-scrollbar {
-    width: 6px;
-    background-color: #F5F5F5;
-  }
-
-    ::-webkit-scrollbar-thumb {
-    background-color: #000000;
-  } */
+  
 `;
 export interface countryListType {
   countryId: string;
