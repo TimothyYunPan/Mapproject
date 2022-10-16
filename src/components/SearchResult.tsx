@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, SetStateAction } from "react";
+import React from "react";
 import styled from "styled-components";
 import { friendListType } from "../App";
 
@@ -11,7 +11,6 @@ const SearchResultBox = styled.div`
   right: 94px;
   top: 60px;
   z-index: 100;
-  /* border: 1px solid black; */
   background-color: inherit;
   color: white;
   overflow-y: scroll;
@@ -27,7 +26,6 @@ const SearchResultBox = styled.div`
 const SearchResultFriend = styled.div`
   width: 100%;
   height: 30px;
-  /* border: 1px solid white; */
   margin-bottom: 4px;
   text-align: left;
   display: flex;
@@ -39,7 +37,6 @@ const SearchResultName = styled.div`
   font-size: 14px;
 
   :hover {
-    /* padding-left: 6px; */
     color: rgba(225, 225, 225, 0.9);
   }
   transition: 0.2s;

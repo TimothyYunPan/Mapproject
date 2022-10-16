@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import NoteImgUploadBtn from "../WorldMap";
 import { Point, PointNotes, PointSet, PointSole, PointNotesTitle, PointNote, PointNotesTextImg } from "../WorldMap";
 import { pointListType } from "../App";
 import parse from "html-react-parser";
@@ -12,10 +11,8 @@ const ViewModeMsg = styled.div`
   margin: 250px 0 10px -10px;
   text-align: left;
   cursor: default;
-  /* right: 25px; */
   bottom: 10px;
   position: absolute;
-  /* padding: 0 20px; */
 `;
 
 type OverlapType = {
@@ -34,31 +31,7 @@ type OverlapType = {
 function Overlap({ mapState, pointList, isShowingPointNotes, pointIndex, previewImgUrl, setPointIndex, setIsShowingPointNotes, setCountryId, setPointPhoto, setNotePhoto }: OverlapType) {
   return (
     <>
-      {/* <Map
-        onClick={(e) => {
-          const target = e.target as HTMLInputElement;
-          if (target.tagName !== "path") {
-            return;
-          }
-          getUserMap3Points(target.id);
-          setCountryId(target.id);
-          setIsShowingPointNotes(false);
-
-          let mousePosition = getMousePos(e);
-          setMousePos(mousePosition);
-          let a = mousePosition;
-          let newObj = {
-            title: "",
-            countryId: target.id,
-            imgUrl: "",
-            notes: "",
-            x: a.x,
-            y: a.y,
-          };
-          setPointList([...pointList, newObj]);
-        }}> */}
       {pointList.map((pointInfo, index) => {
-        // console.log(pointInfo);
         return (
           <>
             <PointSet
@@ -73,18 +46,12 @@ function Overlap({ mapState, pointList, isShowingPointNotes, pointIndex, preview
                 id={pointInfo.countryId}
                 onClick={(e) => {
                   const target = e.target as HTMLInputElement;
-                  // setX(pointInfo.x);
-                  // setY(pointInfo.y);
-                  // console.log(target.id);
                   setPointPhoto(null);
                   setPointIndex(index);
                   setNotePhoto(pointInfo.imgUrl);
                   e.stopPropagation();
                   setIsShowingPointNotes(true);
-                  // setIsEditing(false);
                   setCountryId(target.id);
-                  // setNotePhoto(pointInfo.imgUrl);
-                  // console.log(pointInfo.imgUrl);
                 }}></Point>
               <PointSole></PointSole>
             </PointSet>
@@ -107,8 +74,6 @@ function Overlap({ mapState, pointList, isShowingPointNotes, pointIndex, preview
       ) : (
         <></>
       )}
-
-      {/* </Map> */}
     </>
   );
 }

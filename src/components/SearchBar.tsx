@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, SetStateAction } from "react";
+import React from "react";
 import styled from "styled-components";
 import { friendListType } from "../App";
 
@@ -56,7 +56,6 @@ function SearchBar({ searchInputRef, searchNameResult, setIsShowingSearchResult,
         if (target.value === searchNameResult[0]?.name) {
           setIsShowingSearchResult(true);
         }
-        // setIsShowingSearchResult;
 
         setSearchValue(target.value);
       }}
@@ -67,7 +66,7 @@ function SearchBar({ searchInputRef, searchNameResult, setIsShowingSearchResult,
       }}
       onKeyPress={(e) => {
         if (e.key === "Enter") {
-          const target = e.target as HTMLInputElement;
+          // const target = e.target as HTMLInputElement;
           // setSearchValue(target.value);
           // searchName(target.value);
           // searchCountries(target.value);
@@ -85,8 +84,6 @@ function SearchBar({ searchInputRef, searchNameResult, setIsShowingSearchResult,
             setIsShowingPointNotes(false);
           }
           setPointIndex(-1);
-
-          // searchCountries(target.value);
         }
       }}></SearchInput>
   );
