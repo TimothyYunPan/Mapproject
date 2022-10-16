@@ -48,15 +48,11 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
   }
 
   async function deleteNewMap() {
-    // console.log("有");
-    // console.log(CurrentMapIdRef.current);
     let newMapList = mapNames.filter((obj) => {
-      // console.log(obj.id);
       return obj.id !== CurrentMapIdRef.current;
     });
 
     setMapNames(newMapList);
-    // console.log(newMapList);
 
     await setDoc(doc(db, "user", uid), { names: newMapList }, { merge: true });
     // console.log("有嗎");
@@ -74,13 +70,10 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
   // useEffect(() => {
   //   console.log(deleteMap);
   //   if (deleteMap === "yes" && CurrentMapIdRef.current !== null) {
-  //     console.log("kk");
   //     deleteNewMap();
   //   }
-  //   // console.log(CurrentMapIdRef.current);
   // }, [deleteMap]);
 
-  // console.log(MapNameRef.current?.value, "value");
   return (
     <ChangeMapBtnSet>
       <MapNameInput
@@ -147,8 +140,6 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
               setIsShowingPopUp(true);
               setPopUpMsg([`Are you sure you want to delete the map "${mapName.name}"?`, "Yes", "No", "", "deletemap", deleteNewMap]);
               setIsEditing(false);
-
-              // console.log(index);
             }}></DeleteMapBtn>
         </>
       ) : (

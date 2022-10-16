@@ -100,7 +100,6 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
   }
 
   function editCheckedToMap(target: HTMLInputElement) {
-    // console.log(target.value);
     // const [isShowingCountries, setIsShowingCountries] = useState<boolean>(false);
     let targetValue = target.value;
     countries.forEach((countryObj) => {
@@ -114,7 +113,6 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
         countryList.push({ countryId: targetValue, visited: true });
         const newCountryList = [...countryList];
 
-        // console.log(newCountryList);
         setCountryList(newCountryList);
       } else {
         writeUserMap1Data(targetValue);
@@ -131,8 +129,6 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
         const newCountryList = countryList.filter((obj: countryListType) => obj.countryId !== targetValue);
 
         // const newCountryList = countryList.map((object: countryListType) => {
-        //   // console.log(targetValue)
-        //   // console.log(object.countryId)
 
         //   if (object.countryId === targetValue) {
         //     return { ...object, visited: false };
@@ -140,13 +136,11 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
         //   return object;
         // });
         setCountryList(newCountryList);
-        // console.log(countryList);
       }
       // let newArr = [...countryList]
     }
   }
   async function updateUserMap1Data(country: string) {
-    // console.log("delete");
     await deleteDoc(doc(db, "user", uid, "visitedCountries", country));
 
     // await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
@@ -155,7 +149,6 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
   }
 
   async function deleteUserMap1Data(country: string) {
-    // console.log("delete");
     await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
       visited: deleteField(),
     });
@@ -213,8 +206,6 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
                   }
                   // countries.forEach((countryObj) => {
                   //   if (countryObj.region === region.code) {
-                  //     console.log(countryObj.region);
-                  // console.log(region.code);
                   //   }
                   // });
                 } else {

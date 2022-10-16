@@ -58,7 +58,6 @@ function Overlap({ mapState, pointList, isShowingPointNotes, pointIndex, preview
           setPointList([...pointList, newObj]);
         }}> */}
       {pointList.map((pointInfo, index) => {
-        // console.log(pointInfo);
         return (
           <>
             <PointSet
@@ -75,7 +74,6 @@ function Overlap({ mapState, pointList, isShowingPointNotes, pointIndex, preview
                   const target = e.target as HTMLInputElement;
                   // setX(pointInfo.x);
                   // setY(pointInfo.y);
-                  // console.log(target.id);
                   setPointPhoto(null);
                   setPointIndex(index);
                   setNotePhoto(pointInfo.imgUrl);
@@ -84,7 +82,6 @@ function Overlap({ mapState, pointList, isShowingPointNotes, pointIndex, preview
                   // setIsEditing(false);
                   setCountryId(target.id);
                   // setNotePhoto(pointInfo.imgUrl);
-                  // console.log(pointInfo.imgUrl);
                 }}></Point>
               <PointSole></PointSole>
             </PointSet>

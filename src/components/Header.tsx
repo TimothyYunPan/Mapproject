@@ -391,30 +391,22 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
   const [isReadOnly, setIsReadOnly] = useState<boolean>(true);
   const [isShowingOverlapBtn, setIsShowingOverlapBtn] = useState<boolean>(false);
   const [overlapName, setOverlapName] = useState<string>("Overlap with...");
-  // console.log(overlapName);
   const [searchNameResult, setSearchNameResult] = useState<friendListType[]>([]);
-  // console.log(searchNameResult);
   const [isShowingSearchBarMB, setIsShowingSearchBarMB] = useState<boolean>(false);
   const [isShowSearchResult, setIsShowingSearchResult] = useState<boolean>();
   const [hasCountry, setHasCountry] = useState<boolean>(true);
   const [hasName, setHasName] = useState<boolean>(true);
-  // console.log(hasName);
-  // console.log(hasCountry);
   const [map3Name, setMap3Name] = useState<string>("My Bucket List");
   const Map1NameRef = useRef<HTMLInputElement>(null);
   const Map2NameRef = useRef<HTMLInputElement>(null);
   const Map3NameRef = useRef<HTMLInputElement>(null);
   const searchInputRef = useRef<any>("");
   // useEffect(() => {
-  //   console.log("hi");
   //   if (!hasName && !hasCountry) {
-  //     console.log("hi");
   //     setHasCountry(true);
   //     setHasName(true);
-  //     console.log("hi2");
 
   //     setNotificationInfo({ text: "no result", status: true });
-  //     console.log("hi3");
 
   //     setTimeout(() => {
   //       setNotificationInfo({ text: "", status: false });
@@ -423,14 +415,9 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
   // }, [hasCountry]);
   function checkResult() {
     if (!hasName && !hasCountry) {
-      // console.log("hi");
       setHasCountry(true);
       setHasName(true);
-      // console.log("hi2");
-
       setNotificationInfo({ text: "no result", status: true });
-      // console.log("hi3");
-
       setTimeout(() => {
         setNotificationInfo({ text: "", status: false });
       }, 2000);
@@ -441,7 +428,6 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
     const result = countries.filter(function (obj) {
       return obj.name.toLowerCase() === searchValue.toLowerCase();
     });
-    // console.log(result);
     if (result[0]) {
       setCountryName(searchValue.charAt(0).toUpperCase() + searchValue.slice(1));
       let a = result[0].code;
@@ -467,7 +453,6 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
     const result = friendsList.filter(function (obj) {
       return obj.name.toLowerCase() === searchValue.toLowerCase();
     });
-    // console.log(result);
     if (!result[0]) {
       setHasName(false);
       // console.log("查無資料");
@@ -512,12 +497,10 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
   //   const q = query(countriesRef, where("searchName", "array-contains", searchValue));
   //   const querySnapshot = await getDocs(q);
   //   querySnapshot.forEach((doc) => {
-  //     // console.log(doc.data());
   //     getCountryFriends(doc.id);
   //     setIsShowingFriends(true);
   //     setCountryId(doc.id);
   //     setCountryName(doc.data().friends[0].country);
-  //     // console.log("hi");
   //   });
   // }
   // countries.forEach((country)=>{
@@ -528,7 +511,6 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
     let name = { id: newId, name: "new Map" };
     await setDoc(doc(db, "user", uid), { names: arrayUnion(name) }, { merge: true });
     // let newMap = { id: newId, name: "new Map" };
-    // console.log(mapNames);
     if (mapNames === undefined) {
       setMapNames([name]);
     } else {
@@ -537,13 +519,11 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
   }
   async function updateNewMapName(i: number, mapId: string, Ref: any) {
     let newNames = [...originalMapNames];
-    // console.log(newNames);
     newNames[i].name = Ref.current!.value;
     await setDoc(doc(db, "user", uid), { originalMap: newNames }, { merge: true });
     // let newMap = { id: newId, name: "new Map" };
     setOriginalMapNames(newNames);
   }
-  // console.log(pointList);
   return (
     <Wrapper>
       <HeaderLeftSet>
@@ -745,7 +725,6 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
 
                   {mapNames &&
                     mapNames.map((mapName, index) => {
-                      // console.log(mapName);
                       return (
                         <>
                           <ChangeMapBtn setPointIndex={setPointIndex} setNotificationInfo={setNotificationInfo} pointList={pointList} setIsShowingPopUp={setIsShowingPopUp} setPopUpMsg={setPopUpMsg} deleteMap={deleteMap} setDeleteMap={setDeleteMap} mapId={mapId} uid={uid} mapNames={mapNames} setMapNames={setMapNames} index={index} mapName={mapName} setIsShowingPointNotes={setIsShowingPointNotes} setPointList={setPointList} setIsChangingMap={setIsChangingMap} setMapId={setMapId} setMapState={setMapState} setIsShowingPoint={setIsShowingPoint} setCurrentMapName={setCurrentMapName} isEditingMap={isEditingMap} setIsEditingMap={setIsEditingMap} setOverlapName={setOverlapName}></ChangeMapBtn>
@@ -793,7 +772,6 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
               //   searchCountries(e.target.value);
               // }}
               onClick={(e) => {
-                // console.log("hi");
                 checkResult();
                 setIsShowingPointNotes(false);
                 setPointIndex(-1);

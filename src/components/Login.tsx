@@ -378,12 +378,9 @@ type LoginType = {
 };
 function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList, toLogIn, setToLogIn, uid, setMapState, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList, loginStatus, setLoginStatus, userName, setUserName, userImage, originalMapNames, setMapNames, setNotificationInfo, setUserImg }: LoginType) {
   const [profile, setProfile] = useState();
-  // console.log(loginStatus);
   const [imageUpload, setImageUpload] = useState<File | null>(null);
-  console.log(imageUpload);
   const previewProfileImgUrl = imageUpload ? URL.createObjectURL(imageUpload) : userImage ? userImage : "";
   const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false);
-  // console.log(isLoggedIn);
   const [errorMsg, setErrorMsg] = useState<string[]>([]);
   const imageListRef = ref(storage, "images/");
   const [imageList, setImageList] = useState<string[]>([]);
@@ -392,7 +389,6 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
   const [accountInputValue, setAccountInputValue] = useState("Welcome@gmail.com");
   const [passwordInputValue, setPasswordInputValue] = useState("enjoy your day!");
   const userNameInputRef = useRef<HTMLInputElement>(null);
-  console.log(userImage);
 
   //   const validate = () => {
   //     if (!validEmail.test(email)) {
@@ -402,7 +398,6 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
   //        setPwdError(true);
   //     }
   //  };
-  // console.log(uid)
   async function writeOriginMapToData(uid: string) {
     // const originalMap = [
     //   { name: "Visited Countries Map", id: "visitedCountries" },
@@ -410,7 +405,6 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
     //   { name: "My Map", id: "custimizedMapCountries" },
     // ];
     await setDoc(doc(db, "user", uid), { originalMap: originalMapNames }, { merge: true });
-    // console.log("hi");
     // let newMap = { id: newId, name: "new Map" };
   }
 
@@ -423,7 +417,6 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
     //   setIsLoggedIn(true);
     //   // const a = memberInfo
     //   const memberInfo = JSON.parse(localStorage.getItem("user"));
-    //   console.log(memberInfo);
     //   setMemberName(memberInfo.data.user.name);
     //   setMemberEmail(memberInfo.data.user.email);
     //   setMemberRole(memberInfo.data.user.role);
@@ -436,9 +429,6 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          // console.log(userCredential.user.uid);
-          // console.log("登入囉");
-          // console.log(user.uid);
           setToLogIn(false);
           setUid(user.uid);
           writeUserMap1Data(user.uid);
@@ -455,7 +445,6 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
           } else if (error.message === "Firebase: Error (auth/invalid-email).") {
             setErrorMsg(["7", "* this is not a valid email"]);
           }
-          // console.log(error.message);
           const errorCode = error.code;
           const errorMessage = error.message;
           // ..
@@ -467,9 +456,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
           // Signed in
           const user = userCredential.user;
           setUid(user.uid);
-          // console.log("登入囉");
           setToLogIn(false);
-          // console.log(user.uid);
           // setIsLoggedIn(true);
           // ...
           setNotificationInfo({ text: "Welcome Back!", status: true });
@@ -493,7 +480,6 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
           } else if (error.message === "Firebase: Error (auth/invalid-email).") {
             setErrorMsg(["7", "* this is not a valid email"]);
           }
-          // console.log(error.message);
 
           const errorCode = error.code;
           const errorMessage = error.message;
@@ -511,9 +497,6 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
       });
   }
   async function writeUserMap1Data(uid: string) {
-    // console.log("哈哈哈");
-    // console.log(uid);
-
     countryList.map(async (country) => {
       await setDoc(
         doc(db, "user", uid, "visitedCountries", country.countryId),
@@ -524,7 +507,6 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
       );
     });
 
-    // console.log("我有寫啦");
     // await setDoc(doc(db, "user/7LkdfIpKjPiFsrPDlsaM"), {
     //   country
     // });
@@ -548,7 +530,6 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
   async function updateProfileInfo(uid: string) {
     if (imageUpload == null) {
       const url = userImage;
-      // console.log(userNameInputRef.current);
       await setDoc(
         doc(db, "user", uid),
         {
@@ -560,16 +541,10 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
       setIsEditingProfile(false);
       // setUserImg("");
     } else {
-      // console.log(imageUpload);
-      // console.log(userNameInputRef.current!.value);
       const imageRef = ref(storage, `${uid}profile/${imageUpload.name}`);
       uploadBytes(imageRef, imageUpload).then((snapshot) => {
         getDownloadURL(snapshot.ref).then(async (url) => {
           // writeUserMap2Data(url)
-          // console.log(url);
-          // console.log(uid);
-          // console.log(userNameInputRef);
-          // console.log(userName);
           await setDoc(
             doc(db, "user", uid),
             {
@@ -584,11 +559,6 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
       });
     }
   }
-  // console.log(memberInfo)
-  // console.log(memberRole);
-  // console.log(userName);
-  // console.log(userNameInputRef.current);
-  // console.log(toLogIn);
 
   return (
     <Wrapper toLogIn={toLogIn}>
@@ -624,7 +594,6 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
                     <UpdateProfileBtn
                       onClick={() => {
                         updateProfileInfo(uid);
-                        // console.log(userNameInputRef.defaultvalue);
 
                         setUserName(userNameInputRef.current !== null ? userNameInputRef.current!.value : userName);
                       }}></UpdateProfileBtn>
@@ -646,20 +615,17 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
                 <ProfileInputSet>
                   <AccountWord>Name</AccountWord>
                   <ProfileInput value={nameInputValue} onChange={(e) => setNameInputValue(e.target.value)} />
-                  {/* {console.log(nameInputValue)} */}
                   {errorMsg[0] === "1" ? <WarningWord>{errorMsg[1]}</WarningWord> : <></>}
                 </ProfileInputSet>
               )}
               <ProfileInputSet>
                 <AccountWord>Email</AccountWord>
                 <ProfileInput value={accountInputValue} onChange={(e) => setAccountInputValue(e.target.value)} />
-                {/* {console.log(accountInputValue)} */}
                 {errorMsg[0] === "2" ? <WarningWord>{errorMsg[1]}</WarningWord> : errorMsg[0] === "4" ? <WarningWord>{errorMsg[1]}</WarningWord> : errorMsg[0] === "7" ? <WarningWord>{errorMsg[1]}</WarningWord> : <></>}
               </ProfileInputSet>
               <ProfileInputSet>
                 <AccountWord>Password</AccountWord>
                 <ProfileInput type={"password"} value={passwordInputValue} onChange={(e) => setPasswordInputValue(e.target.value)} />
-                {/* {console.log(passwordInputValue)} */}
                 {errorMsg[0] === "3" ? <WarningWord>{errorMsg[1]}</WarningWord> : errorMsg[0] === "5" ? <WarningWord>{errorMsg[1]}</WarningWord> : errorMsg[0] === "6" ? <WarningWord>{errorMsg[1]}</WarningWord> : <></>}
               </ProfileInputSet>
 

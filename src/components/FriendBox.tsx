@@ -172,19 +172,14 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
   const previewFriendNewImgUrl = imageUpload ? URL.createObjectURL(imageUpload) : "";
   const [friendOriginalPhoto, setFrienOriginalPhoto] = useState<string>("");
   const imageListRef = ref(storage, "images/");
-  // console.log(previewFriendNewImgUrl, CityRef.current);
 
   async function updateFriendInfo(index: number, newObj: friendListType) {
     // searchFriendList.splice(index, 1, newObj.name);
-    // console.log(newSearhingName);
-    // console.log(newObj);
+
     friendList[index] = newObj;
     let newfriendsList = friendsList.filter((friends) => {
-      // console.log(friends.countryId);
-      // console.log(friendsList);
       return friends.countryId !== countryId;
     });
-    // console.log(friendList);
     newfriendsList = [...newfriendsList, ...friendList];
 
     setFriendsList(newfriendsList);
@@ -198,7 +193,6 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
 
   function sendEditFriendInfo(index: number, newObj: friendListType) {
     if (imageUpload == null) {
-      // console.log(pointTitleInputRef.current.value);
       newObj.imgUrl = friendOriginalPhoto;
       // const url = friendOriginalPhoto;
       updateFriendInfo(index, newObj);
@@ -212,7 +206,6 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
       //     notes: pointNotes,
       //   };
       //   const newArr = [...pre];
-      //   console.log(newArr);
       //   return newArr;
       // });
     } else {
@@ -251,7 +244,6 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
     //     let index = acc.findIndex(country => country.Id = countryId)
     //     acc[index].friend -= 1
     //     (acc[index].friend !== 0)
-    //     console.log(obj.countryId === countryId);
     //     if (obj.countryId === countryId) {
     //       obj.haveFriend = obj.haveFriend - 1;
     //     }
@@ -260,13 +252,8 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
     //   .filter((obj) => {
     //     return obj.haveFriend !== 0;
     //   });
-    // console.log(newFriendList);
-
-    // console.log(newNewHaveFriendList);
 
     // let newHaveFriendList = haveFriendList.filter((obj) => obj.countryId === countryId);
-    // console.log(newHaveFriendList[0].haveFriend - 1);
-    // console.log(newHaveFriendList);
     // setHaveFriendList(newHaveFriendList);
 
     // await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), {
@@ -274,7 +261,6 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
     //   haveFriend: friendList.length - 1,
     // });
   }
-  // console.log(friendsList);
   return (
     <>
       <FriendInsideBox>

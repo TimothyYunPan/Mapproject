@@ -87,9 +87,7 @@ export type notificationInfoType = {
 
 function App() {
   const [countryList, setCountryList] = useState<countryListType[]>([]);
-  // console.log(countryList);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  // console.log(isLoggedIn);
   const [mapState, setMapState] = useState<number>(0);
   const [isShowingPoint, setIsShowingPoint] = useState<boolean>(false);
   const [toLogIn, setToLogIn] = useState<boolean>(false);
@@ -97,27 +95,21 @@ function App() {
   const [isShowingPointNotes, setIsShowingPointNotes] = useState<boolean>(false);
   const [friendsList, setFriendsList] = useState<friendListType[]>([]);
   const [friendList, setFriendList] = useState<friendListType[]>([]);
-  // console.log(friendsList);
   const [isShowingFriends, setIsShowingFriends] = useState<boolean>(false);
   const [countryId, setCountryId] = useState<string>("");
   const [countryName, setCountryName] = useState<string>("");
   const [haveFriendList, setHaveFriendList] = useState<haveFriendListType[]>([]);
   const [pointList, setPointList] = useState<pointListType[]>([]);
-  // console.log(pointList);
   const [isShowingPopUp, setIsShowingPopUp] = useState<boolean>(false);
   const [loginStatus, setLoginStatus] = useState("login");
   const [userName, setUserName] = useState<string>("");
   const [userImage, setUserImg] = useState<string>("");
-  // console.log(userImage);
   const [mapId, setMapId] = useState<string>("custimizedMap");
-  // console.log(mapId);
   const [deleteMap, setDeleteMap] = useState<string>("no");
   const [mapNames, setMapNames] = useState<mapNameType[]>([]);
   const [popUpMsg, setPopUpMsg] = useState<(string | { (): void })[]>([]);
   const [isChangingMap, setIsChangingMap] = useState<boolean>(false);
-  // console.log(popUpMsg);
   const [notificationInfo, setNotificationInfo] = useState<notificationInfoType>({ text: "", status: false });
-  // console.log(notificationInfo);
   const [currentMapName, setCurrentMapName] = useState<string>("");
   const [originalMapNames, setOriginalMapNames] = useState<mapNameType[]>([
     { id: "visitedCountries", name: "Visited Countries Map" },
@@ -126,29 +118,16 @@ function App() {
   ]);
   const [pointIndex, setPointIndex] = useState<number>(-1);
 
-  // console.log(originalMapNames);
-  // console.log(pointList);
-  // console.log(mapNames);
-  // console.log(isShowingPoint);
-  // console.log(haveFriendList);
-  // console.log(countryId);
-  // console.log(friendList);
-  // console.log(friendsList);
   function getCountryFriends(id: string) {
     const countryFriendList: friendListType[] = [];
-    // console.log(id);
 
     friendsList.forEach((friend) => {
-      // console.log(friend);
       if (friend.countryId === id) {
         countryFriendList.push(friend);
       }
     });
-    // console.log(countryFriendList);
     setFriendList(countryFriendList);
-    // console.log(friendsList);
   }
-  // console.log(toLogIn);
 
   return (
     <>

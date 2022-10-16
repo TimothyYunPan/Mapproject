@@ -115,12 +115,8 @@ function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatu
                   setPointIndex(-1);
                   deleteNote();
                 } else if (popUpMsg[4] === "deletefriend") {
-                  // console.log(popUpMsg);
                   deleteFriend(Number(popUpMsg[3]));
                 } else if (popUpMsg[4] === "deletemap") {
-                  // setDeleteMap("yes");
-                  // console.log("hi");
-                  // console.log(popUpMsg[5]);
                   let deleteFunc = popUpMsg[5] as () => void;
                   deleteFunc();
                 } else if (popUpMsg[4] === "goback") {
