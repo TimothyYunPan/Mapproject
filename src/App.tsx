@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { Reset } from "styled-reset";
 import { createGlobalStyle } from "styled-components";
 import Notification from "./components/Notafication";
+import "typeface-quicksand";
 
 // import ReactHover, { Trigger, Hover } from 'react-hover'
 // import TriggerComponent from './components/TriggerComponent'
@@ -16,8 +17,11 @@ const GlobalStyleComponent = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
     /* font-weight: 800; */
-    font-family: 'Noto Sans TC', sans-serif;
-    font-family: 'Oswald', sans-serif;
+    /* font-family: 'Noto Sans TC', sans-serif; */
+    font-family: 'Oswald', sans-serif, 'Noto Sans TC', sans-serif;
+    /* font-family: 'Oswald', sans-serif; */
+    /* font-family: 'Quicksand'; */
+
     ::-webkit-scrollbar {
     display: none;
     }
@@ -99,11 +103,12 @@ function App() {
   const [countryName, setCountryName] = useState<string>("");
   const [haveFriendList, setHaveFriendList] = useState<haveFriendListType[]>([]);
   const [pointList, setPointList] = useState<pointListType[]>([]);
-  console.log(pointList);
+  // console.log(pointList);
   const [isShowingPopUp, setIsShowingPopUp] = useState<boolean>(false);
   const [loginStatus, setLoginStatus] = useState("login");
   const [userName, setUserName] = useState<string>("");
   const [userImage, setUserImg] = useState<string>("");
+  // console.log(userImage);
   const [mapId, setMapId] = useState<string>("custimizedMap");
   // console.log(mapId);
   const [deleteMap, setDeleteMap] = useState<string>("no");

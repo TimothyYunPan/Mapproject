@@ -380,6 +380,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
   const [profile, setProfile] = useState();
   // console.log(loginStatus);
   const [imageUpload, setImageUpload] = useState<File | null>(null);
+  console.log(imageUpload);
   const previewProfileImgUrl = imageUpload ? URL.createObjectURL(imageUpload) : userImage ? userImage : "";
   const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false);
   // console.log(isLoggedIn);
@@ -391,6 +392,8 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
   const [accountInputValue, setAccountInputValue] = useState("Welcome@gmail.com");
   const [passwordInputValue, setPasswordInputValue] = useState("enjoy your day!");
   const userNameInputRef = useRef<HTMLInputElement>(null);
+  console.log(userImage);
+
   //   const validate = () => {
   //     if (!validEmail.test(email)) {
   //        setEmailErr(true);
@@ -452,7 +455,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
           } else if (error.message === "Firebase: Error (auth/invalid-email).") {
             setErrorMsg(["7", "* this is not a valid email"]);
           }
-          console.log(error.message);
+          // console.log(error.message);
           const errorCode = error.code;
           const errorMessage = error.message;
           // ..
@@ -490,7 +493,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
           } else if (error.message === "Firebase: Error (auth/invalid-email).") {
             setErrorMsg(["7", "* this is not a valid email"]);
           }
-          console.log(error.message);
+          // console.log(error.message);
 
           const errorCode = error.code;
           const errorMessage = error.message;
@@ -530,6 +533,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
   async function writeUserNameToData(uid: string) {
     await setDoc(doc(db, "user", uid), {
       userName: nameInputValue,
+      imgUrl: "",
     });
     setNotificationInfo({ text: `Hi, ${nameInputValue}. Welcome to Maphub!`, status: true });
     setTimeout(() => {
@@ -543,7 +547,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
 
   async function updateProfileInfo(uid: string) {
     if (imageUpload == null) {
-      const url = "";
+      const url = userImage;
       // console.log(userNameInputRef.current);
       await setDoc(
         doc(db, "user", uid),
@@ -554,7 +558,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
         { merge: true }
       );
       setIsEditingProfile(false);
-      setUserImg("");
+      // setUserImg("");
     } else {
       // console.log(imageUpload);
       // console.log(userNameInputRef.current!.value);
@@ -584,7 +588,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
   // console.log(memberRole);
   // console.log(userName);
   // console.log(userNameInputRef.current);
-  console.log(toLogIn);
+  // console.log(toLogIn);
 
   return (
     <Wrapper toLogIn={toLogIn}>
@@ -604,7 +608,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
                     // onChange={(e)=>{setUserName(e.target.value)}}
                   />
                 ) : (
-                  <ProfileTitle toLogIn={toLogIn}>Hi {userName}</ProfileTitle>
+                  <ProfileTitle toLogIn={toLogIn}>{userName}</ProfileTitle>
                 )}
                 <AddProfilePicLabel htmlFor="addProfilePic">{previewProfileImgUrl && previewProfileImgUrl ? <ProfileUserInfoImg src={previewProfileImgUrl} toLogIn={toLogIn}></ProfileUserInfoImg> : userImage && userImage ? <ProfileUserInfoImg src={userImage} toLogIn={toLogIn}></ProfileUserInfoImg> : <ProfileNoPic isEditingProfile={isEditingProfile} toLogIn={toLogIn}></ProfileNoPic>}</AddProfilePicLabel>
 
@@ -732,6 +736,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
                 setFriendList([]);
                 setPointList([]);
                 setMapNames([]);
+                setUserImg("");
                 setNotificationInfo({ text: "Successfully sign out!", status: true });
                 setTimeout(() => {
                   setNotificationInfo({ text: "", status: false });

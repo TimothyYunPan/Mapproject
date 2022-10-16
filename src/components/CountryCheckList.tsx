@@ -100,7 +100,7 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
   }
 
   function editCheckedToMap(target: HTMLInputElement) {
-    console.log(target.value);
+    // console.log(target.value);
     // const [isShowingCountries, setIsShowingCountries] = useState<boolean>(false);
     let targetValue = target.value;
     countries.forEach((countryObj) => {
@@ -110,30 +110,43 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
       }
     });
     if (target.checked) {
-      writeUserMap1Data(targetValue);
-      countryList.push({ countryId: targetValue, visited: true });
-      const newCountryList = [...countryList];
-      setCountryList(newCountryList);
+      if (!uid) {
+        countryList.push({ countryId: targetValue, visited: true });
+        const newCountryList = [...countryList];
+
+        // console.log(newCountryList);
+        setCountryList(newCountryList);
+      } else {
+        writeUserMap1Data(targetValue);
+        countryList.push({ countryId: targetValue, visited: true });
+        const newCountryList = [...countryList];
+        setCountryList(newCountryList);
+      }
     } else {
-      updateUserMap1Data(targetValue);
-      const newCountryList = countryList.filter((obj: countryListType) => obj.countryId !== targetValue);
+      if (!uid) {
+        const newCountryList = countryList.filter((obj: countryListType) => obj.countryId !== targetValue);
+        setCountryList(newCountryList);
+      } else {
+        updateUserMap1Data(targetValue);
+        const newCountryList = countryList.filter((obj: countryListType) => obj.countryId !== targetValue);
 
-      // const newCountryList = countryList.map((object: countryListType) => {
-      //   // console.log(targetValue)
-      //   // console.log(object.countryId)
+        // const newCountryList = countryList.map((object: countryListType) => {
+        //   // console.log(targetValue)
+        //   // console.log(object.countryId)
 
-      //   if (object.countryId === targetValue) {
-      //     return { ...object, visited: false };
-      //   }
-      //   return object;
-      // });
-      setCountryList(newCountryList);
-      console.log(countryList);
+        //   if (object.countryId === targetValue) {
+        //     return { ...object, visited: false };
+        //   }
+        //   return object;
+        // });
+        setCountryList(newCountryList);
+        // console.log(countryList);
+      }
       // let newArr = [...countryList]
     }
   }
   async function updateUserMap1Data(country: string) {
-    console.log("delete");
+    // console.log("delete");
     await deleteDoc(doc(db, "user", uid, "visitedCountries", country));
 
     // await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {

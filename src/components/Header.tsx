@@ -314,7 +314,7 @@ const LoginBtn = styled.div<{ userImage: string }>`
   margin: 10px -12px 14px 0px;
   font-size: 16px;
   border-radius: 50%;
-  border: 1px solid white;
+  border: ${(props) => (props.userImage ? "1px solid white" : "none")};
   /* margin-top: 15px; */
   cursor: pointer;
   color: white;
@@ -398,10 +398,10 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
   const [isShowSearchResult, setIsShowingSearchResult] = useState<boolean>();
   const [hasCountry, setHasCountry] = useState<boolean>(true);
   const [hasName, setHasName] = useState<boolean>(true);
-  console.log(hasName);
-  console.log(hasCountry);
+  // console.log(hasName);
+  // console.log(hasCountry);
   const [map3Name, setMap3Name] = useState<string>("My Bucket List");
-  const Map1NameRef = useRef<any>("Visited Countries Map");
+  const Map1NameRef = useRef<HTMLInputElement>(null);
   const Map2NameRef = useRef<HTMLInputElement>(null);
   const Map3NameRef = useRef<HTMLInputElement>(null);
   const searchInputRef = useRef<any>("");
@@ -423,13 +423,13 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
   // }, [hasCountry]);
   function checkResult() {
     if (!hasName && !hasCountry) {
-      console.log("hi");
+      // console.log("hi");
       setHasCountry(true);
       setHasName(true);
-      console.log("hi2");
+      // console.log("hi2");
 
       setNotificationInfo({ text: "no result", status: true });
-      console.log("hi3");
+      // console.log("hi3");
 
       setTimeout(() => {
         setNotificationInfo({ text: "", status: false });
@@ -441,7 +441,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
     const result = countries.filter(function (obj) {
       return obj.name.toLowerCase() === searchValue.toLowerCase();
     });
-    console.log(result);
+    // console.log(result);
     if (result[0]) {
       setCountryName(searchValue.charAt(0).toUpperCase() + searchValue.slice(1));
       let a = result[0].code;
@@ -456,7 +456,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
       // searchName(searchValue);
       // setSearchNameResult("no result");
       // setIsShowingSearchResult;
-      console.log("查無資料");
+      // console.log("查無資料");
       setHasCountry(false);
     }
 
@@ -467,10 +467,10 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
     const result = friendsList.filter(function (obj) {
       return obj.name.toLowerCase() === searchValue.toLowerCase();
     });
-    console.log(result);
+    // console.log(result);
     if (!result[0]) {
       setHasName(false);
-      console.log("查無資料");
+      // console.log("查無資料");
       setIsShowingSearchResult(false);
       setSearchNameResult([]);
     } else {
@@ -502,7 +502,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
       setIsShowingPointNotes(false);
       searchInputRef.current.value = "";
     } else {
-      console.log("查無資料");
+      // console.log("查無資料");
     }
     setPointIndex(-1);
   }
@@ -543,7 +543,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
     // let newMap = { id: newId, name: "new Map" };
     setOriginalMapNames(newNames);
   }
-  console.log(pointList);
+  // console.log(pointList);
   return (
     <Wrapper>
       <HeaderLeftSet>
@@ -613,11 +613,13 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                         } else {
                           setIsChangingMap(true);
                         }
-                        setPointIndex(-1);
                         setCurrentMapName("Visited Countries Map");
                         setMapState(1);
                         setIsShowingPopUp(false);
+
                         if (mapState !== 2) {
+                          setPointIndex(-1);
+
                           setIsShowingPointNotes(false);
                           setPointIndex(-1);
                           setIsShowingPoint(false);
@@ -659,7 +661,6 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                           } else {
                             setIsChangingMap(true);
                           }
-                          setPointIndex(-1);
                           setCurrentMapName("Friends Located Map");
                           setMapState(2);
                           setIsShowingFriends(false);

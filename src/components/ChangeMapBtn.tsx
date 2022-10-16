@@ -48,18 +48,18 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
   }
 
   async function deleteNewMap() {
-    console.log("有");
-    console.log(CurrentMapIdRef.current);
+    // console.log("有");
+    // console.log(CurrentMapIdRef.current);
     let newMapList = mapNames.filter((obj) => {
-      console.log(obj.id);
+      // console.log(obj.id);
       return obj.id !== CurrentMapIdRef.current;
     });
 
     setMapNames(newMapList);
-    console.log(newMapList);
+    // console.log(newMapList);
 
     await setDoc(doc(db, "user", uid), { names: newMapList }, { merge: true });
-    console.log("有嗎");
+    // console.log("有嗎");
     setDeleteMap("no");
     // console.log(deleteMap);
     setNotificationInfo({ text: `Map has been successfully deleted`, status: true });

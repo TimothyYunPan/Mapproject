@@ -92,8 +92,9 @@ function MapSVG({ countryList, mapState, haveFriendList, allCountries, setIsHove
   // console.log(isColorHovering2);
   useEffect(() => {
     if (mapState === 1) {
-      console.log(countryList);
+      // console.log(countryList);
       let a: string[] = [];
+      // console.log(allCountries);
       allCountries.forEach((country) => {
         let result = countryList.filter((obj) => {
           return obj.countryId === country;
@@ -103,7 +104,7 @@ function MapSVG({ countryList, mapState, haveFriendList, allCountries, setIsHove
           a.push(result[0].countryId);
         }
       });
-      console.log(a);
+      // console.log(a);
       // let b = [];
 
       a.forEach((countryId) => {
@@ -241,7 +242,7 @@ function MapSVG({ countryList, mapState, haveFriendList, allCountries, setIsHove
           hoverAddCountryName(e);
           // console.log(1);
           const target = e.target as HTMLInputElement;
-          console.log(target.style.fill);
+          // console.log(target.style.fill);
           if (target.style.fill === "" || target.style.fill === "rgb(211, 211, 211)") {
             setIsColorHovering2(true);
           } else {

@@ -32,6 +32,9 @@ import userProfile from "./components/userProfile.png";
 import PopUp from "./components/PopUp";
 import FriendBox from "./components/FriendBox";
 import { uuidv4 } from "@firebase/util";
+import wallPaper1 from "./components/wallpaper1.png";
+import wallPaper2 from "./components/wallpaper2.png";
+import wallPaper3 from "./components/wallpaper3.png";
 
 // import { ScrollDetect } from "./components/ScrollDetect";
 
@@ -157,18 +160,18 @@ const WallPaper = styled.div`
   background-size: cover;
   /* display: flex; */
   /* background-color: rgb(236, 174, 72); */
-  background-image: url(https://images.pexels.com/photos/1647116/pexels-photo-1647116.jpeg?cs=srgb&dl=pexels-humphrey-muleba-1647116.jpg&fm=jpg);
+  background-image: url(${wallPaper1});
   :hover {
     transform: scale(1.02, 1.02);
   }
 `;
 const WallPaper2 = styled(WallPaper)`
   /* background-color: rgb(42, 60, 77); */
-  background-image: url(https://images.pexels.com/photos/853168/pexels-photo-853168.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2);
+  background-image: url(${wallPaper2});
 `;
 const WallPaper3 = styled(WallPaper)`
   /* background-color: rgb(25, 102, 101); */
-  background-image: url(https://cdn.pixabay.com/photo/2016/01/09/18/27/camera-1130731_1280.jpg);
+  background-image: url(${wallPaper3});
 `;
 
 const SelectMapText = styled.div`
@@ -494,7 +497,7 @@ const AddFriendSentBtn = styled.div`
 `;
 
 const addFriendFormGroups = [
-  { label: "Name", key: "name" },
+  { label: "Friend's name", key: "name" },
   { label: "City", key: "city" },
   { label: "Instagram", key: "insta" },
   { label: "Notes", key: "notes" },
@@ -1008,6 +1011,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
         getAllCountries();
         // ...
       } else {
+        getAllCountries();
         // User is signed out
         // ...
         // setTimeout(() => {
@@ -1150,7 +1154,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   // console.log("write");
 
   async function updateUserMap3Data(countryId: string, newObj: pointListType, url: string) {
-    console.log("準備更新3");
+    // console.log("準備更新3");
     // console.log(pointList);
     let newSinglePointList = [];
     const newListObj = {
@@ -1258,7 +1262,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     let newPointList: pointListType[] = [];
     // let newPhotoList: string[] = [];
     // console.log(querySnapshot);
-    console.log(mapId);
+    // console.log(mapId);
     // console.log(querySnapshot);
     // if (country.data()) {
     //     setPointList([]);
@@ -1370,7 +1374,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     newFriendsList = [...friendsList, newFriend];
     setFriendsList(newFriendsList);
     // console.log(addFriendState)
-    console.log("update");
+    // console.log("update");
     setNotificationInfo({ text: "Congrats for making another new friend! 😃 ", status: true });
     setTimeout(() => {
       setNotificationInfo({ text: "", status: false });
@@ -1579,7 +1583,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     // newSearchFriendList.push(addFriendState.name);
     // setSearchFriendList(newSearchFriendList);
     // console.log(addFriendState)
-    console.log("write");
+    // console.log("write");
     let newHaveFriendList = [];
     let newHaveFriendObj = { countryId: countryId, haveFriend: 1 };
     newHaveFriendList = [...haveFriendList, newHaveFriendObj];
@@ -1614,6 +1618,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                   <SelectMapText
                     onClick={() => {
                       setMapState(1);
+                      setCurrentMapName("Visited Countries Map");
                     }}>
                     ᴠɪsɪᴛᴇᴅ ᴍᴀᴘ
                   </SelectMapText>
@@ -1635,7 +1640,15 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                     }}></WallPaper2>
                   <SelectMapText
                     onClick={() => {
-                      setMapState(2);
+                      if (!uid) {
+                        // setToLogIn(true);
+                        setIsShowingPopUp(true);
+                        setPopUpMsg(["Sign in to start your map journey 😋", "Sign In", "Sign Up", "", "signin"]);
+                      } else {
+                        setMapState(2);
+                        setIsShowingPoint(false);
+                        setCurrentMapName("Friends Located Map");
+                      }
                     }}>
                     ғʀɪᴇɴᴅ ᴍᴀᴘ
                   </SelectMapText>
@@ -1656,7 +1669,14 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                     }}></WallPaper3>
                   <SelectMapText
                     onClick={() => {
-                      setMapState(3);
+                      if (!uid) {
+                        setIsShowingPopUp(true);
+                        setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
+                      } else {
+                        setMapState(3);
+                        setIsShowingPoint(true);
+                        setCurrentMapName("My Bucket List");
+                      }
                     }}>
                     ᴍʏ ᴍᴀᴘs
                   </SelectMapText>
@@ -1691,14 +1711,14 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                   target.style.fill = ColorChange;
                   // console.log(target.id);
                   writeUserMap1Data(target.id);
-                  console.log("空去過");
+                  // console.log("空去過");
                   countryList.push({ countryId: target.id, visited: true });
                   const newCountryList = [...countryList];
                   setCountryList(newCountryList);
                 } else if (target.style.fill === ColorOrigin) {
                   target.style.fill = ColorChange;
                   writeUserMap1Data(target.id);
-                  console.log("去過");
+                  // console.log("去過");
                   countryList.push({ countryId: target.id, visited: true });
                   const newCountryList = [...countryList];
                   setCountryList(newCountryList);
@@ -1979,8 +1999,8 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                             mapState={mapState}
                             id={pointInfo.countryId}
                             onClick={(e) => {
-                              console.log(index);
-                              console.log(pointIndex);
+                              // console.log(index);
+                              // console.log(pointIndex);
                               // if (index === ) {
                               //   setIsJumping(true);
                               // }

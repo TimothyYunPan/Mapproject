@@ -177,14 +177,14 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
   async function updateFriendInfo(index: number, newObj: friendListType) {
     // searchFriendList.splice(index, 1, newObj.name);
     // console.log(newSearhingName);
-    console.log(newObj);
+    // console.log(newObj);
     friendList[index] = newObj;
     let newfriendsList = friendsList.filter((friends) => {
       // console.log(friends.countryId);
-      console.log(friendsList);
+      // console.log(friendsList);
       return friends.countryId !== countryId;
     });
-    console.log(friendList);
+    // console.log(friendList);
     newfriendsList = [...newfriendsList, ...friendList];
 
     setFriendsList(newfriendsList);
@@ -202,7 +202,7 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
       newObj.imgUrl = friendOriginalPhoto;
       // const url = friendOriginalPhoto;
       updateFriendInfo(index, newObj);
-      console.log("這裡");
+      // console.log("這裡");
       // friendList
       // setPointList((pre) => {
       //   pre[pointIndex] = {
@@ -218,7 +218,7 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
     } else {
       // let newTitle = pointTitleInputRef.current?.value;
       const imageRef = ref(storage, `${uid}/friendMap/${imageUpload.name}`);
-      console.log("還是這裡");
+      // console.log("還是這裡");
       // setPointList((pre) => {
       //   pre[pointIndex] = {
       //     ...pre[pointIndex],
