@@ -9,7 +9,6 @@ import { countryCollectionArrType } from "../WorldMap";
 const CountrySelectSet = styled.div`
   position: absolute;
   bottom: 8px;
-  /* margin-top: 25px; */
   width: 20%;
   color: rgb(232, 233, 234);
   @media (max-width: 1279px) {
@@ -23,7 +22,6 @@ const CountryRegions = styled.div`
   align-items: center;
 `;
 const CountryRegion = styled.p`
-  /* width: 200px; */
   color: rgb(232, 233, 234);
   font-size: 16px;
   margin: 0 10%;
@@ -32,7 +30,6 @@ const CountryRegion = styled.p`
   :hover {
     color: rgb(236, 174, 72);
   }
-  /* padding: 0 20px; */
 `;
 const CountrySelectListSet = styled.div`
   margin-left: 30px;
@@ -42,13 +39,11 @@ const CountrySelectListSet = styled.div`
   max-height: 510px;
   overflow-y: scroll;
   overflow-x: hidden;
-  /* justify-content: flex-end; */
 `;
 const CountrySelectList = styled.div`
   display: flex;
 `;
 const CountrySelectCheck = styled.input`
-  /* vertical-align: top; */
   display: inline-block;
   vertical-align: middle;
   margin-bottom: 1px;
@@ -56,7 +51,6 @@ const CountrySelectCheck = styled.input`
 `;
 
 const CountrySelectName = styled.label`
-  /* width: 100px; */
   margin-right: 20px;
   cursor: pointer;
   margin: 1px 0;
@@ -100,8 +94,6 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
   }
 
   function editCheckedToMap(target: HTMLInputElement) {
-    console.log(target.value);
-    // const [isShowingCountries, setIsShowingCountries] = useState<boolean>(false);
     let targetValue = target.value;
     countries.forEach((countryObj) => {
       if (countryObj.name === targetValue) {
@@ -110,43 +102,32 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
       }
     });
     if (target.checked) {
-      writeUserMap1Data(targetValue);
-      countryList.push({ countryId: targetValue, visited: true });
-      const newCountryList = [...countryList];
-      setCountryList(newCountryList);
+      if (!uid) {
+        countryList.push({ countryId: targetValue, visited: true });
+        const newCountryList = [...countryList];
+
+        setCountryList(newCountryList);
+      } else {
+        writeUserMap1Data(targetValue);
+        countryList.push({ countryId: targetValue, visited: true });
+        const newCountryList = [...countryList];
+        setCountryList(newCountryList);
+      }
     } else {
-      updateUserMap1Data(targetValue);
-      const newCountryList = countryList.filter((obj: countryListType) => obj.countryId !== targetValue);
-
-      // const newCountryList = countryList.map((object: countryListType) => {
-      //   // console.log(targetValue)
-      //   // console.log(object.countryId)
-
-      //   if (object.countryId === targetValue) {
-      //     return { ...object, visited: false };
-      //   }
-      //   return object;
-      // });
-      setCountryList(newCountryList);
-      console.log(countryList);
-      // let newArr = [...countryList]
+      if (!uid) {
+        const newCountryList = countryList.filter((obj: countryListType) => obj.countryId !== targetValue);
+        setCountryList(newCountryList);
+      } else {
+        updateUserMap1Data(targetValue);
+        const newCountryList = countryList.filter((obj: countryListType) => obj.countryId !== targetValue);
+        setCountryList(newCountryList);
+      }
     }
   }
   async function updateUserMap1Data(country: string) {
-    console.log("delete");
     await deleteDoc(doc(db, "user", uid, "visitedCountries", country));
-
-    // await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
-    //   visited: false,
-    // });
   }
 
-  async function deleteUserMap1Data(country: string) {
-    // console.log("delete");
-    await updateDoc(doc(db, "user", "5Ch2PkVdhfngwXkX0y0h", "visitedCountries", country), {
-      visited: deleteField(),
-    });
-  }
   function isCountrySelected(country: countryCollectionArrType) {
     if (countryList.find((a) => a.countryId === country.countryId)) {
       return true;
@@ -162,12 +143,6 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
                 <span>
                   <CountrySelectCheck
                     type="checkbox"
-                    // {countryList.map(country)=>{country.id ===}}
-                    // {countryList.map((selectedCountry)=>{
-                    //   let a = false
-                    //   if (selectedCountry.countryId === country)
-                    //   a = true})}
-                    // checked={country === countryList[i].countryId}
                     vertical-align="middle"
                     checked={isCountrySelected(country)}
                     style={{ accentColor: "rgb(236,174,72)" }}
@@ -198,23 +173,11 @@ function CountryCheckList({ countryCollection, setCountryList, setCountryCollect
                   if (countryCollection[0].countryRegion === region.code) {
                     setIsShowingCountry(false);
                   }
-                  // countries.forEach((countryObj) => {
-                  //   if (countryObj.region === region.code) {
-                  //     console.log(countryObj.region);
-                  // console.log(region.code);
-                  //   }
-                  // });
                 } else {
                   setIsShowingCountry(true);
                 }
 
                 getCountriesCollection(region.code);
-                // if(isShowingCountries){
-                //   setIsShowingCountries(false)
-                // }else{
-                //   setIsShowingCountries(true)
-                // getCountriesCollection(region.code);
-                // }
               }}>
               {region.name}
             </CountryRegion>

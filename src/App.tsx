@@ -5,42 +5,21 @@ import styled from "styled-components";
 import { Reset } from "styled-reset";
 import { createGlobalStyle } from "styled-components";
 import Notification from "./components/Notafication";
-
-// import ReactHover, { Trigger, Hover } from 'react-hover'
-// import TriggerComponent from './components/TriggerComponent'
-// import HoverComponent from './components/HoverComponent'
+import "typeface-quicksand";
 
 const GlobalStyleComponent = createGlobalStyle`
   *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* font-weight: 800; */
-    font-family: 'Noto Sans TC', sans-serif;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Oswald', sans-serif, 'Noto Sans TC', sans-serif;
+    ::-webkit-scrollbar {
+    display: none;
+    }
     
-    
-    /* display: flex;
-    justify-content: center;
-    flex-direction: column; */
-    /* border:1px solid black */
-    /* outline:1px solid black; */
-    /* margin: 20px; */
-    /* background-color: red; */
   }
   
-  /* ::-webkit-scrollbar-track {
-	background-color: #F5F5F5;
-  }
-
-    ::-webkit-scrollbar {
-    width: 6px;
-    background-color: #F5F5F5;
-  }
-
-    ::-webkit-scrollbar-thumb {
-    background-color: #000000;
-  } */
+  
 `;
 export interface countryListType {
   countryId: string;
@@ -80,9 +59,7 @@ export type notificationInfoType = {
 
 function App() {
   const [countryList, setCountryList] = useState<countryListType[]>([]);
-  // console.log(countryList);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  // console.log(isLoggedIn);
   const [mapState, setMapState] = useState<number>(0);
   const [isShowingPoint, setIsShowingPoint] = useState<boolean>(false);
   const [toLogIn, setToLogIn] = useState<boolean>(false);
@@ -90,26 +67,21 @@ function App() {
   const [isShowingPointNotes, setIsShowingPointNotes] = useState<boolean>(false);
   const [friendsList, setFriendsList] = useState<friendListType[]>([]);
   const [friendList, setFriendList] = useState<friendListType[]>([]);
-  // console.log(friendsList);
   const [isShowingFriends, setIsShowingFriends] = useState<boolean>(false);
   const [countryId, setCountryId] = useState<string>("");
   const [countryName, setCountryName] = useState<string>("");
   const [haveFriendList, setHaveFriendList] = useState<haveFriendListType[]>([]);
   const [pointList, setPointList] = useState<pointListType[]>([]);
-  console.log(pointList);
   const [isShowingPopUp, setIsShowingPopUp] = useState<boolean>(false);
   const [loginStatus, setLoginStatus] = useState("login");
   const [userName, setUserName] = useState<string>("");
   const [userImage, setUserImg] = useState<string>("");
   const [mapId, setMapId] = useState<string>("custimizedMap");
-  // console.log(mapId);
   const [deleteMap, setDeleteMap] = useState<string>("no");
   const [mapNames, setMapNames] = useState<mapNameType[]>([]);
   const [popUpMsg, setPopUpMsg] = useState<(string | { (): void })[]>([]);
   const [isChangingMap, setIsChangingMap] = useState<boolean>(false);
-  // console.log(popUpMsg);
   const [notificationInfo, setNotificationInfo] = useState<notificationInfoType>({ text: "", status: false });
-  // console.log(notificationInfo);
   const [currentMapName, setCurrentMapName] = useState<string>("");
   const [originalMapNames, setOriginalMapNames] = useState<mapNameType[]>([
     { id: "visitedCountries", name: "Visited Countries Map" },
@@ -118,29 +90,16 @@ function App() {
   ]);
   const [pointIndex, setPointIndex] = useState<number>(-1);
 
-  // console.log(originalMapNames);
-  // console.log(pointList);
-  // console.log(mapNames);
-  // console.log(isShowingPoint);
-  // console.log(haveFriendList);
-  // console.log(countryId);
-  // console.log(friendList);
-  // console.log(friendsList);
   function getCountryFriends(id: string) {
     const countryFriendList: friendListType[] = [];
-    // console.log(id);
 
     friendsList.forEach((friend) => {
-      // console.log(friend);
       if (friend.countryId === id) {
         countryFriendList.push(friend);
       }
     });
-    // console.log(countryFriendList);
     setFriendList(countryFriendList);
-    // console.log(friendsList);
   }
-  // console.log(toLogIn);
 
   return (
     <>
@@ -193,6 +152,7 @@ function App() {
         currentMapName={currentMapName}
         isChangingMap={isChangingMap}
         setIsChangingMap={setIsChangingMap}
+        setUserImg={setUserImg}
       />
       <WorldMap
         isLoggedIn={isLoggedIn}
