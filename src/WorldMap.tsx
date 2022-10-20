@@ -679,7 +679,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   const [mousePos, setMousePos] = useState<mousePosType>({ x: null, y: null });
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [searchTitleList, setSearchTitleList] = useState<(string | undefined)[]>([]);
-  const mouseRef = useRef<any>(null);
+  const mouseRef = useRef<SVGSVGElement>(null);
   const [currentPos, setCurrentPos] = useState<mousePosType>({ x: null, y: null });
   const [largeTipTap, setLargeTipTap] = useState<boolean>(true);
   const [isColorHovering, setIsColorHovering] = useState<boolean>(true);
@@ -726,7 +726,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   });
 
   function getPosition(e: MouseEvent) {
-    let rect = mouseRef.current.getBoundingClientRect();
+    let rect = mouseRef.current!.getBoundingClientRect();
     let x = e.clientX - rect.left; //x position within the element.
     let y = e.clientY - rect.top; //y position within the element.
     setCurrentPos({ x: x, y: y });
@@ -990,7 +990,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     }, 4000);
   }
 
-  function hoverAddCountryName(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+  function hoverAddCountryName(e: React.MouseEvent<SVGSVGElement>) {
     const target = e.target as HTMLInputElement;
     const result = countries.filter(function (obj) {
       return obj.code == target.id;
@@ -1299,7 +1299,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                   getPosition(e);
                 }}>
                 {" "}
-                <MapSVG setIsColorHovering={setIsColorHovering} isColorHovering={isColorHovering} countryId={countryId} mouseRef={mouseRef} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
+                <MapSVG setIsColorHovering={setIsColorHovering} isColorHovering={isColorHovering} countryId={countryId} ref={mouseRef} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
               </div>
               {isShowingPoint ? <Overlap setNotePhoto={setNotePhoto} setPointPhoto={setPointPhoto} mapState={mapState} pointList={pointList} isShowingPointNotes={isShowingPointNotes} pointIndex={pointIndex} previewImgUrl={previewImgUrl} setPointIndex={setPointIndex} setIsShowingPointNotes={setIsShowingPointNotes} setCountryId={setCountryId}></Overlap> : <></>}
             </Map>
@@ -1329,7 +1329,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                     getPosition(e);
                   }}>
                   {" "}
-                  <MapSVG setIsColorHovering={setIsColorHovering} isColorHovering={isColorHovering} countryId={countryId} mouseRef={mouseRef} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
+                  <MapSVG setIsColorHovering={setIsColorHovering} isColorHovering={isColorHovering} countryId={countryId} ref={mouseRef} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
                 </div>
               </MapCover>
               {isShowingFriends && isShowingFriends === true ? (
@@ -1640,7 +1640,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
                 onMouseMove={(e) => {
                   getPosition(e);
                 }}>
-                <MapSVG setIsColorHovering={setIsColorHovering} isColorHovering={isColorHovering} countryId={countryId} mouseRef={mouseRef} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
+                <MapSVG setIsColorHovering={setIsColorHovering} isColorHovering={isColorHovering} countryId={countryId} ref={mouseRef} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
               </div>
               {isHovering ? <ShowName currentPos={currentPos}>{countryName}</ShowName> : <></>}
             </Map>
