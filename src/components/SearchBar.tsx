@@ -1,6 +1,7 @@
-import React from "react";
+// import React from "react";
 import styled from "styled-components";
 import { friendListType } from "../App";
+import React, { forwardRef, MutableRefObject } from "react";
 
 const SearchInput = styled.input<{ isShowingSearchBarMB: boolean }>`
   position: absolute;
@@ -34,7 +35,7 @@ type SearchBar = {
   setCountryName: React.Dispatch<React.SetStateAction<string>>;
   setCurrentMapName: React.Dispatch<React.SetStateAction<string>>;
   setSearchNameResult: React.Dispatch<React.SetStateAction<friendListType[]>>;
-  searchInputRef: any;
+  // searchInputRef: HTMLInputElement;
   searchNameResult: friendListType[];
   setIsShowingSearchResult: React.Dispatch<React.SetStateAction<boolean | undefined>>;
   setSearchValue: React.Dispatch<React.SetStateAction<string>>;
@@ -45,11 +46,11 @@ type SearchBar = {
   checkResult: () => void;
 };
 
-function SearchBar({ searchInputRef, searchNameResult, setIsShowingSearchResult, setSearchValue, searchName, searchCountries, setMapState, setCurrentMapName, setCountryId, setIsShowingFriends, setCountryName, getCountryFriends, setIsShowingPointNotes, setSearchNameResult, isShowingSearchBarMB, setPointIndex, checkResult }: SearchBar) {
+const SearchBar = forwardRef<HTMLInputElement, SearchBar>(({ searchNameResult, setIsShowingSearchResult, setSearchValue, searchName, searchCountries, setMapState, setCurrentMapName, setCountryId, setIsShowingFriends, setCountryName, getCountryFriends, setIsShowingPointNotes, setSearchNameResult, isShowingSearchBarMB, setPointIndex, checkResult }, ref) => {
   return (
     <SearchInput
       isShowingSearchBarMB={isShowingSearchBarMB}
-      ref={searchInputRef}
+      ref={ref}
       placeholder="country / friend"
       onClick={(e) => {
         const target = e.target as HTMLInputElement;
@@ -79,7 +80,7 @@ function SearchBar({ searchInputRef, searchNameResult, setIsShowingSearchResult,
             setCountryName(searchNameResult[0].country);
             getCountryFriends(searchNameResult[0].countryId);
             setIsShowingSearchResult(false);
-            searchInputRef.current.value = "";
+            (ref as MutableRefObject<HTMLInputElement>).current.value = "";
             setSearchNameResult([]);
             setIsShowingPointNotes(false);
           }
@@ -87,6 +88,6 @@ function SearchBar({ searchInputRef, searchNameResult, setIsShowingSearchResult,
         }
       }}></SearchInput>
   );
-}
+});
 
 export default SearchBar;

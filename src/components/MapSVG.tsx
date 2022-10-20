@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, forwardRef } from "react";
 import { useScroll } from "@react-hooks-library/core";
 import styled from "styled-components";
 import { countryListType, haveFriendListType } from "../App";
@@ -50,8 +50,19 @@ const Path = styled.path<Pathtype>`
     transition: 0.1s;
   }
 `;
+type MapSVGType = {
+  countryList: countryListType[];
+  mapState: number;
+  haveFriendList: haveFriendListType[];
+  allCountries: string[];
+  setIsHovering: React.Dispatch<React.SetStateAction<boolean>>;
+  hoverAddCountryName: (e: React.MouseEvent<SVGSVGElement>) => void;
+  countryId: string;
+  isColorHovering: boolean;
+  setIsColorHovering: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-function MapSVG({ countryList, mapState, haveFriendList, allCountries, setIsHovering, hoverAddCountryName, mouseRef, countryId, isColorHovering, setIsColorHovering }: { countryList: countryListType[]; mapState: number; haveFriendList: haveFriendListType[]; allCountries: string[]; setIsHovering: React.Dispatch<React.SetStateAction<boolean>>; hoverAddCountryName: (e: any) => void; mouseRef: any; countryId: string; isColorHovering: boolean; setIsColorHovering: React.Dispatch<React.SetStateAction<boolean>> }) {
+const MapSVG = forwardRef<SVGSVGElement, MapSVGType>(({ countryList, mapState, haveFriendList, allCountries, setIsHovering, hoverAddCountryName, countryId, isColorHovering, setIsColorHovering }, ref) => {
   const [isColorHovering2, setIsColorHovering2] = useState<boolean>(false);
   useEffect(() => {
     if (mapState === 1) {
@@ -133,7 +144,7 @@ function MapSVG({ countryList, mapState, haveFriendList, allCountries, setIsHove
   return (
     <SVGBox windowWidth={windowWidth} windowHeight={windowHeight}>
       <SVG
-        ref={mouseRef}
+        ref={ref}
         mapState={mapState}
         id="CtySVG"
         xmlns="http://www.w3.org/2000/svg"
@@ -1892,6 +1903,6 @@ function MapSVG({ countryList, mapState, haveFriendList, allCountries, setIsHove
       </SVG>
     </SVGBox>
   );
-}
+});
 
 export default MapSVG;
