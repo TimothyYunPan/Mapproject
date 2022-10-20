@@ -58,12 +58,12 @@ type SearchResultType = {
   setSearchNameResult: React.Dispatch<React.SetStateAction<friendListType[]>>;
   searchNameResult: friendListType[];
   setIsShowingSearchResult: React.Dispatch<React.SetStateAction<boolean | undefined>>;
-  searchInputRef: any;
+  inputElement: HTMLInputElement | null;
   setIsShowingSearchBarMB: React.Dispatch<React.SetStateAction<boolean>>;
   setPointIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
-function SearchResult({ searchInputRef, searchNameResult, setIsShowingSearchResult, setMapState, setCurrentMapName, setCountryId, setIsShowingFriends, setCountryName, getCountryFriends, setIsShowingPointNotes, setSearchNameResult, setIsShowingSearchBarMB, setPointIndex }: SearchResultType) {
+function SearchResult({ inputElement, searchNameResult, setIsShowingSearchResult, setMapState, setCurrentMapName, setCountryId, setIsShowingFriends, setCountryName, getCountryFriends, setIsShowingPointNotes, setSearchNameResult, setIsShowingSearchBarMB, setPointIndex }: SearchResultType) {
   return (
     <SearchResultBox>
       {searchNameResult[0] &&
@@ -75,7 +75,7 @@ function SearchResult({ searchInputRef, searchNameResult, setIsShowingSearchResu
               setCountryName(result.country);
               getCountryFriends(result.countryId);
               setIsShowingSearchResult(false);
-              searchInputRef.current.value = "";
+              inputElement!.value = "";
               setSearchNameResult([]);
               setMapState(2);
               setCurrentMapName("Friends Located Map");

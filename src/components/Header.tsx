@@ -341,7 +341,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
   const Map1NameRef = useRef<HTMLInputElement>(null);
   const Map2NameRef = useRef<HTMLInputElement>(null);
   const Map3NameRef = useRef<HTMLInputElement>(null);
-  const searchInputRef = useRef<any>("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   function checkResult() {
     if (!hasName && !hasCountry) {
@@ -398,7 +398,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
       setMapState(2);
       setCurrentMapName("Friends Located Map");
       setIsShowingPointNotes(false);
-      searchInputRef.current.value = "";
+      searchInputRef.current!.value = "";
     } else {
       // console.log("查無資料");
     }
@@ -660,9 +660,9 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
           <></>
         ) : (
           <>
-            <SearchBar checkResult={checkResult} setPointIndex={setPointIndex} isShowingSearchBarMB={isShowingSearchBarMB} searchInputRef={searchInputRef} searchNameResult={searchNameResult} setIsShowingSearchResult={setIsShowingSearchResult} setSearchValue={setSearchValue} searchName={searchName} searchCountries={searchCountries} setMapState={setMapState} setCurrentMapName={setCurrentMapName} setCountryId={setCountryId} setIsShowingFriends={setIsShowingFriends} setCountryName={setCountryName} getCountryFriends={getCountryFriends} setIsShowingPointNotes={setIsShowingPointNotes} setSearchNameResult={setSearchNameResult}></SearchBar>
+            <SearchBar checkResult={checkResult} setPointIndex={setPointIndex} isShowingSearchBarMB={isShowingSearchBarMB} ref={searchInputRef} searchNameResult={searchNameResult} setIsShowingSearchResult={setIsShowingSearchResult} setSearchValue={setSearchValue} searchName={searchName} searchCountries={searchCountries} setMapState={setMapState} setCurrentMapName={setCurrentMapName} setCountryId={setCountryId} setIsShowingFriends={setIsShowingFriends} setCountryName={setCountryName} getCountryFriends={getCountryFriends} setIsShowingPointNotes={setIsShowingPointNotes} setSearchNameResult={setSearchNameResult}></SearchBar>
 
-            {isShowSearchResult ? <SearchResult setPointIndex={setPointIndex} setIsShowingSearchBarMB={setIsShowingSearchBarMB} searchInputRef={searchInputRef} searchNameResult={searchNameResult} setIsShowingSearchResult={setIsShowingSearchResult} setMapState={setMapState} setCurrentMapName={setCurrentMapName} setCountryId={setCountryId} setIsShowingFriends={setIsShowingFriends} setCountryName={setCountryName} getCountryFriends={getCountryFriends} setIsShowingPointNotes={setIsShowingPointNotes} setSearchNameResult={setSearchNameResult}></SearchResult> : <></>}
+            {isShowSearchResult ? <SearchResult setPointIndex={setPointIndex} setIsShowingSearchBarMB={setIsShowingSearchBarMB} inputElement={searchInputRef.current} searchNameResult={searchNameResult} setIsShowingSearchResult={setIsShowingSearchResult} setMapState={setMapState} setCurrentMapName={setCurrentMapName} setCountryId={setCountryId} setIsShowingFriends={setIsShowingFriends} setCountryName={setCountryName} getCountryFriends={getCountryFriends} setIsShowingPointNotes={setIsShowingPointNotes} setSearchNameResult={setSearchNameResult}></SearchResult> : <></>}
 
             <SearchBtn
               // onChange={(e) => {

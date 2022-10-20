@@ -34,9 +34,9 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
   // const [isEditingNewMap, setIsEditingNewMap] = useState<boolean>(false);
   const [isReadOnly, setIsReadOnly] = useState<boolean>(true);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const CurrentMapIdRef = useRef<any>(null);
+  // const CurrentMapIdRef = useRef<string>(null);
   const MapNameRef = useRef<HTMLInputElement>(null);
-
+  let currentMapId: string;
   async function updateNewMapName(mapId: string) {
     let newMapNames = [...mapNames];
     newMapNames[index].name = MapNameRef.current!.value;
@@ -49,7 +49,7 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
 
   async function deleteNewMap() {
     let newMapList = mapNames.filter((obj) => {
-      return obj.id !== CurrentMapIdRef.current;
+      return obj.id !== currentMapId;
     });
 
     setMapNames(newMapList);
@@ -119,7 +119,7 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
           <DeleteMapBtn
             // ref={CurrentMapIdRef}
             onClick={() => {
-              CurrentMapIdRef.current = mapName.id;
+              currentMapId = mapName.id;
               setIsShowingPopUp(true);
               setPopUpMsg([`Are you sure you want to delete the map "${mapName.name}"?`, "Yes", "No", "", "deletemap", deleteNewMap]);
               setIsEditing(false);
