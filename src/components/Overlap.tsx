@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Point, PointNotes, PointSet, PointSole, PointNotesTitle, PointNote, PointNotesTextImg } from "../WorldMap";
+import { Point, PointNotes, PointSet, PointSole, PointNotesTitle, PointNote, PointNotesTextImg } from "./CustomizedMap";
 import { pointListType } from "../App";
 import parse from "html-react-parser";
 import { LittleCloseBtn } from "../WorldMap";

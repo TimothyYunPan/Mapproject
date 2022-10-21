@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useRef, MouseEvent, forwardRef } from "react";
 import MapSVG from "./MapSVG";
-import Map from "../WorldMap";
+import { Map } from "../WorldMap";
 import { ShowName } from "../WorldMap";
+import { doc, setDoc, collection, getDoc, getDocs, deleteField, updateDoc, deleteDoc, arrayRemove } from "firebase/firestore";
 import { countryListType, friendListType, haveFriendListType, pointListType, mapNameType, notificationInfoType } from "../App";
 import { mousePosType } from "../WorldMap";
 import Overlap from "./Overlap";
+import { db } from "../utils/firebaseConfig";
 
 type visitedMapType = {
   mapState: number;
@@ -36,9 +38,16 @@ type visitedMapType = {
   allCountries: string[];
   ref: SVGSVGElement;
   updateUserMap1Data: (country: string) => void;
+  uid: string;
 };
 
-const VisitedMap = forwardRef<SVGSVGElement, visitedMapType>(({ updateUserMap1Data, allCountries, setIsHovering, hoverAddCountryName, previewImgUrl, setPointPhoto, isColorHovering, currentPos, setNotePhoto, getPosition, isHovering, setIsColorHovering, mapState, isShowingPoint, countryList, setCountryList, setIsShowingPointNotes, isShowingPointNotes, countryId, setCountryId, countryName, haveFriendList, pointList, setIsShowingPopUp, setIsChangingMap, pointIndex, setPointIndex, writeUserMap1Data }, ref) => {
+const VisitedMap = forwardRef<SVGSVGElement, visitedMapType>(({ uid, updateUserMap1Data, allCountries, setIsHovering, hoverAddCountryName, previewImgUrl, setPointPhoto, isColorHovering, currentPos, setNotePhoto, getPosition, isHovering, setIsColorHovering, mapState, isShowingPoint, countryList, setCountryList, setIsShowingPointNotes, isShowingPointNotes, countryId, setCountryId, countryName, haveFriendList, pointList, setIsShowingPopUp, setIsChangingMap, pointIndex, setPointIndex, writeUserMap1Data }, ref) => {
+  async function deleteUserMap1Data(country: string) {
+    // console.log("delete");
+    await updateDoc(doc(db, "user", uid, "visitedCountries", country), {
+      visited: deleteField(),
+    });
+  }
   return (
     <Map
       onClick={(e: React.MouseEvent<HTMLInputElement>) => {
