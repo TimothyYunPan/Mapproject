@@ -73,6 +73,7 @@ const SearchBar = forwardRef<HTMLInputElement, SearchBar>(({ searchNameResult, s
           // searchCountries(target.value);
           checkResult();
           if (searchNameResult.length === 1) {
+            console.log("SB");
             setMapState(2);
             setCurrentMapName("Friends Located Map");
             setCountryId(searchNameResult[0].countryId);

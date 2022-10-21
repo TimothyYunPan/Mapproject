@@ -100,7 +100,7 @@ function App() {
     });
     setFriendList(countryFriendList);
   }
-
+  console.log(mapState);
   return (
     <>
       {/* <Reset /> */}

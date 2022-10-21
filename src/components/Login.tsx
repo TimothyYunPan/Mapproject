@@ -7,7 +7,7 @@ import userProfileGrey from "./userProfileGrey.png";
 import styled from "styled-components";
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage";
 import { countryListType, friendListType, haveFriendListType, pointListType, mapNameType, notificationInfoType } from "../App";
-import { PointNotesTitleInput } from "../WorldMap";
+import { PointNotesTitleInput } from "./CustomizedMap";
 import closeGrey from "./closeGrey.png";
 import okGrey from "./okGrey.png";
 import editGrey from "./editGrey.png";
@@ -591,6 +591,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
               onClick={() => {
                 setIsLoggedIn(false);
                 LogOut();
+                console.log("L");
                 setMapState(-1);
                 setCountryList([]);
                 setHaveFriendList([]);
