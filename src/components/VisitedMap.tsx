@@ -37,16 +37,18 @@ type visitedMapType = {
   setIsHovering: React.Dispatch<React.SetStateAction<boolean>>;
   allCountries: string[];
   ref: SVGSVGElement;
-  updateUserMap1Data: (country: string) => void;
   uid: string;
 };
 
-const VisitedMap = forwardRef<SVGSVGElement, visitedMapType>(({ uid, updateUserMap1Data, allCountries, setIsHovering, hoverAddCountryName, previewImgUrl, setPointPhoto, isColorHovering, currentPos, setNotePhoto, getPosition, isHovering, setIsColorHovering, mapState, isShowingPoint, countryList, setCountryList, setIsShowingPointNotes, isShowingPointNotes, countryId, setCountryId, countryName, haveFriendList, pointList, setIsShowingPopUp, setIsChangingMap, pointIndex, setPointIndex, writeUserMap1Data }, ref) => {
+const VisitedMap = forwardRef<SVGSVGElement, visitedMapType>(({ uid, allCountries, setIsHovering, hoverAddCountryName, previewImgUrl, setPointPhoto, isColorHovering, currentPos, setNotePhoto, getPosition, isHovering, setIsColorHovering, mapState, isShowingPoint, countryList, setCountryList, setIsShowingPointNotes, isShowingPointNotes, countryId, setCountryId, countryName, haveFriendList, pointList, setIsShowingPopUp, setIsChangingMap, pointIndex, setPointIndex, writeUserMap1Data }, ref) => {
   async function deleteUserMap1Data(country: string) {
     // console.log("delete");
     await updateDoc(doc(db, "user", uid, "visitedCountries", country), {
       visited: deleteField(),
     });
+  }
+  async function updateUserMap1Data(country: string) {
+    await deleteDoc(doc(db, "user", uid, "visitedCountries", country));
   }
   return (
     <Map
