@@ -591,6 +591,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
               onClick={() => {
                 setIsLoggedIn(false);
                 LogOut();
+                console.log("L");
                 setMapState(-1);
                 setCountryList([]);
                 setHaveFriendList([]);
