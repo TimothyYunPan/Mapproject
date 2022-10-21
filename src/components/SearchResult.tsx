@@ -77,6 +77,7 @@ function SearchResult({ inputElement, searchNameResult, setIsShowingSearchResult
               setIsShowingSearchResult(false);
               inputElement!.value = "";
               setSearchNameResult([]);
+              console.log("SR");
               setMapState(2);
               setCurrentMapName("Friends Located Map");
               setIsShowingSearchBarMB(false);

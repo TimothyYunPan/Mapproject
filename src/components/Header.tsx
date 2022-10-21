@@ -395,6 +395,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
       getCountryFriends(searchNameResult[0].countryId);
       setIsShowingSearchResult(false);
       setSearchNameResult([]);
+      console.log("H");
       setMapState(2);
       setCurrentMapName("Friends Located Map");
       setIsShowingPointNotes(false);
@@ -429,6 +430,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
           mapState={mapState}
           onClick={() => {
             setIsShowingFriends(false);
+            console.log("H");
             setMapState(-1);
           }}></Logo>
         <Logo1
@@ -492,6 +494,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                           setIsChangingMap(true);
                         }
                         setCurrentMapName("Visited Countries Map");
+                        console.log("H");
                         setMapState(1);
                         setIsShowingPopUp(false);
 
@@ -540,6 +543,8 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                             setIsChangingMap(true);
                           }
                           setCurrentMapName("Friends Located Map");
+                          console.log("H");
+
                           setMapState(2);
                           setIsShowingFriends(false);
                           if (mapState !== 1) {
@@ -594,6 +599,8 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                           setPointIndex(-1);
                           setOverlapName("My Bucket List");
                           setCurrentMapName("My Bucket List");
+                          console.log("H");
+
                           setMapState(3);
                           setIsShowingPoint(true);
                           setIsShowingPointNotes(false);
