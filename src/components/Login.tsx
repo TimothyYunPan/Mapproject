@@ -3,15 +3,15 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, si
 import { doc, setDoc, collection, arrayUnion } from "firebase/firestore";
 import { db } from "../utils/firebaseConfig";
 import app from "../utils/firebaseConfig";
-import userProfileGrey from "./userProfileGrey.png";
+import userProfileGrey from "./icon/userProfileGrey.png";
 import styled from "styled-components";
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage";
 import { countryListType, friendListType, haveFriendListType, pointListType, mapNameType, notificationInfoType } from "../App";
 import { PointNotesTitleInput } from "./CustomizedMap";
-import closeGrey from "./closeGrey.png";
-import okGrey from "./okGrey.png";
-import editGrey from "./editGrey.png";
-import editGreyHover from "./editGreyHover.png";
+import closeGrey from "./icon/closeGrey.png";
+import okGrey from "./icon/okGrey.png";
+import editGrey from "./icon/editGrey.png";
+import editGreyHover from "./icon/editGreyHover.png";
 
 const storage = getStorage(app);
 
@@ -591,7 +591,6 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
               onClick={() => {
                 setIsLoggedIn(false);
                 LogOut();
-                console.log("L");
                 setMapState(-1);
                 setCountryList([]);
                 setHaveFriendList([]);

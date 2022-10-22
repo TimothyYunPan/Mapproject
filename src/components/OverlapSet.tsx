@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import { mapNameType, pointListType } from "../App";
-import sortDown from "./sortDown.png";
-import eyeOpened from "../components/eyeOpened.png";
-import eyeClosed from "../components/eyeClosed.png";
+import sortDown from "./icon/sortDown.png";
+import eyeOpened from "./icon/eyeOpened.png";
+import eyeClosed from "./icon/eyeClosed.png";
 
 const ShowOverLapBtn = styled.div<{ isShowingPoint: boolean }>`
   height: 20px;

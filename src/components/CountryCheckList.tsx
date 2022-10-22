@@ -5,7 +5,6 @@ import countries from "../utils/countries";
 import { doc, setDoc, collection, getFirestore, getDoc, getDocs, deleteField, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../utils/firebaseConfig";
 import { countryListType } from "../App";
-import { countryCollectionArrType } from "../WorldMap";
 const CountrySelectSet = styled.div`
   position: absolute;
   bottom: 8px;
@@ -70,18 +69,23 @@ const Mask = styled.input`
   height: 100%;
   left: 200px;
 `;
+type countryCollectionArrType = {
+  countryName: string;
+  countryId: string;
+  countryRegion: string;
+};
 
 type CountryCheckListType = {
-  countryCollection: countryCollectionArrType[];
   countryList: countryListType[];
   setCountryList: React.Dispatch<React.SetStateAction<countryListType[]>>;
-  setCountryCollection: React.Dispatch<React.SetStateAction<countryCollectionArrType[]>>;
   writeUserMap1Data: (country: string) => Promise<void>;
   uid: string;
 };
 
-function CountryCheckList({ countryCollection, setCountryList, setCountryCollection, countryList, writeUserMap1Data, uid }: CountryCheckListType) {
+function CountryCheckList({ setCountryList, countryList, writeUserMap1Data, uid }: CountryCheckListType) {
   const [isShowingCountry, setIsShowingCountry] = useState<boolean>(false);
+  const [countryCollection, setCountryCollection] = useState<countryCollectionArrType[]>([]);
+
   function getCountriesCollection(regionCode: string) {
     let countryCollectionArr: countryCollectionArrType[] = [];
     countries.forEach((countryObj) => {

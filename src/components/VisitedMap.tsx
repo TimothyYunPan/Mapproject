@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef, MouseEvent, forwardRef } from "react";
+import React, { MouseEvent, forwardRef } from "react";
 import MapSVG from "./MapSVG";
 import { Map } from "../WorldMap";
 import { ShowName } from "../WorldMap";
-import { doc, setDoc, collection, getDoc, getDocs, deleteField, updateDoc, deleteDoc, arrayRemove } from "firebase/firestore";
-import { countryListType, friendListType, haveFriendListType, pointListType, mapNameType, notificationInfoType } from "../App";
+import { doc, deleteField, updateDoc, deleteDoc } from "firebase/firestore";
+import { countryListType, haveFriendListType, pointListType } from "../App";
 import { mousePosType } from "../WorldMap";
 import Overlap from "./Overlap";
 import { db } from "../utils/firebaseConfig";

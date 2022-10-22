@@ -3,12 +3,14 @@ import { db } from "../utils/firebaseConfig";
 import { friendListType, haveFriendListType, notificationInfoType } from "../App";
 import { doc, setDoc } from "firebase/firestore";
 import styled from "styled-components";
-import { EditFriendBtn, AddFriendPicInput, AddFriendPicLabel, FriendProfileNoPic } from "../WorldMap";
+import { AddFriendPicInput, AddFriendPicLabel, FriendProfileNoPic } from "./FriendsMap";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import trashCan from "../components/trashCan.png";
-import trashCanHover from "../components/trashCanHover.png";
-import okIcon from "../components/okIcon.png";
+import trashCan from "./icon/trashCan.png";
+import trashCanHover from "./icon/trashCanHover.png";
+import okIcon from "./icon/okIcon.png";
 import app from "../utils/firebaseConfig";
+import edit from "./icon/edit.png";
+import editHover from "./icon/editHover.png";
 const storage = getStorage(app);
 
 const IconBtnStyle = styled.div`
@@ -43,6 +45,23 @@ const FriendSet = styled.div`
   flex-direction: column;
 `;
 
+const EditFriendBtn = styled.div`
+  width: 20px;
+  height: 20px;
+  bottom: 20px;
+  right: 45px;
+  background-image: url(${edit});
+  background-size: cover;
+  position: absolute;
+  cursor: pointer;
+
+  :hover {
+    background-image: url(${editHover});
+    width: 24px;
+    height: 24px;
+    bottom: 15px;
+  }
+`;
 const FriendUpdateBtn = styled(IconBtnStyle)`
   background-image: url(${okIcon});
   right: 45px;
@@ -165,10 +184,8 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
     if (imageUpload == null) {
       newObj.imgUrl = friendOriginalPhoto;
       updateFriendInfo(index, newObj);
-      // console.log("這裡");
     } else {
       const imageRef = ref(storage, `${uid}/friendMap/${imageUpload.name}`);
-      // console.log("還是這裡");
       uploadBytes(imageRef, imageUpload).then((snapshot) => {
         getDownloadURL(snapshot.ref).then((url) => {
           newObj.imgUrl = url;
