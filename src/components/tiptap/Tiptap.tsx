@@ -2,7 +2,7 @@ import "./styles.css";
 import { Editor, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import React from "react";
-import { pointListType } from "./App";
+import { pointListType } from "../../App";
 import styled from "styled-components";
 import Placeholder from "@tiptap/extension-placeholder";
 import { Bold, Italic, H1, H2, H3, H4, H5, ListNumbers, Menu } from "tabler-icons-react";

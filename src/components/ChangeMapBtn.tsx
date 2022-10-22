@@ -81,7 +81,6 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
               setPointList([]);
             }
             setIsChangingMap(false);
-            console.log("CMB");
             setMapState(3);
             setCurrentMapName(mapName.name);
             setOverlapName(mapName.name);
