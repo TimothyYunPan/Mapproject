@@ -1,8 +1,6 @@
 import WorldMap from "./WorldMap";
 import Header from "./components/Header";
-import React, { useEffect, useState, useRef } from "react";
-import styled from "styled-components";
-import { Reset } from "styled-reset";
+import React, { useState } from "react";
 import { createGlobalStyle } from "styled-components";
 import Notification from "./components/Notafication";
 import "typeface-quicksand";
@@ -16,15 +14,12 @@ const GlobalStyleComponent = createGlobalStyle`
     ::-webkit-scrollbar {
     display: none;
     }
-    
   }
-  
-  
 `;
-export interface countryListType {
+export type countryListType = {
   countryId: string;
   visited: boolean;
-}
+};
 export type friendListType = {
   countryId: string;
   name: string;
@@ -83,12 +78,12 @@ function App() {
   const [isChangingMap, setIsChangingMap] = useState<boolean>(false);
   const [notificationInfo, setNotificationInfo] = useState<notificationInfoType>({ text: "", status: false });
   const [currentMapName, setCurrentMapName] = useState<string>("");
+  const [pointIndex, setPointIndex] = useState<number>(-1);
   const [originalMapNames, setOriginalMapNames] = useState<mapNameType[]>([
     { id: "visitedCountries", name: "Visited Countries Map" },
     { id: "friendsLocatedCountries", name: "Friends Located Map" },
     { id: "custimizedMapCountries", name: "My Bucket List" },
   ]);
-  const [pointIndex, setPointIndex] = useState<number>(-1);
 
   function getCountryFriends(id: string) {
     const countryFriendList: friendListType[] = [];
@@ -100,7 +95,6 @@ function App() {
     });
     setFriendList(countryFriendList);
   }
-  console.log(mapState);
   return (
     <>
       {/* <Reset /> */}

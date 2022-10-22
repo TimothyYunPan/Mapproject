@@ -1,24 +1,23 @@
-import React, { useEffect, useState, useRef, MouseEvent, forwardRef } from "react";
+import React, { useState, useRef, MouseEvent, forwardRef } from "react";
 import MapSVG from "./MapSVG";
-import { Map, AddFriendPicInput, CloseBtn, LittleCloseBtn, ShowName, AddFriendPicLabel, AddFriendType, FriendProfileNoPic, EditFriendBtn } from "../WorldMap";
+import { Map, LittleCloseBtn, ShowName } from "../WorldMap";
 import styled from "styled-components";
-import FriendBox from "./FriendBox";
-import { doc, setDoc, collection, getDoc, getDocs, deleteField, updateDoc, deleteDoc, arrayRemove } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import app from "../utils/firebaseConfig";
 import { db } from "../utils/firebaseConfig";
-import { countryListType, friendListType, haveFriendListType, pointListType, mapNameType, notificationInfoType } from "../App";
+import { countryListType, haveFriendListType, pointListType, notificationInfoType } from "../App";
 import { mousePosType } from "../WorldMap";
-import okIcon from "./okIcon.png";
-import Tiptap from "../Tiptap";
-import edit from "./edit.png";
-import editHover from "./editHover.png";
+import okIcon from "./icon/okIcon.png";
+import Tiptap from "./tiptap/Tiptap";
+import edit from "./icon/edit.png";
+import editHover from "./icon/editHover.png";
 import parse from "html-react-parser";
-import backIcon from "./backIcon.png";
-import imageIcon from "./imageIcon.png";
-import imageHover from "./imageHover.png";
-import trashCan from "./trashCan.png";
-import trashCanHover from "./trashCanHover.png";
+import backIcon from "./icon/backIcon.png";
+import imageIcon from "./icon/imageIcon.png";
+import imageHover from "./icon/imageHover.png";
+import trashCan from "./icon/trashCan.png";
+import trashCanHover from "./icon/trashCanHover.png";
 const storage = getStorage(app);
 
 const NotesFlex = styled.div``;
@@ -414,7 +413,6 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(({ setX, setY
       });
     }
   }
-  console.log(mouseRef);
   return (
     <Map
       onClick={(e) => {

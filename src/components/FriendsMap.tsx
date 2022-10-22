@@ -1,16 +1,17 @@
-import React, { useEffect, useState, useRef, MouseEvent, forwardRef } from "react";
+import React, { useState, MouseEvent, forwardRef } from "react";
 import MapSVG from "./MapSVG";
-import { doc, setDoc, collection, getDoc, getDocs, deleteField, updateDoc, deleteDoc, arrayRemove } from "firebase/firestore";
-import { Map, AddFriendPicInput, CloseBtn, LittleCloseBtn, Flag, ShowName, AddFriendPicLabel, AddFriendType, FriendProfileNoPic } from "../WorldMap";
-import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { Map, CloseBtn, LittleCloseBtn, Flag, ShowName } from "../WorldMap";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import styled from "styled-components";
 import FriendBox from "./FriendBox";
-import { countryListType, friendListType, haveFriendListType, pointListType, mapNameType, notificationInfoType } from "../App";
+import { countryListType, friendListType, haveFriendListType, pointListType, notificationInfoType } from "../App";
 import { mousePosType } from "../WorldMap";
 import Overlap from "./Overlap";
 import { uuidv4 } from "@firebase/util";
 import { db } from "../utils/firebaseConfig";
 import app from "../utils/firebaseConfig";
+import userProfile from "./icon/userProfile.png";
 
 const storage = getStorage(app);
 
@@ -165,6 +166,31 @@ const AddFriendProfilePic = styled.img`
   cursor: pointer;
   object-fit: cover;
 `;
+
+export const FriendProfileNoPic = styled.div`
+  height: 80px;
+  width: 80px;
+  border: 1px solid white;
+  border-radius: 50%;
+  background-image: url(${userProfile});
+  background-size: cover;
+  background-repeat: no-repeat;
+  cursor: pointer;
+`;
+
+export const AddFriendPicLabel = styled.label`
+  justify-content: center;
+`;
+export const AddFriendPicInput = styled.input`
+  display: none;
+`;
+type AddFriendType = {
+  name: string;
+  // country: string;
+  city: string;
+  insta: string;
+  notes: string;
+};
 type friendsMapType = {
   mapState: number;
   isShowingPoint: boolean;
@@ -202,16 +228,21 @@ type friendsMapType = {
   previewImgUrl: string;
   setIsHovering: React.Dispatch<React.SetStateAction<boolean>>;
   allCountries: string[];
-  setIsAddingFriend: React.Dispatch<React.SetStateAction<boolean>>;
-  setImageUpload: React.Dispatch<React.SetStateAction<File | null>>;
-  isAddingFriend: boolean;
-  previewFriendImgUrl: string;
-  setAddFriendState: React.Dispatch<React.SetStateAction<AddFriendType>>;
-  addFriendState: AddFriendType;
-  imageUpload: File | null;
 };
 
-const FriednsMap = forwardRef<SVGSVGElement, friendsMapType>(({ imageUpload, addFriendState, setAddFriendState, previewFriendImgUrl, isAddingFriend, setImageUpload, setIsAddingFriend, allCountries, setIsHovering, previewImgUrl, hoverAddCountryName, setPointPhoto, isColorHovering, setNotePhoto, getPosition, currentPos, isHovering, setIsColorHovering, mapState, isShowingPoint, uid, countryList, setIsShowingPointNotes, isShowingPointNotes, getCountryFriends, friendList, setFriendList, friendsList, setFriendsList, isShowingFriends, setIsShowingFriends, countryId, setCountryId, countryName, haveFriendList, setHaveFriendList, pointList, setIsShowingPopUp, setPopUpMsg, setNotificationInfo, setIsChangingMap, pointIndex, setPointIndex }, mouseRef) => {
+const FriednsMap = forwardRef<SVGSVGElement, friendsMapType>(({ allCountries, setIsHovering, previewImgUrl, hoverAddCountryName, setPointPhoto, isColorHovering, setNotePhoto, getPosition, currentPos, isHovering, setIsColorHovering, mapState, isShowingPoint, uid, countryList, setIsShowingPointNotes, isShowingPointNotes, getCountryFriends, friendList, setFriendList, friendsList, setFriendsList, isShowingFriends, setIsShowingFriends, countryId, setCountryId, countryName, haveFriendList, setHaveFriendList, pointList, setIsShowingPopUp, setPopUpMsg, setNotificationInfo, setIsChangingMap, pointIndex, setPointIndex }, mouseRef) => {
+  const [isAddingFriend, setIsAddingFriend] = useState<boolean>(false);
+  const [imageUpload, setImageUpload] = useState<File | null>(null);
+  const previewFriendImgUrl = imageUpload ? URL.createObjectURL(imageUpload) : "";
+  const initialAddFriendState = {
+    name: "",
+    // country: '',
+    city: "",
+    insta: "",
+    notes: "",
+  };
+  const [addFriendState, setAddFriendState] = useState<AddFriendType>(initialAddFriendState);
+
   const sentNewFriendInfo = () => {
     if (imageUpload == null) {
       const url = "";

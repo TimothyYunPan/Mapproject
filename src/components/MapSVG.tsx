@@ -1,13 +1,9 @@
 import React, { useEffect, useState, useRef, forwardRef } from "react";
-import { useScroll } from "@react-hooks-library/core";
 import styled from "styled-components";
 import { countryListType, haveFriendListType } from "../App";
-import { getAllByTitle } from "@testing-library/react";
-import countries from "../utils/countries";
-import useWindowDimensions from "./WindowDimensions";
-import { Element } from "html-react-parser";
+// import useWindowDimensions from "./WindowDimensions";
 
-const SVGBox = styled.svg<{ windowHeight: number; windowWidth: number }>`
+const SVGBox = styled.svg`
   width: 1100px;
   height: 650px;
 `;
@@ -19,7 +15,7 @@ const SVG = styled.svg<{ mapState: number }>`
   stroke-width: 0.4px;
 `;
 
-interface Pathtype {
+type Pathtype = {
   title?: string;
   id?: string;
   className?: string;
@@ -27,18 +23,7 @@ interface Pathtype {
   mapState: number;
   isColorHovering: boolean;
   isColorHovering2: boolean;
-}
-
-const Big = styled.div`
-  position: fixed;
-  color: white;
-  right: 100px;
-  top: 100px;
-  z-index: 1100;
-  font-size: 24px;
-  width: 50px;
-  height: 50px;
-`;
+};
 
 const Path = styled.path<Pathtype>`
   position: relative;
@@ -137,12 +122,12 @@ const MapSVG = forwardRef<SVGSVGElement, MapSVGType>(({ countryList, mapState, h
       });
     }
   }, [mapState, countryList, haveFriendList]);
-  const { height, width } = useWindowDimensions();
-  const [windowWidth, setWindowWidth] = useState<number>(width);
-  const [windowHeight, setWindowHeight] = useState<number>(height);
+  // const { height, width } = useWindowDimensions();
+  // const [windowWidth, setWindowWidth] = useState<number>(width);
+  // const [windowHeight, setWindowHeight] = useState<number>(height);
 
   return (
-    <SVGBox windowWidth={windowWidth} windowHeight={windowHeight}>
+    <SVGBox>
       <SVG
         ref={ref}
         mapState={mapState}
@@ -168,13 +153,6 @@ const MapSVG = forwardRef<SVGSVGElement, MapSVGType>(({ countryList, mapState, h
           //   // }, 2000);
           // }
         }}
-        // onMouseOver={(e) => {
-        //   const target = e.target as HTMLInputElement;
-        //   if (target.style.fill === "" || target.style.fill === "rgb(211,211,211)") {
-        //     setIsColorHovering2(true);
-        //   }
-        // }}
-
         onMouseLeave={(e) => {
           // setIsColorHovering2(false);
           setIsColorHovering(true);

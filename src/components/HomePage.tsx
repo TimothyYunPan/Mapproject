@@ -110,16 +110,12 @@ function HomePage({ deleteFriend, deleteNote, setIsEditing, setMapState, setIsSh
         <WallPaperSet>
           <WallPaper
             onClick={() => {
-              console.log("HP");
-
               setMapState(1);
-
               setIsShowingPoint(false);
               setCurrentMapName("Visited Countries Map");
             }}></WallPaper>
           <SelectMapText
             onClick={() => {
-              console.log("HP");
               setMapState(1);
               setCurrentMapName("Visited Countries Map");
             }}>
@@ -135,7 +131,6 @@ function HomePage({ deleteFriend, deleteNote, setIsEditing, setMapState, setIsSh
                 setIsShowingPopUp(true);
                 setPopUpMsg(["Sign in to start your map journey 😋", "Sign In", "Sign Up", "", "signin"]);
               } else {
-                console.log("HP");
                 setMapState(2);
                 setIsShowingPoint(false);
                 setCurrentMapName("Friends Located Map");
@@ -147,7 +142,6 @@ function HomePage({ deleteFriend, deleteNote, setIsEditing, setMapState, setIsSh
                 setIsShowingPopUp(true);
                 setPopUpMsg(["Sign in to start your map journey 😋", "Sign In", "Sign Up", "", "signin"]);
               } else {
-                console.log("HP");
                 setMapState(2);
                 setIsShowingPoint(false);
                 setCurrentMapName("Friends Located Map");
@@ -165,7 +159,6 @@ function HomePage({ deleteFriend, deleteNote, setIsEditing, setMapState, setIsSh
                 setIsShowingPopUp(true);
                 setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
               } else {
-                console.log("HP");
                 setMapState(3);
                 setIsShowingPoint(true);
                 setCurrentMapName("My Bucket List");
@@ -177,7 +170,6 @@ function HomePage({ deleteFriend, deleteNote, setIsEditing, setMapState, setIsSh
                 setIsShowingPopUp(true);
                 setPopUpMsg(["Sign in to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
               } else {
-                console.log("HP");
                 setMapState(3);
                 setIsShowingPoint(true);
                 setCurrentMapName("My Bucket List");

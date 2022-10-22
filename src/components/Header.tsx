@@ -1,25 +1,25 @@
-import React, { useEffect, useState, useRef, SetStateAction } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import countries from "../utils/countries";
-import continent from "./continents1.png";
-import search from "./search.png";
+import continent from "./icon/continents1.png";
+import search from "./icon/search.png";
 import { countryListType, friendListType, haveFriendListType, pointListType, mapNameType, notificationInfoType } from "../App";
 import Login from "./Login";
-import { collection, query, where, getDocs, doc, getDoc, setDoc, arrayUnion } from "firebase/firestore";
+import { doc, setDoc, arrayUnion } from "firebase/firestore";
 import { db } from "../utils/firebaseConfig";
 import { v4 as uuidv4 } from "uuid";
-import sortDown from "./sortDown.png";
-import addIcon from "./addIcon.png";
-import editIcon from "./edit.png";
-import editHoverIcon from "./editHover.png";
-import deleteIcon from "./trashCan.png";
-import deleteHoverIcon from "./trashCanHover.png";
-import okIcon from "./okIcon.png";
+import sortDown from "./icon/sortDown.png";
+import addIcon from "./icon/addIcon.png";
+import editIcon from "./icon/edit.png";
+import editHoverIcon from "./icon/editHover.png";
+import deleteIcon from "./icon/trashCan.png";
+import deleteHoverIcon from "./icon/trashCanHover.png";
+import okIcon from "./icon/okIcon.png";
 import ChangeMapBtn from "./ChangeMapBtn";
 import OverlapSet from "./OverlapSet";
 import SearchBar from "./SearchBar";
 import SearchResult from "./SearchResult";
-import userProfile from "./userProfile.png";
+import userProfile from "./icon/userProfile.png";
 const Logo = styled.div<{ mapState: number }>`
   margin-top: ${(props) => (props.mapState === -1 ? "20px" : "0px")};
   width: ${(props) => (props.mapState === -1 ? "100px" : "70px")};
@@ -395,7 +395,6 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
       getCountryFriends(searchNameResult[0].countryId);
       setIsShowingSearchResult(false);
       setSearchNameResult([]);
-      console.log("H");
       setMapState(2);
       setCurrentMapName("Friends Located Map");
       setIsShowingPointNotes(false);
@@ -430,7 +429,6 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
           mapState={mapState}
           onClick={() => {
             setIsShowingFriends(false);
-            console.log("H");
             setMapState(-1);
           }}></Logo>
         <Logo1
@@ -494,7 +492,6 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                           setIsChangingMap(true);
                         }
                         setCurrentMapName("Visited Countries Map");
-                        console.log("H");
                         setMapState(1);
                         setIsShowingPopUp(false);
 
@@ -543,7 +540,6 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                             setIsChangingMap(true);
                           }
                           setCurrentMapName("Friends Located Map");
-                          console.log("H");
 
                           setMapState(2);
                           setIsShowingFriends(false);
@@ -599,8 +595,6 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                           setPointIndex(-1);
                           setOverlapName("My Bucket List");
                           setCurrentMapName("My Bucket List");
-                          console.log("H");
-
                           setMapState(3);
                           setIsShowingPoint(true);
                           setIsShowingPointNotes(false);
