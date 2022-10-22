@@ -9,7 +9,7 @@ import { db } from "../utils/firebaseConfig";
 import { countryListType, haveFriendListType, pointListType, notificationInfoType } from "../App";
 import { mousePosType } from "../WorldMap";
 import okIcon from "./icon/okIcon.png";
-import Tiptap from "../Tiptap";
+import Tiptap from "./tiptap/Tiptap";
 import edit from "./icon/edit.png";
 import editHover from "./icon/editHover.png";
 import parse from "html-react-parser";
