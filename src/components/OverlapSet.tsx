@@ -114,7 +114,7 @@ type OverlapSetType = {
   setIsShowingPopUp: React.Dispatch<React.SetStateAction<boolean>>;
   setMapId: React.Dispatch<React.SetStateAction<string>>;
   mapNames: mapNameType[];
-  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void })[]>>;
+  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void } | { (index: number): void })[]>>;
   setIsChangingMap: React.Dispatch<React.SetStateAction<boolean>>;
   isShowingOverlapBtn: boolean;
   setIsShowingOverlapBtn: React.Dispatch<React.SetStateAction<boolean>>;

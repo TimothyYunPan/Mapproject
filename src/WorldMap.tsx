@@ -146,8 +146,8 @@ type WorldMapType = {
   mapNames: mapNameType[];
   setMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
   setOriginalMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
-  popUpMsg: (string | { (): void })[];
-  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void })[]>>;
+  popUpMsg: (string | { (): void } | { (index: number): void })[];
+  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void } | { (index: number): void })[]>>;
   setDeleteMap: React.Dispatch<React.SetStateAction<string>>;
   setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
   setCurrentMapName: React.Dispatch<React.SetStateAction<string>>;
@@ -167,8 +167,6 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   const mouseRef = useRef<SVGSVGElement>(null);
   const [currentPos, setCurrentPos] = useState<mousePosType>({ x: null, y: null });
   const [isColorHovering, setIsColorHovering] = useState<boolean>(true);
-  const [X, setX] = useState<number>(0);
-  const [Y, setY] = useState<number>(0);
   const [allCountries, setAllCountries] = useState<string[]>([]);
 
   function getAllCountries() {
@@ -178,13 +176,6 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     });
     setAllCountries(All);
   }
-
-  const singlePointList: pointListType[] = [];
-  pointList.forEach((pointInfo) => {
-    if (pointInfo.countryId === countryId) {
-      singlePointList.push(pointInfo);
-    }
-  });
 
   function getPosition(e: MouseEvent) {
     let rect = mouseRef.current!.getBoundingClientRect();
@@ -243,44 +234,6 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     await setDoc(doc(db, "user", uid, "visitedCountries", country), {
       visited: true,
     });
-  }
-
-  async function deleteFriend(index: number) {
-    let newFriendsList = friendsList.filter((friend) => {
-      return friend.key !== friendList[index].key;
-    });
-    setFriendsList(newFriendsList);
-    let newFriendList = friendList.filter((friend, i) => {
-      return i !== index;
-    });
-    setFriendList(newFriendList);
-    let newHaveFriendNum = friendList.length - 1;
-
-    let newHaveFriendList = haveFriendList.map((obj) => {
-      if (obj.countryId === countryId) {
-        obj.haveFriend = obj.haveFriend - 1;
-      }
-      return obj;
-    });
-
-    let newNewHaveFriendList = [];
-    newNewHaveFriendList = newHaveFriendList.filter((obj) => {
-      return obj.haveFriend !== 0;
-    });
-    setHaveFriendList(newNewHaveFriendList);
-    if (newFriendList.length) {
-      await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), { friends: newFriendList, haveFriend: newHaveFriendNum });
-    } else {
-      await deleteDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId));
-    }
-    await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), {
-      friends: arrayRemove(friendList[index]),
-      haveFriend: friendList.length - 1,
-    });
-    setNotificationInfo({ text: "This friend has been successfully removed 😈 ", status: true });
-    setTimeout(() => {
-      setNotificationInfo({ text: "", status: false });
-    }, 3000);
   }
 
   async function getUserName(userUid: string) {
@@ -366,32 +319,24 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     }
   }
 
-  async function deleteNote() {
-    let newPointList = pointList.filter((obj) => {
-      return obj.x !== X && obj.y !== Y;
-    });
-    setPointList(newPointList);
-    await updateDoc(doc(db, "user", uid, mapId, countryId), {
-      List: arrayRemove(singlePointList[0]),
-    });
-
-    setNotificationInfo({ text: "Your pin has been successfully deleted", status: true });
-    setTimeout(() => {
-      setNotificationInfo({ text: "", status: false });
-    }, 3000);
-  }
+  const singlePointList: pointListType[] = [];
+  pointList.forEach((pointInfo) => {
+    if (pointInfo.countryId === countryId) {
+      singlePointList.push(pointInfo);
+    }
+  });
 
   return (
     <>
       <Wrapper mapState={mapState}>
         {mapState && mapState === -1 ? (
-          <HomePage deleteFriend={deleteFriend} deleteNote={deleteNote} setIsEditing={setIsEditing} setMapState={setMapState} setIsShowingPoint={setIsShowingPoint} toLogIn={toLogIn} setToLogIn={setToLogIn} uid={uid} setIsLoggedIn={setIsLoggedIn} setIsShowingPointNotes={setIsShowingPointNotes} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp} setLoginStatus={setLoginStatus} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} setDeleteMap={setDeleteMap} setCurrentMapName={setCurrentMapName} setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex}></HomePage>
+          <HomePage setIsEditing={setIsEditing} setMapState={setMapState} setIsShowingPoint={setIsShowingPoint} toLogIn={toLogIn} setToLogIn={setToLogIn} uid={uid} setIsLoggedIn={setIsLoggedIn} setIsShowingPointNotes={setIsShowingPointNotes} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp} setLoginStatus={setLoginStatus} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} setDeleteMap={setDeleteMap} setCurrentMapName={setCurrentMapName} setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex}></HomePage>
         ) : mapState === 1 ? (
           <>
             {/* prettier-ignore */}
             <VisitedMap
               uid={uid} ref={mouseRef} allCountries={allCountries} setIsHovering={setIsHovering} hoverAddCountryName={hoverAddCountryName} previewImgUrl={previewImgUrl} setPointPhoto={setPointPhoto} isColorHovering={isColorHovering} currentPos={currentPos} setNotePhoto={setNotePhoto} getPosition={getPosition} isHovering={isHovering} setIsColorHovering={setIsColorHovering} mapState={mapState} isShowingPoint={isShowingPoint} countryList={countryList} setCountryList={setCountryList} setIsShowingPointNotes={setIsShowingPointNotes} isShowingPointNotes={isShowingPointNotes} countryId={countryId} setCountryId={setCountryId} countryName={countryName} haveFriendList={haveFriendList} pointList={pointList} setIsShowingPopUp={setIsShowingPopUp} setIsChangingMap={setIsChangingMap} pointIndex={pointIndex} setPointIndex={setPointIndex} writeUserMap1Data={writeUserMap1Data}></VisitedMap>
-            <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} deleteFriend={deleteFriend} deleteNote={deleteNote} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
+            <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
             <NumberCount>
               You have visited {countryList.length} {countryList && countryList.length <= 1 ? "country" : "countries"} / area
             </NumberCount>
@@ -401,7 +346,7 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
           <>
             {/* prettier-ignore */}
             <FriendsMap ref={mouseRef} allCountries={allCountries} setIsHovering={setIsHovering} previewImgUrl={previewImgUrl} hoverAddCountryName={hoverAddCountryName} setPointPhoto={setPointPhoto} isColorHovering={isColorHovering} setNotePhoto={setNotePhoto} getPosition={getPosition} currentPos={currentPos} isHovering={isHovering} setIsColorHovering={setIsColorHovering} mapState={mapState} isShowingPoint={isShowingPoint} uid={uid} countryList={countryList} setIsShowingPointNotes={setIsShowingPointNotes} isShowingPointNotes={isShowingPointNotes} getCountryFriends={getCountryFriends} friendList={friendList} setFriendList={setFriendList} friendsList={friendsList} setFriendsList={setFriendsList} isShowingFriends={isShowingFriends} setIsShowingFriends={setIsShowingFriends} countryId={countryId} setCountryId={setCountryId} countryName={countryName} haveFriendList={haveFriendList} setHaveFriendList={setHaveFriendList} pointList={pointList} setIsShowingPopUp={setIsShowingPopUp} setPopUpMsg={setPopUpMsg} setNotificationInfo={setNotificationInfo} setIsChangingMap={setIsChangingMap} pointIndex={pointIndex} setPointIndex={setPointIndex}></FriendsMap>
-            <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} deleteFriend={deleteFriend} deleteNote={deleteNote} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
+            <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
             <NumberCount>
               You already have {friendsList.length} {friendsList && friendsList.length <= 1 ? `friend` : `friends`} from {haveFriendList.length} {haveFriendList && haveFriendList.length <= 1 ? `country` : `countries`}
             </NumberCount>
@@ -409,9 +354,9 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
         ) : mapState === 3 ? (
           <>
             {/* prettier-ignore */}
-            <CustomizedMap setX={setX}
-              ref={mouseRef} setY={setY} allCountries={allCountries} setIsHovering={setIsHovering} hoverAddCountryName={hoverAddCountryName} isHovering={isHovering} isColorHovering={isColorHovering} setIsColorHovering={setIsColorHovering} imageList={imageList} getPosition={getPosition} singlePointList={singlePointList} notePhoto={notePhoto} pointPhoto={pointPhoto} isEditing={isEditing} previewImgUrl={previewImgUrl} setNotePhoto={setNotePhoto} setIsEditing={setIsEditing} currentPos={currentPos} setPointPhoto={setPointPhoto} mapState={mapState} isShowingPoint={isShowingPoint} uid={uid} countryList={countryList} setIsShowingPointNotes={setIsShowingPointNotes} isShowingPointNotes={isShowingPointNotes} countryId={countryId} setCountryId={setCountryId} countryName={countryName} haveFriendList={haveFriendList} pointList={pointList} setPointList={setPointList} setIsShowingPopUp={setIsShowingPopUp} mapId={mapId} setPopUpMsg={setPopUpMsg} setNotificationInfo={setNotificationInfo} setIsChangingMap={setIsChangingMap} pointIndex={pointIndex} setPointIndex={setPointIndex}></CustomizedMap>
-            <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} deleteFriend={deleteFriend} deleteNote={deleteNote} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
+            <CustomizedMap 
+              ref={mouseRef} allCountries={allCountries} setIsHovering={setIsHovering} hoverAddCountryName={hoverAddCountryName} isHovering={isHovering} isColorHovering={isColorHovering} setIsColorHovering={setIsColorHovering} imageList={imageList} getPosition={getPosition} singlePointList={singlePointList} notePhoto={notePhoto} pointPhoto={pointPhoto} isEditing={isEditing} previewImgUrl={previewImgUrl} setNotePhoto={setNotePhoto} setIsEditing={setIsEditing} currentPos={currentPos} setPointPhoto={setPointPhoto} mapState={mapState} isShowingPoint={isShowingPoint} uid={uid} countryList={countryList} setIsShowingPointNotes={setIsShowingPointNotes} isShowingPointNotes={isShowingPointNotes} countryId={countryId} setCountryId={setCountryId} countryName={countryName} haveFriendList={haveFriendList} pointList={pointList} setPointList={setPointList} setIsShowingPopUp={setIsShowingPopUp} mapId={mapId} setPopUpMsg={setPopUpMsg} setNotificationInfo={setNotificationInfo} setIsChangingMap={setIsChangingMap} pointIndex={pointIndex} setPointIndex={setPointIndex}></CustomizedMap>
+            <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
           </>
         ) : (
           <></>

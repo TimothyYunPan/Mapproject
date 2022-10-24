@@ -74,7 +74,7 @@ function App() {
   const [mapId, setMapId] = useState<string>("custimizedMap");
   const [deleteMap, setDeleteMap] = useState<string>("no");
   const [mapNames, setMapNames] = useState<mapNameType[]>([]);
-  const [popUpMsg, setPopUpMsg] = useState<(string | { (): void })[]>([]);
+  const [popUpMsg, setPopUpMsg] = useState<(string | { (): void } | { (index: number): void })[]>([]);
   const [isChangingMap, setIsChangingMap] = useState<boolean>(false);
   const [notificationInfo, setNotificationInfo] = useState<notificationInfoType>({ text: "", status: false });
   const [currentMapName, setCurrentMapName] = useState<string>("");

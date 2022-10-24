@@ -1,6 +1,6 @@
 import React, { useState, MouseEvent, forwardRef } from "react";
 import MapSVG from "./MapSVG";
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc, deleteDoc, arrayRemove } from "firebase/firestore";
 import { Map, CloseBtn, LittleCloseBtn, Flag, ShowName } from "../WorldMap";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import styled from "styled-components";
@@ -212,7 +212,7 @@ type friendsMapType = {
   setHaveFriendList: React.Dispatch<React.SetStateAction<haveFriendListType[]>>;
   pointList: pointListType[];
   setIsShowingPopUp: React.Dispatch<React.SetStateAction<boolean>>;
-  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void })[]>>;
+  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void } | { (index: number): void })[]>>;
   setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
   setIsChangingMap: React.Dispatch<React.SetStateAction<boolean>>;
   pointIndex: number;
