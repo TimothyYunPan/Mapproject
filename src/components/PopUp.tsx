@@ -79,17 +79,15 @@ type PopUpType = {
   setLoginStatus: React.Dispatch<React.SetStateAction<string>>;
   toLogIn: boolean;
   setToLogIn: React.Dispatch<React.SetStateAction<boolean>>;
-  popUpMsg: (string | { (): void })[];
-  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void })[]>>;
+  popUpMsg: (string | { (): void } | { (index: number): void })[];
+  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void } | { (index: number): void })[]>>;
   setIsShowingPointNotes: React.Dispatch<React.SetStateAction<boolean>>;
-  deleteNote: () => void;
-  deleteFriend: (index: number) => void;
   setDeleteMap: React.Dispatch<React.SetStateAction<string>>;
   setPointIndex: React.Dispatch<React.SetStateAction<number>>;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   setIsChangingMap: React.Dispatch<React.SetStateAction<boolean>>;
 };
-function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatus, toLogIn, setToLogIn, popUpMsg, setPopUpMsg, setIsShowingPointNotes, deleteNote, deleteFriend, setDeleteMap, setIsEditing, setPointIndex, setIsChangingMap }: PopUpType) {
+function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatus, toLogIn, setToLogIn, popUpMsg, setPopUpMsg, setIsShowingPointNotes, setDeleteMap, setIsEditing, setPointIndex, setIsChangingMap }: PopUpType) {
   return (
     <>
       <PopUpBg isShowingPopUp={isShowingPopUp} toLogIn={toLogIn}></PopUpBg>
@@ -106,12 +104,17 @@ function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatu
                 } else if (popUpMsg[4] === "deletepin") {
                   setIsShowingPointNotes(false);
                   setPointIndex(-1);
-                  deleteNote();
+                  let deletePinFunc = popUpMsg[5] as () => void;
+                  deletePinFunc();
                 } else if (popUpMsg[4] === "deletefriend") {
-                  deleteFriend(Number(popUpMsg[3]));
+                  let deleteFriendFunc = popUpMsg[5] as (index: number) => void;
+                  let i = parseInt(popUpMsg[3] as string);
+                  // i = i.parseInt()
+                  deleteFriendFunc(i);
+                  // deleteFriend(Number(popUpMsg[3]));
                 } else if (popUpMsg[4] === "deletemap") {
-                  let deleteFunc = popUpMsg[5] as () => void;
-                  deleteFunc();
+                  let deleteMapFunc = popUpMsg[5] as () => void;
+                  deleteMapFunc();
                 } else if (popUpMsg[4] === "goback") {
                   setIsEditing(false);
                 } else if (popUpMsg[4] === "closenote") {

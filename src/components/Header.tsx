@@ -313,7 +313,7 @@ type HeaderType = {
   setMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
   originalMapNames: mapNameType[];
   setOriginalMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
-  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void })[]>>;
+  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void } | { (index: number): void })[]>>;
   deleteMap: string;
   setDeleteMap: React.Dispatch<React.SetStateAction<string>>;
   setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
