@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { db } from "../utils/firebaseConfig";
 import { friendListType, haveFriendListType, notificationInfoType } from "../App";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc, deleteDoc, arrayRemove } from "firebase/firestore";
 import styled from "styled-components";
 import { AddFriendPicInput, AddFriendPicLabel, FriendProfileNoPic } from "./FriendsMap";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -149,7 +149,7 @@ type friendInsideBoxType = {
   countryId: string;
   index: number;
   countryName: string;
-  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void })[]>>;
+  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void } | { (index: number): void })[]>>;
   setIsShowingPopUp: React.Dispatch<React.SetStateAction<boolean>>;
   setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
 };
@@ -194,6 +194,43 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
       });
     }
   }
+  async function deleteFriend(index: number) {
+    let newFriendsList = friendsList.filter((friend) => {
+      return friend.key !== friendList[index].key;
+    });
+    setFriendsList(newFriendsList);
+    let newFriendList = friendList.filter((friend, i) => {
+      return i !== index;
+    });
+    setFriendList(newFriendList);
+    let newHaveFriendNum = friendList.length - 1;
+
+    let newHaveFriendList = haveFriendList.map((obj) => {
+      if (obj.countryId === countryId) {
+        obj.haveFriend = obj.haveFriend - 1;
+      }
+      return obj;
+    });
+
+    let newNewHaveFriendList = [];
+    newNewHaveFriendList = newHaveFriendList.filter((obj) => {
+      return obj.haveFriend !== 0;
+    });
+    setHaveFriendList(newNewHaveFriendList);
+    if (newFriendList.length) {
+      await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), { friends: newFriendList, haveFriend: newHaveFriendNum });
+    } else {
+      await deleteDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId));
+    }
+    await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), {
+      friends: arrayRemove(friendList[index]),
+      haveFriend: friendList.length - 1,
+    });
+    setNotificationInfo({ text: "This friend has been successfully removed 😈 ", status: true });
+    setTimeout(() => {
+      setNotificationInfo({ text: "", status: false });
+    }, 3000);
+  }
   return (
     <>
       <FriendInsideBox>
@@ -201,7 +238,7 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
         <DeleteFriendBtn
           onClick={(e) => {
             setIsShowingPopUp(true);
-            setPopUpMsg([`Are you sure you want to remove "${friendList[index].name}" from your friend list? 😭`, "Yes", "No", `${index}`, `deletefriend`]);
+            setPopUpMsg([`Are you sure you want to remove "${friendList[index].name}" from your friend list? 😭`, "Yes", "No", `${index}`, `deletefriend`, deleteFriend]);
           }}></DeleteFriendBtn>
         {isEditingFriend ? (
           <FriendUpdateBtn

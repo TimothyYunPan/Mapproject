@@ -2,7 +2,7 @@ import React, { useState, useRef, MouseEvent, forwardRef } from "react";
 import MapSVG from "./MapSVG";
 import { Map, LittleCloseBtn, ShowName } from "../WorldMap";
 import styled from "styled-components";
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc, arrayRemove } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import app from "../utils/firebaseConfig";
 import { db } from "../utils/firebaseConfig";
@@ -277,7 +277,7 @@ type customizedMapType = {
   setPointList: React.Dispatch<React.SetStateAction<pointListType[]>>;
   setIsShowingPopUp: React.Dispatch<React.SetStateAction<boolean>>;
   mapId: string;
-  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void })[]>>;
+  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void } | { (index: number): void })[]>>;
   setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
   setIsChangingMap: React.Dispatch<React.SetStateAction<boolean>>;
   pointIndex: number;
@@ -299,15 +299,15 @@ type customizedMapType = {
   notePhoto: string;
   singlePointList: pointListType[];
   imageList: string[];
-  setX: React.Dispatch<React.SetStateAction<number>>;
-  setY: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(({ setX, setY, allCountries, setIsHovering, hoverAddCountryName, isHovering, isColorHovering, setIsColorHovering, imageList, getPosition, singlePointList, notePhoto, pointPhoto, isEditing, previewImgUrl, setNotePhoto, setIsEditing, currentPos, setPointPhoto, mapState, isShowingPoint, uid, countryList, setIsShowingPointNotes, isShowingPointNotes, countryId, setCountryId, countryName, haveFriendList, pointList, setPointList, setIsShowingPopUp, mapId, setPopUpMsg, setNotificationInfo, setIsChangingMap, pointIndex, setPointIndex }, mouseRef) => {
+const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(({ allCountries, setIsHovering, hoverAddCountryName, isHovering, isColorHovering, setIsColorHovering, imageList, getPosition, singlePointList, notePhoto, pointPhoto, isEditing, previewImgUrl, setNotePhoto, setIsEditing, currentPos, setPointPhoto, mapState, isShowingPoint, uid, countryList, setIsShowingPointNotes, isShowingPointNotes, countryId, setCountryId, countryName, haveFriendList, pointList, setPointList, setIsShowingPopUp, mapId, setPopUpMsg, setNotificationInfo, setIsChangingMap, pointIndex, setPointIndex }, mouseRef) => {
   const [mousePos, setMousePos] = useState<mousePosType>({ x: null, y: null });
   const [largeTipTap, setLargeTipTap] = useState<boolean>(true);
   const [pointNotes, setPointNotes] = useState<string>("");
   const [searchTitleList, setSearchTitleList] = useState<(string | undefined)[]>([]);
+  const [X, setX] = useState<number>(0);
+  const [Y, setY] = useState<number>(0);
 
   const pointTitleInputRef = useRef<HTMLInputElement>(null);
   async function writeUserMap3Data(country: string, newObj: pointListType, url: string) {
@@ -412,6 +412,21 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(({ setX, setY
         });
       });
     }
+  }
+
+  async function deleteNote() {
+    let newPointList = pointList.filter((obj) => {
+      return obj.x !== X && obj.y !== Y;
+    });
+    setPointList(newPointList);
+    await updateDoc(doc(db, "user", uid, mapId, countryId), {
+      List: arrayRemove(singlePointList[0]),
+    });
+
+    setNotificationInfo({ text: "Your pin has been successfully deleted", status: true });
+    setTimeout(() => {
+      setNotificationInfo({ text: "", status: false });
+    }, 3000);
   }
   return (
     <Map
@@ -551,7 +566,7 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(({ setX, setY
                 <NoteDeleteBtn
                   onClick={(e: React.MouseEvent<HTMLInputElement>) => {
                     setIsShowingPopUp(true);
-                    setPopUpMsg(["Are you sure you want to delete the pin?", "Yes", "No", "", "deletepin"]);
+                    setPopUpMsg(["Are you sure you want to delete the pin?", "Yes", "No", "", "deletepin", deleteNote]);
                   }}></NoteDeleteBtn>
               </>
             )}
