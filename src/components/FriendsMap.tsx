@@ -1,6 +1,6 @@
 import React, { useState, MouseEvent, forwardRef } from "react";
 import MapSVG from "./MapSVG";
-import { doc, setDoc, updateDoc, deleteDoc, arrayRemove } from "firebase/firestore";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { Map, CloseBtn, LittleCloseBtn, Flag, ShowName } from "../WorldMap";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import styled from "styled-components";
@@ -247,18 +247,14 @@ const FriednsMap = forwardRef<SVGSVGElement, friendsMapType>(({ allCountries, se
     if (imageUpload == null) {
       const url = "";
       if (friendList.length === 0) {
-        // console.log("我是write");
         writeUserMap2Data(url);
       } else {
-        // console.log("我是update");
-
         updateUserMap2Data(url);
       }
     } else {
       const imageRef = ref(storage, `${uid}/friendsMap/${imageUpload.name}`);
       uploadBytes(imageRef, imageUpload).then((snapshot) => {
         getDownloadURL(snapshot.ref).then((url) => {
-          // writeUserMap2Data(url)
           if (friendList.length === 0) {
             writeUserMap2Data(url);
           } else {
@@ -444,7 +440,6 @@ const FriednsMap = forwardRef<SVGSVGElement, friendsMapType>(({ allCountries, se
                         setIsAddingFriend(false);
                         setAddFriendState({
                           name: "",
-                          // country: '',
                           city: "",
                           insta: "",
                           notes: "",

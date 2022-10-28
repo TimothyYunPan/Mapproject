@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef, MouseEvent } from "react";
 import styled from "styled-components";
 import countries from "./utils/countries";
-import { doc, setDoc, collection, getDoc, getDocs, updateDoc, deleteDoc, arrayRemove } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage";
+import { doc, setDoc, collection, getDoc, getDocs } from "firebase/firestore";
+import { getStorage, ref, getDownloadURL, listAll } from "firebase/storage";
 import app from "./utils/firebaseConfig";
 import { db } from "./utils/firebaseConfig";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -224,7 +224,6 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       setMapNames(docSnap.data().names);
-      // setOriginalMapNames(docSnap.data().originalMap);
     } else {
       // console.log("No such document!");
     }
@@ -313,7 +312,6 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
     const result = countries.filter(function (obj) {
       return obj.code == target.id;
     });
-    // setMousePlace(currentPos);
     if (result.length > 0) {
       setCountryName(result[0].name);
     }

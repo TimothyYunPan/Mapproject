@@ -1,4 +1,3 @@
-// import React from "react";
 import styled from "styled-components";
 import { friendListType } from "../App";
 import React, { forwardRef, MutableRefObject } from "react";
@@ -35,7 +34,6 @@ type SearchBar = {
   setCountryName: React.Dispatch<React.SetStateAction<string>>;
   setCurrentMapName: React.Dispatch<React.SetStateAction<string>>;
   setSearchNameResult: React.Dispatch<React.SetStateAction<friendListType[]>>;
-  // searchInputRef: HTMLInputElement;
   searchNameResult: friendListType[];
   setIsShowingSearchResult: React.Dispatch<React.SetStateAction<boolean | undefined>>;
   setSearchValue: React.Dispatch<React.SetStateAction<string>>;
@@ -67,10 +65,6 @@ const SearchBar = forwardRef<HTMLInputElement, SearchBar>(({ searchNameResult, s
       }}
       onKeyPress={(e) => {
         if (e.key === "Enter") {
-          // const target = e.target as HTMLInputElement;
-          // setSearchValue(target.value);
-          // searchName(target.value);
-          // searchCountries(target.value);
           checkResult();
           if (searchNameResult.length === 1) {
             setMapState(2);

@@ -94,8 +94,6 @@ const VisitedMap = forwardRef<SVGSVGElement, visitedMapType>(({ uid, allCountrie
         onMouseMove={(e) => {
           getPosition(e);
         }}>
-        {" "}
-        {/* @ts-ignore */}
         <MapSVG setIsColorHovering={setIsColorHovering} isColorHovering={isColorHovering} countryId={countryId} ref={ref} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
       </div>
       {isShowingPoint ? <Overlap setNotePhoto={setNotePhoto} setPointPhoto={setPointPhoto} mapState={mapState} pointList={pointList} isShowingPointNotes={isShowingPointNotes} pointIndex={pointIndex} previewImgUrl={previewImgUrl} setPointIndex={setPointIndex} setIsShowingPointNotes={setIsShowingPointNotes} setCountryId={setCountryId}></Overlap> : <></>}
