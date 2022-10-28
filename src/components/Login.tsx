@@ -1,11 +1,11 @@
 import { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../utils/firebaseConfig";
 import app from "../utils/firebaseConfig";
 import userProfileGrey from "./icon/userProfileGrey.png";
 import styled from "styled-components";
-import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { countryListType, friendListType, haveFriendListType, pointListType, mapNameType, notificationInfoType } from "../App";
 import { PointNotesTitleInput } from "./CustomizedMap";
 import closeGrey from "./icon/closeGrey.png";
@@ -14,7 +14,6 @@ import editGrey from "./icon/editGrey.png";
 import editGreyHover from "./icon/editGreyHover.png";
 
 const storage = getStorage(app);
-
 const auth = getAuth(app);
 
 const Wrapper = styled.div<{ toLogIn: boolean }>`
@@ -53,13 +52,6 @@ const ProfilePanel = styled.div<{ toLogIn: boolean }>`
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.8);
   overflow: hidden;
-`;
-
-const MemberInfoLine = styled.div`
-  width: 100%;
-  border-top: 0.5px solid #9d9d9d;
-  margin-top: 11px;
-  margin-bottom: 11px;
 `;
 
 const ProfileTitle = styled.div<{ toLogIn: boolean }>`
@@ -332,20 +324,13 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
   const previewProfileImgUrl = imageUpload ? URL.createObjectURL(imageUpload) : userImage ? userImage : "";
   const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string[]>([]);
-  const imageListRef = ref(storage, "images/");
   const [nameInputValue, setNameInputValue] = useState("");
   const [accountInputValue, setAccountInputValue] = useState("Welcome@gmail.com");
   const [passwordInputValue, setPasswordInputValue] = useState("enjoy your day!");
   const userNameInputRef = useRef<HTMLInputElement>(null);
 
   async function writeOriginMapToData(uid: string) {
-    // const originalMap = [
-    //   { name: "Visited Countries Map", id: "visitedCountries" },
-    //   { name: "Friends Located Map", id: "friendsLocatedCountries" },
-    //   { name: "My Map", id: "custimizedMapCountries" },
-    // ];
     await setDoc(doc(db, "user", uid), { originalMap: originalMapNames }, { merge: true });
-    // let newMap = { id: newId, name: "new Map" };
   }
 
   useEffect(() => {
@@ -477,16 +462,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
           {isLoggedIn === true && (
             <>
               <ProfileUserInfo>
-                {isEditingProfile ? (
-                  <ProfileTitleInput
-                    defaultValue={userName}
-                    // defaultValue={pointList[pointIndex].title}
-                    ref={userNameInputRef}
-                    // onChange={(e)=>{setUserName(e.target.value)}}
-                  />
-                ) : (
-                  <ProfileTitle toLogIn={toLogIn}>{userName}</ProfileTitle>
-                )}
+                {isEditingProfile ? <ProfileTitleInput defaultValue={userName} ref={userNameInputRef} /> : <ProfileTitle toLogIn={toLogIn}>{userName}</ProfileTitle>}
                 <AddProfilePicLabel htmlFor="addProfilePic">{previewProfileImgUrl && previewProfileImgUrl ? <ProfileUserInfoImg src={previewProfileImgUrl} toLogIn={toLogIn}></ProfileUserInfoImg> : userImage && userImage ? <ProfileUserInfoImg src={userImage} toLogIn={toLogIn}></ProfileUserInfoImg> : <ProfileNoPic isEditingProfile={isEditingProfile} toLogIn={toLogIn}></ProfileNoPic>}</AddProfilePicLabel>
 
                 {isEditingProfile ? (
@@ -508,7 +484,6 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
                 ) : (
                   <EditProfileBtn
                     onClick={() => {
-                      // setImageUpload(null);
                       setIsEditingProfile(true);
                     }}></EditProfileBtn>
                 )}
