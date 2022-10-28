@@ -343,133 +343,128 @@ const FriednsMap = forwardRef<SVGSVGElement, friendsMapType>(({ allCountries, se
   }
 
   return (
-    <>
-      <Map
-        onClick={(e: React.MouseEvent<HTMLInputElement>) => {
-          setIsChangingMap(false);
-          const target = e.target as HTMLInputElement;
-          if (target.tagName !== "path") {
-            return;
-          }
-          setCountryId(target.id);
-          setIsShowingFriends(true);
-          getCountryFriends(target.id);
-          setIsShowingPointNotes(false);
-          setPointIndex(-1);
-        }}>
-        <MapCover>
-          <div
-            onMouseMove={(e) => {
-              getPosition(e);
-            }}>
-            {" "}
-            <MapSVG setIsColorHovering={setIsColorHovering} isColorHovering={isColorHovering} countryId={countryId} ref={mouseRef} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
-          </div>
-        </MapCover>
-        {isShowingFriends && isShowingFriends === true ? (
-          <FriendBg>
-            <FriendOutsideBox>
-              <FriendMiddleBox>
-                <>
-                  {friendList.length < 1 ? (
-                    <AddFriendTip>add your first friend in this country</AddFriendTip>
-                  ) : (
-                    <>
-                      {friendList.map((friend: { imgUrl: string; name: string; city: string; insta: string; notes: string; key: string }, index) => {
-                        return <FriendBox setNotificationInfo={setNotificationInfo} setIsShowingPopUp={setIsShowingPopUp} setPopUpMsg={setPopUpMsg} key={friend.key} countryName={countryName} index={index} countryId={countryId} friend={friend} uid={uid} friendList={friendList} setFriendList={setFriendList} friendsList={friendsList} haveFriendList={haveFriendList} setHaveFriendList={setHaveFriendList} setFriendsList={setFriendsList}></FriendBox>;
-                      })}
-                    </>
-                  )}
-                </>
-              </FriendMiddleBox>
-              <LittleCloseBtn
-                onClick={() => {
-                  setIsShowingFriends(false);
-                  setIsAddingFriend(false);
-                }}></LittleCloseBtn>
-              <AddFriendBtn
-                onClick={() => {
-                  setIsAddingFriend(true);
-                  setImageUpload(null);
-                }}>
-                +
-              </AddFriendBtn>
-              <Flag src={`https://countryflagsapi.com/png/${countryId}`}></Flag>
-              <FriendsCountry>{countryName}</FriendsCountry>
-              {isAddingFriend && isAddingFriend ? (
-                <AddFriendBox>
-                  <AddFriendPicLabel htmlFor="addFriendPic">{previewFriendImgUrl ? <AddFriendProfilePic src={previewFriendImgUrl}></AddFriendProfilePic> : <FriendProfileNoPic></FriendProfileNoPic>}</AddFriendPicLabel>
-
-                  <AddFriendPicInput
-                    id="addFriendPic"
-                    accept="image/png, image/gif, image/jpeg, image/svg"
-                    type="file"
-                    onChange={(e) => {
-                      setImageUpload(e.target.files![0]);
-                    }}></AddFriendPicInput>
-                  {addFriendFormGroups.map(({ label, key }) => (
-                    <AddFriendSet key={key}>
-                      <AddFriendFormLabel>{label}</AddFriendFormLabel>
-                      {key === "notes" ? (
-                        <AddFriendFormTextarea
-                          maxLength={125}
-                          onChange={(e) =>
-                            setAddFriendState({
-                              ...addFriendState,
-                              [key]: e.target.value,
-                            })
-                          }
-                        />
-                      ) : (
-                        <AddFriendFormInput
-                          maxLength={21}
-                          onChange={(e) =>
-                            setAddFriendState({
-                              ...addFriendState,
-                              [key]: e.target.value,
-                            })
-                          }
-                        />
-                      )}
-                    </AddFriendSet>
-                  ))}
-                  <AddFriendSentBtn
-                    onClick={() => {
-                      if (addFriendState.name.trim() !== "") {
-                        sentNewFriendInfo();
-                        setIsAddingFriend(false);
-                        setAddFriendState({
-                          name: "",
-                          city: "",
-                          insta: "",
-                          notes: "",
-                        });
-                      } else {
-                        setNotificationInfo({ text: `Friend's name could not be blank `, status: true });
-                        setTimeout(() => {
-                          setNotificationInfo({ text: "", status: false });
-                        }, 3000);
-                      }
-                    }}>
-                    Create
-                  </AddFriendSentBtn>
-                  <CloseBtn
-                    onClick={() => {
+    <Map
+      onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+        setIsChangingMap(false);
+        const target = e.target as HTMLInputElement;
+        if (target.tagName !== "path") {
+          return;
+        }
+        setCountryId(target.id);
+        setIsShowingFriends(true);
+        getCountryFriends(target.id);
+        setIsShowingPointNotes(false);
+        setPointIndex(-1);
+      }}>
+      <MapCover>
+        <div
+          onMouseMove={(e) => {
+            getPosition(e);
+          }}>
+          <MapSVG setIsColorHovering={setIsColorHovering} isColorHovering={isColorHovering} countryId={countryId} ref={mouseRef} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
+        </div>
+      </MapCover>
+      {isShowingFriends && (
+        <FriendBg>
+          <FriendOutsideBox>
+            <FriendMiddleBox>
+              <>
+                {friendList.length < 1 ? (
+                  <AddFriendTip>add your first friend in this country</AddFriendTip>
+                ) : (
+                  <>
+                    {friendList.map((friend: { imgUrl: string; name: string; city: string; insta: string; notes: string; key: string }, index) => {
+                      return <FriendBox setNotificationInfo={setNotificationInfo} setIsShowingPopUp={setIsShowingPopUp} setPopUpMsg={setPopUpMsg} key={friend.key} countryName={countryName} index={index} countryId={countryId} friend={friend} uid={uid} friendList={friendList} setFriendList={setFriendList} friendsList={friendsList} haveFriendList={haveFriendList} setHaveFriendList={setHaveFriendList} setFriendsList={setFriendsList} />;
+                    })}
+                  </>
+                )}
+              </>
+            </FriendMiddleBox>
+            <LittleCloseBtn
+              onClick={() => {
+                setIsShowingFriends(false);
+                setIsAddingFriend(false);
+              }}
+            />
+            <AddFriendBtn
+              onClick={() => {
+                setIsAddingFriend(true);
+                setImageUpload(null);
+              }}>
+              +
+            </AddFriendBtn>
+            <Flag src={`https://countryflagsapi.com/png/${countryId}`} />
+            <FriendsCountry>{countryName}</FriendsCountry>
+            {isAddingFriend && (
+              <AddFriendBox>
+                <AddFriendPicLabel htmlFor="addFriendPic">{previewFriendImgUrl ? <AddFriendProfilePic src={previewFriendImgUrl} /> : <FriendProfileNoPic />}</AddFriendPicLabel>
+                <AddFriendPicInput
+                  id="addFriendPic"
+                  accept="image/png, image/gif, image/jpeg, image/svg"
+                  type="file"
+                  onChange={(e) => {
+                    setImageUpload(e.target.files![0]);
+                  }}
+                />
+                {addFriendFormGroups.map(({ label, key }) => (
+                  <AddFriendSet key={key}>
+                    <AddFriendFormLabel>{label}</AddFriendFormLabel>
+                    {key === "notes" ? (
+                      <AddFriendFormTextarea
+                        maxLength={125}
+                        onChange={(e) =>
+                          setAddFriendState({
+                            ...addFriendState,
+                            [key]: e.target.value,
+                          })
+                        }
+                      />
+                    ) : (
+                      <AddFriendFormInput
+                        maxLength={21}
+                        onChange={(e) =>
+                          setAddFriendState({
+                            ...addFriendState,
+                            [key]: e.target.value,
+                          })
+                        }
+                      />
+                    )}
+                  </AddFriendSet>
+                ))}
+                <AddFriendSentBtn
+                  onClick={() => {
+                    if (addFriendState.name.trim() !== "") {
+                      sentNewFriendInfo();
                       setIsAddingFriend(false);
-                    }}></CloseBtn>
-                </AddFriendBox>
-              ) : (
-                <></>
-              )}
-            </FriendOutsideBox>
-          </FriendBg>
-        ) : (
-          <></>
-        )}
-        {isHovering ? <ShowName currentPos={currentPos}>{countryName}</ShowName> : <></>}
-        {isShowingPoint ? <Overlap setNotePhoto={setNotePhoto} setPointPhoto={setPointPhoto} mapState={mapState} pointList={pointList} isShowingPointNotes={isShowingPointNotes} pointIndex={pointIndex} previewImgUrl={previewImgUrl} setPointIndex={setPointIndex} setIsShowingPointNotes={setIsShowingPointNotes} setCountryId={setCountryId}></Overlap> : <></>}
-      </Map>
-    </>
+                      setAddFriendState({
+                        name: "",
+                        city: "",
+                        insta: "",
+                        notes: "",
+                      });
+                    } else {
+                      setNotificationInfo({ text: `Friend's name could not be blank `, status: true });
+                      setTimeout(() => {
+                        setNotificationInfo({ text: "", status: false });
+                      }, 3000);
+                    }
+                  }}>
+                  Create
+                </AddFriendSentBtn>
+                <CloseBtn
+                  onClick={() => {
+                    setIsAddingFriend(false);
+                  }}
+                />
+              </AddFriendBox>
+            )}
+          </FriendOutsideBox>
+        </FriendBg>
+      )}
+      {isHovering && <ShowName currentPos={currentPos}>{countryName}</ShowName>}
+      {isShowingPoint && <Overlap setNotePhoto={setNotePhoto} setPointPhoto={setPointPhoto} mapState={mapState} pointList={pointList} isShowingPointNotes={isShowingPointNotes} pointIndex={pointIndex} previewImgUrl={previewImgUrl} setPointIndex={setPointIndex} setIsShowingPointNotes={setIsShowingPointNotes} setCountryId={setCountryId} />}
+    </Map>
   );
 });
 

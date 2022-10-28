@@ -126,7 +126,7 @@ function CountryCheckList({ setCountryList, countryList, writeUserMap1Data, uid 
   }
   return (
     <CountrySelection>
-      {isShowingCountry ? (
+      {isShowingCountry && (
         <CountrySelectListSet>
           {countryCollection.map((country: countryCollectionArrType) => {
             return (
@@ -141,7 +141,8 @@ function CountryCheckList({ setCountryList, countryList, writeUserMap1Data, uid 
                     id={country.countryName}
                     onChange={(e) => {
                       editCheckedToMap(e.target);
-                    }}></CountrySelectCheck>
+                    }}
+                  />
                   <CountrySelectName htmlFor={country.countryName} vertical-align="middle">
                     {country.countryName}
                   </CountrySelectName>
@@ -150,8 +151,6 @@ function CountryCheckList({ setCountryList, countryList, writeUserMap1Data, uid 
             );
           })}
         </CountrySelectListSet>
-      ) : (
-        <></>
       )}
       <CountryRegions>
         {regions.map((region) => {

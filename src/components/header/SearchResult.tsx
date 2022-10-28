@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { friendListType } from "../App";
+import { friendListType } from "../../App";
 
 const SearchResultBox = styled.div`
   position: absolute;

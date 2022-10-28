@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import PopUp from "./PopUp";
+import PopUp from "../PopUp";
 
 import wallPaper1 from "./wallpaper1.png";
 import wallPaper2 from "./wallpaper2.png";
@@ -111,7 +111,8 @@ function HomePage({ setIsEditing, setMapState, setIsShowingPoint, toLogIn, setTo
               setMapState(1);
               setIsShowingPoint(false);
               setCurrentMapName("Visited Countries Map");
-            }}></WallPaper>
+            }}
+          />
           <SelectMapText
             onClick={() => {
               setMapState(1);
@@ -133,7 +134,8 @@ function HomePage({ setIsEditing, setMapState, setIsShowingPoint, toLogIn, setTo
                 setIsShowingPoint(false);
                 setCurrentMapName("Friends Located Map");
               }
-            }}></WallPaper2>
+            }}
+          />
           <SelectMapText
             onClick={() => {
               if (!uid) {
@@ -161,7 +163,8 @@ function HomePage({ setIsEditing, setMapState, setIsShowingPoint, toLogIn, setTo
                 setIsShowingPoint(true);
                 setCurrentMapName("My Bucket List");
               }
-            }}></WallPaper3>
+            }}
+          />
           <SelectMapText
             onClick={() => {
               if (!uid) {
@@ -177,7 +180,7 @@ function HomePage({ setIsEditing, setMapState, setIsShowingPoint, toLogIn, setTo
           </SelectMapText>
         </WallPaperSet>
       </HomePageContainer>
-      <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
+      <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp} />
     </HomePageCom>
   );
 }

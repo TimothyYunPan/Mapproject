@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { MapNameInput, ChangeMapBtnSet, OkIcon, DeleteMapBtn, EditMapBtn } from "./Header";
-import { pointListType, mapNameType, notificationInfoType } from "../App";
+import { pointListType, mapNameType, notificationInfoType } from "../../App";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "../utils/firebaseConfig";
+import { db } from "../../utils/firebaseConfig";
 
 type ChangeMapBtnType = {
   setIsShowingPointNotes: React.Dispatch<React.SetStateAction<boolean>>;
@@ -43,9 +43,7 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
     let newMapList = mapNames.filter((obj) => {
       return obj.id !== currentMapId;
     });
-
     setMapNames(newMapList);
-
     await setDoc(doc(db, "user", uid), { names: newMapList }, { merge: true });
     setDeleteMap("no");
     setNotificationInfo({ text: `Map has been successfully deleted`, status: true });
@@ -81,8 +79,9 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
           }
           setIsShowingPoint(true);
           setPointIndex(-1);
-        }}></MapNameInput>
-      {isEditing === true ? (
+        }}
+      />
+      {isEditing ? (
         <>
           <OkIcon
             onClick={() => {
@@ -104,21 +103,24 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
                   setNotificationInfo({ text: "", status: false });
                 }, 3000);
               }
-            }}></OkIcon>
+            }}
+          />
           <DeleteMapBtn
             onClick={() => {
               currentMapId = mapName.id;
               setIsShowingPopUp(true);
               setPopUpMsg([`Are you sure you want to delete the map "${mapName.name}"?`, "Yes", "No", "", "deletemap", deleteNewMap]);
               setIsEditing(false);
-            }}></DeleteMapBtn>
+            }}
+          />
         </>
       ) : (
         <EditMapBtn
           onClick={(e) => {
             setIsReadOnly(false);
             setIsEditing(true);
-          }}></EditMapBtn>
+          }}
+        />
       )}
     </ChangeMapBtnSet>
   );
