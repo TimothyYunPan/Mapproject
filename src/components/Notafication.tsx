@@ -31,11 +31,7 @@ type NotificationType = {
 };
 
 function Notification({ notificationInfo }: NotificationType) {
-  return (
-    <>
-      <NotificationBox notificationInfo={notificationInfo}>{notificationInfo.text}</NotificationBox>
-    </>
-  );
+  return <NotificationBox notificationInfo={notificationInfo}>{notificationInfo.text}</NotificationBox>;
 }
 
 export default Notification;

@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBEcaedfGj9JVZGz4J_g5QQgk2NKh_UnEo",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "maphub-b1531.firebaseapp.com",
   projectId: "maphub-b1531",
   storageBucket: "maphub-b1531.appspot.com",

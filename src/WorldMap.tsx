@@ -333,9 +333,36 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
           <HomePage setIsEditing={setIsEditing} setMapState={setMapState} setIsShowingPoint={setIsShowingPoint} toLogIn={toLogIn} setToLogIn={setToLogIn} uid={uid} setIsLoggedIn={setIsLoggedIn} setIsShowingPointNotes={setIsShowingPointNotes} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp} setLoginStatus={setLoginStatus} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} setDeleteMap={setDeleteMap} setCurrentMapName={setCurrentMapName} setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex}></HomePage>
         ) : mapState === 1 ? (
           <>
-            {/* prettier-ignore */}
             <VisitedMap
-              uid={uid} ref={mouseRef} allCountries={allCountries} setIsHovering={setIsHovering} hoverAddCountryName={hoverAddCountryName} previewImgUrl={previewImgUrl} setPointPhoto={setPointPhoto} isColorHovering={isColorHovering} currentPos={currentPos} setNotePhoto={setNotePhoto} getPosition={getPosition} isHovering={isHovering} setIsColorHovering={setIsColorHovering} mapState={mapState} isShowingPoint={isShowingPoint} countryList={countryList} setCountryList={setCountryList} setIsShowingPointNotes={setIsShowingPointNotes} isShowingPointNotes={isShowingPointNotes} countryId={countryId} setCountryId={setCountryId} countryName={countryName} haveFriendList={haveFriendList} pointList={pointList} setIsShowingPopUp={setIsShowingPopUp} setIsChangingMap={setIsChangingMap} pointIndex={pointIndex} setPointIndex={setPointIndex} writeUserMap1Data={writeUserMap1Data}></VisitedMap>
+              uid={uid}
+              ref={mouseRef}
+              allCountries={allCountries}
+              setIsHovering={setIsHovering}
+              hoverAddCountryName={hoverAddCountryName}
+              previewImgUrl={previewImgUrl}
+              setPointPhoto={setPointPhoto}
+              currentPos={currentPos}
+              setNotePhoto={setNotePhoto}
+              getPosition={getPosition}
+              isHovering={isHovering}
+              isColorHovering={isColorHovering}
+              setIsColorHovering={setIsColorHovering}
+              mapState={mapState}
+              isShowingPoint={isShowingPoint}
+              countryList={countryList}
+              setCountryList={setCountryList}
+              setIsShowingPointNotes={setIsShowingPointNotes}
+              isShowingPointNotes={isShowingPointNotes}
+              countryId={countryId}
+              setCountryId={setCountryId}
+              countryName={countryName}
+              haveFriendList={haveFriendList}
+              pointList={pointList}
+              setIsShowingPopUp={setIsShowingPopUp}
+              setIsChangingMap={setIsChangingMap}
+              pointIndex={pointIndex}
+              setPointIndex={setPointIndex}
+              writeUserMap1Data={writeUserMap1Data}></VisitedMap>
             <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
             <NumberCount>
               You have visited {countryList.length} {countryList && countryList.length <= 1 ? "country" : "countries"} / area
@@ -344,8 +371,44 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
           </>
         ) : mapState === 2 ? (
           <>
-            {/* prettier-ignore */}
-            <FriendsMap ref={mouseRef} allCountries={allCountries} setIsHovering={setIsHovering} previewImgUrl={previewImgUrl} hoverAddCountryName={hoverAddCountryName} setPointPhoto={setPointPhoto} isColorHovering={isColorHovering} setNotePhoto={setNotePhoto} getPosition={getPosition} currentPos={currentPos} isHovering={isHovering} setIsColorHovering={setIsColorHovering} mapState={mapState} isShowingPoint={isShowingPoint} uid={uid} countryList={countryList} setIsShowingPointNotes={setIsShowingPointNotes} isShowingPointNotes={isShowingPointNotes} getCountryFriends={getCountryFriends} friendList={friendList} setFriendList={setFriendList} friendsList={friendsList} setFriendsList={setFriendsList} isShowingFriends={isShowingFriends} setIsShowingFriends={setIsShowingFriends} countryId={countryId} setCountryId={setCountryId} countryName={countryName} haveFriendList={haveFriendList} setHaveFriendList={setHaveFriendList} pointList={pointList} setIsShowingPopUp={setIsShowingPopUp} setPopUpMsg={setPopUpMsg} setNotificationInfo={setNotificationInfo} setIsChangingMap={setIsChangingMap} pointIndex={pointIndex} setPointIndex={setPointIndex}></FriendsMap>
+            <FriendsMap
+              ref={mouseRef}
+              allCountries={allCountries}
+              setIsHovering={setIsHovering}
+              previewImgUrl={previewImgUrl}
+              hoverAddCountryName={hoverAddCountryName}
+              setPointPhoto={setPointPhoto}
+              isColorHovering={isColorHovering}
+              setNotePhoto={setNotePhoto}
+              getPosition={getPosition}
+              currentPos={currentPos}
+              isHovering={isHovering}
+              setIsColorHovering={setIsColorHovering}
+              mapState={mapState}
+              isShowingPoint={isShowingPoint}
+              uid={uid}
+              countryList={countryList}
+              setIsShowingPointNotes={setIsShowingPointNotes}
+              isShowingPointNotes={isShowingPointNotes}
+              getCountryFriends={getCountryFriends}
+              friendList={friendList}
+              setFriendList={setFriendList}
+              friendsList={friendsList}
+              setFriendsList={setFriendsList}
+              isShowingFriends={isShowingFriends}
+              setIsShowingFriends={setIsShowingFriends}
+              countryId={countryId}
+              setCountryId={setCountryId}
+              countryName={countryName}
+              haveFriendList={haveFriendList}
+              setHaveFriendList={setHaveFriendList}
+              pointList={pointList}
+              setIsShowingPopUp={setIsShowingPopUp}
+              setPopUpMsg={setPopUpMsg}
+              setNotificationInfo={setNotificationInfo}
+              setIsChangingMap={setIsChangingMap}
+              pointIndex={pointIndex}
+              setPointIndex={setPointIndex}></FriendsMap>
             <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
             <NumberCount>
               You already have {friendsList.length} {friendsList && friendsList.length <= 1 ? `friend` : `friends`} from {haveFriendList.length} {haveFriendList && haveFriendList.length <= 1 ? `country` : `countries`}
@@ -353,9 +416,44 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
           </>
         ) : mapState === 3 ? (
           <>
-            {/* prettier-ignore */}
-            <CustomizedMap 
-              ref={mouseRef} allCountries={allCountries} setIsHovering={setIsHovering} hoverAddCountryName={hoverAddCountryName} isHovering={isHovering} isColorHovering={isColorHovering} setIsColorHovering={setIsColorHovering} imageList={imageList} getPosition={getPosition} singlePointList={singlePointList} notePhoto={notePhoto} pointPhoto={pointPhoto} isEditing={isEditing} previewImgUrl={previewImgUrl} setNotePhoto={setNotePhoto} setIsEditing={setIsEditing} currentPos={currentPos} setPointPhoto={setPointPhoto} mapState={mapState} isShowingPoint={isShowingPoint} uid={uid} countryList={countryList} setIsShowingPointNotes={setIsShowingPointNotes} isShowingPointNotes={isShowingPointNotes} countryId={countryId} setCountryId={setCountryId} countryName={countryName} haveFriendList={haveFriendList} pointList={pointList} setPointList={setPointList} setIsShowingPopUp={setIsShowingPopUp} mapId={mapId} setPopUpMsg={setPopUpMsg} setNotificationInfo={setNotificationInfo} setIsChangingMap={setIsChangingMap} pointIndex={pointIndex} setPointIndex={setPointIndex}></CustomizedMap>
+            <CustomizedMap
+              ref={mouseRef}
+              allCountries={allCountries}
+              setIsHovering={setIsHovering}
+              hoverAddCountryName={hoverAddCountryName}
+              isHovering={isHovering}
+              isColorHovering={isColorHovering}
+              setIsColorHovering={setIsColorHovering}
+              imageList={imageList}
+              getPosition={getPosition}
+              singlePointList={singlePointList}
+              notePhoto={notePhoto}
+              pointPhoto={pointPhoto}
+              isEditing={isEditing}
+              previewImgUrl={previewImgUrl}
+              setNotePhoto={setNotePhoto}
+              setIsEditing={setIsEditing}
+              currentPos={currentPos}
+              setPointPhoto={setPointPhoto}
+              mapState={mapState}
+              isShowingPoint={isShowingPoint}
+              uid={uid}
+              countryList={countryList}
+              setIsShowingPointNotes={setIsShowingPointNotes}
+              isShowingPointNotes={isShowingPointNotes}
+              countryId={countryId}
+              setCountryId={setCountryId}
+              countryName={countryName}
+              haveFriendList={haveFriendList}
+              pointList={pointList}
+              setPointList={setPointList}
+              setIsShowingPopUp={setIsShowingPopUp}
+              mapId={mapId}
+              setPopUpMsg={setPopUpMsg}
+              setNotificationInfo={setNotificationInfo}
+              setIsChangingMap={setIsChangingMap}
+              pointIndex={pointIndex}
+              setPointIndex={setPointIndex}></CustomizedMap>
             <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp}></PopUp>
           </>
         ) : (
