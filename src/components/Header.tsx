@@ -430,7 +430,8 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
           onClick={() => {
             setIsShowingFriends(false);
             setMapState(-1);
-          }}></Logo>
+          }}
+        />
         <Logo1
           mapState={mapState}
           onClick={() => {
@@ -703,7 +704,7 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
 
         {}
       </HeaderRightSet>
-      <Login setUserImg={setUserImg} setNotificationInfo={setNotificationInfo} friendsList={friendsList} setFriendsList={setFriendsList} setMapState={setMapState} uid={uid} toLogIn={toLogIn} setToLogIn={setToLogIn} countryList={countryList} setCountryList={setCountryList} setUid={setUid} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setHaveFriendList={setHaveFriendList} setFriendList={setFriendList} setPointList={setPointList} loginStatus={loginStatus} setLoginStatus={setLoginStatus} userName={userName} setUserName={setUserName} userImage={userImage} originalMapNames={originalMapNames} setMapNames={setMapNames}></Login>
+      <Login setUserImg={setUserImg} setNotificationInfo={setNotificationInfo} setFriendsList={setFriendsList} setMapState={setMapState} uid={uid} toLogIn={toLogIn} setToLogIn={setToLogIn} countryList={countryList} setCountryList={setCountryList} setUid={setUid} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setHaveFriendList={setHaveFriendList} setFriendList={setFriendList} setPointList={setPointList} loginStatus={loginStatus} setLoginStatus={setLoginStatus} userName={userName} setUserName={setUserName} userImage={userImage} originalMapNames={originalMapNames} setMapNames={setMapNames}></Login>
     </Wrapper>
   );
 }

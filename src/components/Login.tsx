@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
-import { doc, setDoc, collection, arrayUnion } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { db } from "../utils/firebaseConfig";
 import app from "../utils/firebaseConfig";
 import userProfileGrey from "./icon/userProfileGrey.png";
@@ -313,7 +313,6 @@ type LoginType = {
   setToLogIn: React.Dispatch<React.SetStateAction<boolean>>;
   uid: string;
   setMapState: React.Dispatch<React.SetStateAction<number>>;
-  friendsList: friendListType[];
   setFriendsList: React.Dispatch<React.SetStateAction<friendListType[]>>;
   setHaveFriendList: React.Dispatch<React.SetStateAction<haveFriendListType[]>>;
   setFriendList: React.Dispatch<React.SetStateAction<friendListType[]>>;
@@ -328,7 +327,7 @@ type LoginType = {
   setMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
   setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
 };
-function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList, toLogIn, setToLogIn, uid, setMapState, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList, loginStatus, setLoginStatus, userName, setUserName, userImage, originalMapNames, setMapNames, setNotificationInfo, setUserImg }: LoginType) {
+function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList, toLogIn, setToLogIn, uid, setMapState, setFriendsList, setHaveFriendList, setFriendList, setPointList, loginStatus, setLoginStatus, userName, setUserName, userImage, originalMapNames, setMapNames, setNotificationInfo, setUserImg }: LoginType) {
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const previewProfileImgUrl = imageUpload ? URL.createObjectURL(imageUpload) : userImage ? userImage : "";
   const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false);

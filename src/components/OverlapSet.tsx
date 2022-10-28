@@ -129,7 +129,7 @@ type OverlapSetType = {
 function OverlapSet({ mapState, setPopUpMsg, uid, setIsShowingPoint, isShowingOverlapBtn, setIsShowingOverlapBtn, setIsChangingMap, overlapName, mapNames, setMapId, setOverlapName, setIsShowingPointNotes, isShowingPoint, setIsShowingPopUp, setIsShowingSearchBarMB, setIsShowingSearchResult, setPointIndex, pointList }: OverlapSetType) {
   return (
     <OverlapSetBox>
-      {mapState && mapState <= 2 && mapState !== -1 ? (
+      {mapState && mapState <= 2 && mapState !== -1 && (
         <>
           <ShowOverLapBtn
             isShowingPoint={isShowingPoint}
@@ -138,11 +138,7 @@ function OverlapSet({ mapState, setPopUpMsg, uid, setIsShowingPoint, isShowingOv
                 setIsShowingPopUp(true);
                 setPopUpMsg(["Sign up to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
               } else {
-                if (isShowingPoint) {
-                  setIsShowingPoint(false);
-                } else {
-                  setIsShowingPoint(true);
-                }
+                setIsShowingPoint(!isShowingPoint);
                 setIsShowingSearchBarMB(false);
                 setIsShowingSearchResult(false);
               }
@@ -227,8 +223,6 @@ function OverlapSet({ mapState, setPopUpMsg, uid, setIsShowingPoint, isShowingOv
               }
             }}></CheckOverLapBtn>
         </>
-      ) : (
-        <></>
       )}
     </OverlapSetBox>
   );
