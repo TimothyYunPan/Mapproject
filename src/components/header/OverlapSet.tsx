@@ -55,11 +55,11 @@ const OverlapBtn = styled.div<{ isShowingPoint: boolean; mapState: number }>`
 
 const OverlapList = styled.div<{ isShowingOverlapBtn: boolean }>`
   position: absolute;
-  height: ${(props) => (props.isShowingOverlapBtn === true ? "308" : "0")}px;
+  height: ${(props) => (props.isShowingOverlapBtn ? "308" : "0")}px;
   display: flex;
   flex-direction: column;
   top: 60px;
-  overflow: ${(props) => (props.isShowingOverlapBtn === true ? "scroll" : "hidden")};
+  overflow: ${(props) => (props.isShowingOverlapBtn ? "scroll" : "hidden")};
   transition: 0.3s;
   ::-webkit-scrollbar {
     display: none;

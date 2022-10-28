@@ -50,28 +50,26 @@ const MapSVG = forwardRef<SVGSVGElement, MapSVGType>(({ countryList, mapState, h
   const [isColorHovering2, setIsColorHovering2] = useState<boolean>(false);
   useEffect(() => {
     if (mapState === 1) {
-      let a: string[] = [];
+      let visitedCountries: string[] = [];
       allCountries.forEach((country) => {
         let result = countryList.filter((obj) => {
           return obj.countryId === country;
         });
         if (result.length !== 0) {
-          a.push(result[0].countryId);
+          visitedCountries.push(result[0].countryId);
         }
       });
-      // let b = [];
 
-      a.forEach((countryId) => {
+      visitedCountries.forEach((countryId) => {
         if (!document.getElementById(countryId)) return;
         document.getElementById(countryId)!.style.fill = "rgb(236,174,72)";
       });
 
-      //處理visited false
-      let b = allCountries.filter((obj) => {
-        return a.indexOf(obj) === -1;
+      let yetVisited = allCountries.filter((obj) => {
+        return visitedCountries.indexOf(obj) === -1;
       });
 
-      b.forEach((countryId) => {
+      yetVisited.forEach((countryId) => {
         if (!document.getElementById(countryId)) return;
         document.getElementById(countryId)!.style.fill = "rgb(148, 149, 154)";
       });
@@ -81,10 +79,9 @@ const MapSVG = forwardRef<SVGSVGElement, MapSVGType>(({ countryList, mapState, h
           return obj.countryId !== country;
         });
         if (result.length !== 0) {
-          b.push(result[0].countryId);
+          yetVisited.push(result[0].countryId);
         }
       });
-      //處理visited false end
     } else if (mapState === 2) {
       if (countryId) {
         if (!haveFriendList.find((e) => e.countryId === countryId)) {

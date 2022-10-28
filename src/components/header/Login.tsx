@@ -55,7 +55,7 @@ const ProfilePanel = styled.div<{ toLogIn: boolean }>`
 `;
 
 const ProfileTitle = styled.div<{ toLogIn: boolean }>`
-  opacity: ${(props) => (props.toLogIn === true ? 1 : 0)};
+  opacity: ${(props) => (props.toLogIn ? 1 : 0)};
   color: #222;
   margin-top: 8px;
   margin-bottom: 40px;
@@ -103,7 +103,7 @@ const ProfileNoPic = styled.div<{ toLogIn: boolean; isEditingProfile: boolean }>
 `;
 
 const ProfileLogInSet = styled.div<{ toLogIn: boolean }>`
-  opacity: ${(props) => (props.toLogIn === true ? 1 : 0)};
+  opacity: ${(props) => (props.toLogIn ? 1 : 0)};
   width: 100%;
 `;
 

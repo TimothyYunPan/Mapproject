@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import PopUp from "../PopUp";
-
 import wallPaper1 from "./wallpaper1.png";
 import wallPaper2 from "./wallpaper2.png";
 import wallPaper3 from "./wallpaper3.png";
+
 const HomePageCom = styled.div`
   position: relative;
   display: flex;
