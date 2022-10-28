@@ -156,7 +156,55 @@ type WorldMapType = {
   setPointIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
-function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, toLogIn, setToLogIn, uid, setUid, countryList, setCountryList, isLoggedIn, setIsLoggedIn, setIsShowingPointNotes, isShowingPointNotes, getCountryFriends, friendList, setFriendList, friendsList, setFriendsList, isShowingFriends, setIsShowingFriends, countryId, setCountryId, countryName, setCountryName, haveFriendList, setHaveFriendList, pointList, setPointList, isShowingPopUp, setIsShowingPopUp, loginStatus, setLoginStatus, setUserName, setUserImg, mapId, setMapNames, mapNames, setOriginalMapNames, popUpMsg, setPopUpMsg, setDeleteMap, setNotificationInfo, setCurrentMapName, setIsChangingMap, pointIndex, setPointIndex }: WorldMapType) {
+function WorldMap({
+  mapState,
+  setMapState,
+  isShowingPoint,
+  setIsShowingPoint,
+  toLogIn,
+  setToLogIn,
+  uid,
+  setUid,
+  countryList,
+  setCountryList,
+  isLoggedIn,
+  setIsLoggedIn,
+  setIsShowingPointNotes,
+  isShowingPointNotes,
+  getCountryFriends,
+  friendList,
+  setFriendList,
+  friendsList,
+  setFriendsList,
+  isShowingFriends,
+  setIsShowingFriends,
+  countryId,
+  setCountryId,
+  countryName,
+  setCountryName,
+  haveFriendList,
+  setHaveFriendList,
+  pointList,
+  setPointList,
+  isShowingPopUp,
+  setIsShowingPopUp,
+  loginStatus,
+  setLoginStatus,
+  setUserName,
+  setUserImg,
+  mapId,
+  setMapNames,
+  mapNames,
+  setOriginalMapNames,
+  popUpMsg,
+  setPopUpMsg,
+  setDeleteMap,
+  setNotificationInfo,
+  setCurrentMapName,
+  setIsChangingMap,
+  pointIndex,
+  setPointIndex,
+}: WorldMapType) {
   const [isHovering, setIsHovering] = useState<boolean>(false);
   const [imageList, setImageList] = useState<string[]>([]);
   const imageListRef = ref(storage, "images/");
@@ -165,7 +213,10 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   const previewImgUrl = pointPhoto ? URL.createObjectURL(pointPhoto) : notePhoto;
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const mouseRef = useRef<SVGSVGElement>(null);
-  const [currentPos, setCurrentPos] = useState<mousePosType>({ x: null, y: null });
+  const [currentPos, setCurrentPos] = useState<mousePosType>({
+    x: null,
+    y: null,
+  });
   const [isColorHovering, setIsColorHovering] = useState<boolean>(true);
   const [allCountries, setAllCountries] = useState<string[]>([]);
 
@@ -195,7 +246,6 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
         getUserData(user.uid);
         setIsLoggedIn(true);
         getAllCountries();
-        // ...
       } else {
         getAllCountries();
       }
@@ -273,7 +323,6 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
         let newFriendObj = {
           countryId: country.id,
           name: friend.name,
-          // country: "",
           city: friend.city,
           country: friend.country,
           insta: friend.insta,
@@ -327,7 +376,25 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
   return (
     <Wrapper mapState={mapState}>
       {mapState && mapState === -1 ? (
-        <HomePage setIsEditing={setIsEditing} setMapState={setMapState} setIsShowingPoint={setIsShowingPoint} toLogIn={toLogIn} setToLogIn={setToLogIn} uid={uid} setIsLoggedIn={setIsLoggedIn} setIsShowingPointNotes={setIsShowingPointNotes} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp} setLoginStatus={setLoginStatus} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} setDeleteMap={setDeleteMap} setCurrentMapName={setCurrentMapName} setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} />
+        <HomePage
+          setIsEditing={setIsEditing}
+          setMapState={setMapState}
+          setIsShowingPoint={setIsShowingPoint}
+          toLogIn={toLogIn}
+          setToLogIn={setToLogIn}
+          uid={uid}
+          setIsLoggedIn={setIsLoggedIn}
+          setIsShowingPointNotes={setIsShowingPointNotes}
+          isShowingPopUp={isShowingPopUp}
+          setIsShowingPopUp={setIsShowingPopUp}
+          setLoginStatus={setLoginStatus}
+          popUpMsg={popUpMsg}
+          setPopUpMsg={setPopUpMsg}
+          setDeleteMap={setDeleteMap}
+          setCurrentMapName={setCurrentMapName}
+          setIsChangingMap={setIsChangingMap}
+          setPointIndex={setPointIndex}
+        />
       ) : mapState === 1 ? (
         <>
           <VisitedMap
@@ -361,7 +428,21 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
             setPointIndex={setPointIndex}
             writeUserMap1Data={writeUserMap1Data}
           />
-          <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp} />
+          <PopUp
+            setIsChangingMap={setIsChangingMap}
+            setPointIndex={setPointIndex}
+            setIsEditing={setIsEditing}
+            setDeleteMap={setDeleteMap}
+            setIsShowingPointNotes={setIsShowingPointNotes}
+            popUpMsg={popUpMsg}
+            setPopUpMsg={setPopUpMsg}
+            toLogIn={toLogIn}
+            setToLogIn={setToLogIn}
+            setLoginStatus={setLoginStatus}
+            setIsLoggedIn={setIsLoggedIn}
+            isShowingPopUp={isShowingPopUp}
+            setIsShowingPopUp={setIsShowingPopUp}
+          />
           <NumberCount>
             You have visited {countryList.length} {countryList && countryList.length <= 1 ? "country" : "countries"} / area
           </NumberCount>
@@ -408,9 +489,24 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
             pointIndex={pointIndex}
             setPointIndex={setPointIndex}
           />
-          <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp} />
+          <PopUp
+            setIsChangingMap={setIsChangingMap}
+            setPointIndex={setPointIndex}
+            setIsEditing={setIsEditing}
+            setDeleteMap={setDeleteMap}
+            setIsShowingPointNotes={setIsShowingPointNotes}
+            popUpMsg={popUpMsg}
+            setPopUpMsg={setPopUpMsg}
+            toLogIn={toLogIn}
+            setToLogIn={setToLogIn}
+            setLoginStatus={setLoginStatus}
+            setIsLoggedIn={setIsLoggedIn}
+            isShowingPopUp={isShowingPopUp}
+            setIsShowingPopUp={setIsShowingPopUp}
+          />
           <NumberCount>
-            You already have {friendsList.length} {friendsList && friendsList.length <= 1 ? `friend` : `friends`} from {haveFriendList.length} {haveFriendList && haveFriendList.length <= 1 ? `country` : `countries`}
+            You already have {friendsList.length} {friendsList && friendsList.length <= 1 ? `friend` : `friends`} from {haveFriendList.length}
+            {haveFriendList && haveFriendList.length <= 1 ? `country` : `countries`}
           </NumberCount>
         </>
       ) : mapState === 3 ? (
@@ -454,7 +550,21 @@ function WorldMap({ mapState, setMapState, isShowingPoint, setIsShowingPoint, to
             pointIndex={pointIndex}
             setPointIndex={setPointIndex}
           />
-          <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp} />
+          <PopUp
+            setIsChangingMap={setIsChangingMap}
+            setPointIndex={setPointIndex}
+            setIsEditing={setIsEditing}
+            setDeleteMap={setDeleteMap}
+            setIsShowingPointNotes={setIsShowingPointNotes}
+            popUpMsg={popUpMsg}
+            setPopUpMsg={setPopUpMsg}
+            toLogIn={toLogIn}
+            setToLogIn={setToLogIn}
+            setLoginStatus={setLoginStatus}
+            setIsLoggedIn={setIsLoggedIn}
+            isShowingPopUp={isShowingPopUp}
+            setIsShowingPopUp={setIsShowingPopUp}
+          />
         </>
       ) : (
         <></>

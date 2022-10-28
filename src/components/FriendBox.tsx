@@ -154,7 +154,22 @@ type friendInsideBoxType = {
   setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
 };
 
-function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList, setHaveFriendList, setFriendsList, friend, countryId, index, countryName, setPopUpMsg, setIsShowingPopUp, setNotificationInfo }: friendInsideBoxType) {
+function FriendBox({
+  uid,
+  friendList,
+  setFriendList,
+  friendsList,
+  haveFriendList,
+  setHaveFriendList,
+  setFriendsList,
+  friend,
+  countryId,
+  index,
+  countryName,
+  setPopUpMsg,
+  setIsShowingPopUp,
+  setNotificationInfo,
+}: friendInsideBoxType) {
   const NameRef = useRef<HTMLInputElement>(null);
   const CityRef = useRef<HTMLInputElement>(null);
   const InstaRef = useRef<HTMLInputElement>(null);
@@ -236,7 +251,14 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
       <DeleteFriendBtn
         onClick={(e) => {
           setIsShowingPopUp(true);
-          setPopUpMsg([`Are you sure you want to remove "${friendList[index].name}" from your friend list? 😭`, "Yes", "No", `${index}`, `deletefriend`, deleteFriend]);
+          setPopUpMsg([
+            `Are you sure you want to remove "${friendList[index].name}" from your friend list? 😭`,
+            "Yes",
+            "No",
+            `${index}`,
+            `deletefriend`,
+            deleteFriend,
+          ]);
         }}
       />
       {isEditingFriend ? (
@@ -272,7 +294,15 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
           }}
         />
       )}
-      <AddFriendPicLabel htmlFor={`addFriendPic-${index}`}>{previewFriendNewImgUrl ? <FriendProfilePic src={previewFriendNewImgUrl} /> : friend.imgUrl ? <FriendProfilePic src={friend.imgUrl} /> : <FriendProfileNoPic />}</AddFriendPicLabel>
+      <AddFriendPicLabel htmlFor={`addFriendPic-${index}`}>
+        {previewFriendNewImgUrl ? (
+          <FriendProfilePic src={previewFriendNewImgUrl} />
+        ) : friend.imgUrl ? (
+          <FriendProfilePic src={friend.imgUrl} />
+        ) : (
+          <FriendProfileNoPic />
+        )}
+      </AddFriendPicLabel>
       <AddFriendPicInput
         id={`addFriendPic-${index}`}
         accept="image/png, image/gif, image/jpeg, image/svg"

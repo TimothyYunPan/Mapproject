@@ -63,7 +63,21 @@ type SearchResultType = {
   setPointIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
-function SearchResult({ inputElement, searchNameResult, setIsShowingSearchResult, setMapState, setCurrentMapName, setCountryId, setIsShowingFriends, setCountryName, getCountryFriends, setIsShowingPointNotes, setSearchNameResult, setIsShowingSearchBarMB, setPointIndex }: SearchResultType) {
+function SearchResult({
+  inputElement,
+  searchNameResult,
+  setIsShowingSearchResult,
+  setMapState,
+  setCurrentMapName,
+  setCountryId,
+  setIsShowingFriends,
+  setCountryName,
+  getCountryFriends,
+  setIsShowingPointNotes,
+  setSearchNameResult,
+  setIsShowingSearchBarMB,
+  setPointIndex,
+}: SearchResultType) {
   return (
     <SearchResultBox>
       {searchNameResult[0] &&

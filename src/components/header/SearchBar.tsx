@@ -44,45 +44,67 @@ type SearchBar = {
   checkResult: () => void;
 };
 
-const SearchBar = forwardRef<HTMLInputElement, SearchBar>(({ searchNameResult, setIsShowingSearchResult, setSearchValue, searchName, searchCountries, setMapState, setCurrentMapName, setCountryId, setIsShowingFriends, setCountryName, getCountryFriends, setIsShowingPointNotes, setSearchNameResult, isShowingSearchBarMB, setPointIndex, checkResult }, ref) => {
-  return (
-    <SearchInput
-      isShowingSearchBarMB={isShowingSearchBarMB}
-      ref={ref}
-      placeholder="country / friend"
-      onClick={(e) => {
-        const target = e.target as HTMLInputElement;
-        if (target.value === searchNameResult[0]?.name) {
-          setIsShowingSearchResult(true);
-        }
-
-        setSearchValue(target.value);
-      }}
-      onChange={(e) => {
-        setSearchValue(e.target.value);
-        searchName(e.target.value);
-        searchCountries(e.target.value);
-      }}
-      onKeyPress={(e) => {
-        if (e.key === "Enter") {
-          checkResult();
-          if (searchNameResult.length === 1) {
-            setMapState(2);
-            setCurrentMapName("Friends Located Map");
-            setCountryId(searchNameResult[0].countryId);
-            setIsShowingFriends(true);
-            setCountryName(searchNameResult[0].country);
-            getCountryFriends(searchNameResult[0].countryId);
-            setIsShowingSearchResult(false);
-            (ref as MutableRefObject<HTMLInputElement>).current.value = "";
-            setSearchNameResult([]);
-            setIsShowingPointNotes(false);
+const SearchBar = forwardRef<HTMLInputElement, SearchBar>(
+  (
+    {
+      searchNameResult,
+      setIsShowingSearchResult,
+      setSearchValue,
+      searchName,
+      searchCountries,
+      setMapState,
+      setCurrentMapName,
+      setCountryId,
+      setIsShowingFriends,
+      setCountryName,
+      getCountryFriends,
+      setIsShowingPointNotes,
+      setSearchNameResult,
+      isShowingSearchBarMB,
+      setPointIndex,
+      checkResult,
+    },
+    ref
+  ) => {
+    return (
+      <SearchInput
+        isShowingSearchBarMB={isShowingSearchBarMB}
+        ref={ref}
+        placeholder="country / friend"
+        onClick={(e) => {
+          const target = e.target as HTMLInputElement;
+          if (target.value === searchNameResult[0]?.name) {
+            setIsShowingSearchResult(true);
           }
-          setPointIndex(-1);
-        }
-      }}
-    />
-  );
-});
+
+          setSearchValue(target.value);
+        }}
+        onChange={(e) => {
+          setSearchValue(e.target.value);
+          searchName(e.target.value);
+          searchCountries(e.target.value);
+        }}
+        onKeyPress={(e) => {
+          if (e.key === "Enter") {
+            checkResult();
+            if (searchNameResult.length === 1) {
+              setMapState(2);
+              setCurrentMapName("Friends Located Map");
+              setCountryId(searchNameResult[0].countryId);
+              setIsShowingFriends(true);
+              setCountryName(searchNameResult[0].country);
+              getCountryFriends(searchNameResult[0].countryId);
+              setIsShowingSearchResult(false);
+              (ref as MutableRefObject<HTMLInputElement>).current.value = "";
+              setSearchNameResult([]);
+              setIsShowingPointNotes(false);
+            }
+            setPointIndex(-1);
+          }
+        }}
+      />
+    );
+  }
+);
 
 export default SearchBar;

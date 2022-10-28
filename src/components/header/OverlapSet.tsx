@@ -120,10 +120,27 @@ type OverlapSetType = {
   setIsShowingSearchBarMB: React.Dispatch<React.SetStateAction<boolean>>;
   setIsShowingSearchResult: React.Dispatch<React.SetStateAction<boolean | undefined>>;
   setPointIndex: React.Dispatch<React.SetStateAction<number>>;
-  pointList: pointListType[];
 };
 
-function OverlapSet({ mapState, setPopUpMsg, uid, setIsShowingPoint, isShowingOverlapBtn, setIsShowingOverlapBtn, setIsChangingMap, overlapName, mapNames, setMapId, setOverlapName, setIsShowingPointNotes, isShowingPoint, setIsShowingPopUp, setIsShowingSearchBarMB, setIsShowingSearchResult, setPointIndex, pointList }: OverlapSetType) {
+function OverlapSet({
+  mapState,
+  setPopUpMsg,
+  uid,
+  setIsShowingPoint,
+  isShowingOverlapBtn,
+  setIsShowingOverlapBtn,
+  setIsChangingMap,
+  overlapName,
+  mapNames,
+  setMapId,
+  setOverlapName,
+  setIsShowingPointNotes,
+  isShowingPoint,
+  setIsShowingPopUp,
+  setIsShowingSearchBarMB,
+  setIsShowingSearchResult,
+  setPointIndex,
+}: OverlapSetType) {
   return (
     <OverlapSetBox>
       {mapState && mapState <= 2 && mapState !== -1 && (

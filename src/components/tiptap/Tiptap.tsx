@@ -59,7 +59,17 @@ const MenuBar: React.FC<{ editor: Editor | null }> = ({ editor }) => {
   );
 };
 
-const Tiptap = ({ setPointNotes, pointList, pointIndex, largeTipTap }: { setPointNotes: React.Dispatch<React.SetStateAction<string>>; pointList: pointListType[]; pointIndex: number; largeTipTap: boolean }) => {
+const Tiptap = ({
+  setPointNotes,
+  pointList,
+  pointIndex,
+  largeTipTap,
+}: {
+  setPointNotes: React.Dispatch<React.SetStateAction<string>>;
+  pointList: pointListType[];
+  pointIndex: number;
+  largeTipTap: boolean;
+}) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
