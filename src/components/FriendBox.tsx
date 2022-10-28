@@ -161,7 +161,6 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
   const NotesRef = useRef<HTMLTextAreaElement>(null);
   const [isEditingFriend, setIsEditingFriend] = useState<boolean>(false);
   const [imageUpload, setImageUpload] = useState<File | null>(null);
-
   const previewFriendNewImgUrl = imageUpload ? URL.createObjectURL(imageUpload) : "";
   const [friendOriginalPhoto, setFrienOriginalPhoto] = useState<string>("");
   const imageListRef = ref(storage, "images/");
@@ -232,74 +231,72 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
     }, 3000);
   }
   return (
-    <>
-      <FriendInsideBox>
-        {!isEditingFriend && <FriendMask />}
-        <DeleteFriendBtn
-          onClick={(e) => {
-            setIsShowingPopUp(true);
-            setPopUpMsg([`Are you sure you want to remove "${friendList[index].name}" from your friend list? 😭`, "Yes", "No", `${index}`, `deletefriend`, deleteFriend]);
+    <FriendInsideBox>
+      {!isEditingFriend && <FriendMask />}
+      <DeleteFriendBtn
+        onClick={(e) => {
+          setIsShowingPopUp(true);
+          setPopUpMsg([`Are you sure you want to remove "${friendList[index].name}" from your friend list? 😭`, "Yes", "No", `${index}`, `deletefriend`, deleteFriend]);
+        }}
+      />
+      {isEditingFriend ? (
+        <FriendUpdateBtn
+          onClick={() => {
+            if (NameRef.current!.value.trim() !== "") {
+              let key = friendList[index].key;
+              let newObj = {
+                city: CityRef.current!.value,
+                country: countryName,
+                countryId: countryId,
+                imgUrl: "",
+                insta: InstaRef.current!.value,
+                name: NameRef.current!.value,
+                notes: NotesRef.current!.value,
+                key: key,
+              };
+              sendEditFriendInfo(index, newObj);
+              setIsEditingFriend(false);
+            } else {
+              setNotificationInfo({ text: `Friend's name could not be blank `, status: true });
+              setTimeout(() => {
+                setNotificationInfo({ text: "", status: false });
+              }, 3000);
+            }
           }}
         />
-        {isEditingFriend ? (
-          <FriendUpdateBtn
-            onClick={() => {
-              if (NameRef.current!.value.trim() !== "") {
-                let key = friendList[index].key;
-                let newObj = {
-                  city: CityRef.current!.value,
-                  country: countryName,
-                  countryId: countryId,
-                  imgUrl: "",
-                  insta: InstaRef.current!.value,
-                  name: NameRef.current!.value,
-                  notes: NotesRef.current!.value,
-                  key: key,
-                };
-                sendEditFriendInfo(index, newObj);
-                setIsEditingFriend(false);
-              } else {
-                setNotificationInfo({ text: `Friend's name could not be blank `, status: true });
-                setTimeout(() => {
-                  setNotificationInfo({ text: "", status: false });
-                }, 3000);
-              }
-            }}
-          />
-        ) : (
-          <EditFriendBtn
-            onClick={() => {
-              setFrienOriginalPhoto(friend.imgUrl);
-              setIsEditingFriend(true);
-            }}
-          />
-        )}
-        <AddFriendPicLabel htmlFor={`addFriendPic-${index}`}>{previewFriendNewImgUrl ? <FriendProfilePic src={previewFriendNewImgUrl} /> : friend.imgUrl ? <FriendProfilePic src={friend.imgUrl} /> : <FriendProfileNoPic />}</AddFriendPicLabel>
-        <AddFriendPicInput
-          id={`addFriendPic-${index}`}
-          accept="image/png, image/gif, image/jpeg, image/svg"
-          type="file"
-          onChange={(e) => {
-            setImageUpload(e.target.files![0]);
+      ) : (
+        <EditFriendBtn
+          onClick={() => {
+            setFrienOriginalPhoto(friend.imgUrl);
+            setIsEditingFriend(true);
           }}
         />
-        <FriendFormTitle maxLength={15} isEditingFriend={isEditingFriend} ref={NameRef} defaultValue={friend.name} />
-        <FriendSet>
-          <FriendFormdiv>
-            City: <br />
-            <FriendFormInput maxLength={21} isEditingFriend={isEditingFriend} ref={CityRef} defaultValue={friend.city} />
-          </FriendFormdiv>
-          <FriendFormdiv>
-            Instagram: <br />
-            <FriendFormInput maxLength={21} isEditingFriend={isEditingFriend} ref={InstaRef} defaultValue={friend.insta} />
-          </FriendFormdiv>
-          <FriendFormdiv>
-            Notes: <br />
-            <FriendFormTextarea maxLength={125} isEditingFriend={isEditingFriend} ref={NotesRef} defaultValue={friend.notes} />
-          </FriendFormdiv>
-        </FriendSet>
-      </FriendInsideBox>
-    </>
+      )}
+      <AddFriendPicLabel htmlFor={`addFriendPic-${index}`}>{previewFriendNewImgUrl ? <FriendProfilePic src={previewFriendNewImgUrl} /> : friend.imgUrl ? <FriendProfilePic src={friend.imgUrl} /> : <FriendProfileNoPic />}</AddFriendPicLabel>
+      <AddFriendPicInput
+        id={`addFriendPic-${index}`}
+        accept="image/png, image/gif, image/jpeg, image/svg"
+        type="file"
+        onChange={(e) => {
+          setImageUpload(e.target.files![0]);
+        }}
+      />
+      <FriendFormTitle maxLength={15} isEditingFriend={isEditingFriend} ref={NameRef} defaultValue={friend.name} />
+      <FriendSet>
+        <FriendFormdiv>
+          City: <br />
+          <FriendFormInput maxLength={21} isEditingFriend={isEditingFriend} ref={CityRef} defaultValue={friend.city} />
+        </FriendFormdiv>
+        <FriendFormdiv>
+          Instagram: <br />
+          <FriendFormInput maxLength={21} isEditingFriend={isEditingFriend} ref={InstaRef} defaultValue={friend.insta} />
+        </FriendFormdiv>
+        <FriendFormdiv>
+          Notes: <br />
+          <FriendFormTextarea maxLength={125} isEditingFriend={isEditingFriend} ref={NotesRef} defaultValue={friend.notes} />
+        </FriendFormdiv>
+      </FriendSet>
+    </FriendInsideBox>
   );
 }
 
