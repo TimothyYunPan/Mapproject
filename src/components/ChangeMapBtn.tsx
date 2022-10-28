@@ -6,7 +6,6 @@ import { db } from "../utils/firebaseConfig";
 
 type ChangeMapBtnType = {
   setIsShowingPointNotes: React.Dispatch<React.SetStateAction<boolean>>;
-  pointList: pointListType[];
   setPointList: React.Dispatch<React.SetStateAction<pointListType[]>>;
   setIsChangingMap: React.Dispatch<React.SetStateAction<boolean>>;
   mapId: string;
@@ -15,14 +14,11 @@ type ChangeMapBtnType = {
   setIsShowingPoint: React.Dispatch<React.SetStateAction<boolean>>;
   setCurrentMapName: React.Dispatch<React.SetStateAction<string>>;
   mapName: { id: string; name: string };
-  isEditingMap: number;
-  setIsEditingMap: React.Dispatch<React.SetStateAction<number>>;
   index: number;
   mapNames: mapNameType[];
   setMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
   uid: string;
   setOverlapName: React.Dispatch<React.SetStateAction<string>>;
-  deleteMap: string;
   setDeleteMap: React.Dispatch<React.SetStateAction<string>>;
   setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void } | { (index: number): void })[]>>;
   setIsShowingPopUp: React.Dispatch<React.SetStateAction<boolean>>;
@@ -30,21 +26,17 @@ type ChangeMapBtnType = {
   setPointIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
-function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, setMapId, setMapState, setIsShowingPoint, setCurrentMapName, mapName, isEditingMap, setIsEditingMap, index, uid, mapNames, setMapNames, setOverlapName, mapId, deleteMap, setDeleteMap, setPopUpMsg, setIsShowingPopUp, pointList, setNotificationInfo, setPointIndex }: ChangeMapBtnType) {
-  // const [isEditingNewMap, setIsEditingNewMap] = useState<boolean>(false);
+function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, setMapId, setMapState, setIsShowingPoint, setCurrentMapName, mapName, index, uid, mapNames, setMapNames, setOverlapName, mapId, setDeleteMap, setPopUpMsg, setIsShowingPopUp, setNotificationInfo, setPointIndex }: ChangeMapBtnType) {
   const [isReadOnly, setIsReadOnly] = useState<boolean>(true);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  // const CurrentMapIdRef = useRef<string>(null);
   const MapNameRef = useRef<HTMLInputElement>(null);
   let currentMapId: string;
+
   async function updateNewMapName(mapId: string) {
     let newMapNames = [...mapNames];
     newMapNames[index].name = MapNameRef.current!.value;
     setMapNames(newMapNames);
-
     await setDoc(doc(db, "user", uid), { names: newMapNames }, { merge: true });
-    // let newMap = { id: newId, name: "new Map" };
-    // setOriginalMapNames(newNames);
   }
 
   async function deleteNewMap() {
@@ -89,9 +81,7 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
           }
           setIsShowingPoint(true);
           setPointIndex(-1);
-        }}>
-        {/* {mapName.name} */}
-      </MapNameInput>
+        }}></MapNameInput>
       {isEditing === true ? (
         <>
           <OkIcon
@@ -100,7 +90,6 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
                 setIsEditing(false);
                 setIsReadOnly(true);
                 updateNewMapName(mapName.id);
-                // setMapId(mapName.id);
                 if (mapId === mapName.id) {
                   setCurrentMapName(MapNameRef.current!.value);
                   setOverlapName(MapNameRef.current!.value);
@@ -117,7 +106,6 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
               }
             }}></OkIcon>
           <DeleteMapBtn
-            // ref={CurrentMapIdRef}
             onClick={() => {
               currentMapId = mapName.id;
               setIsShowingPopUp(true);

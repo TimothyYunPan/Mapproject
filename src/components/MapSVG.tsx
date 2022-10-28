@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useRef, forwardRef } from "react";
+import React, { useEffect, useState, forwardRef } from "react";
 import styled from "styled-components";
 import { countryListType, haveFriendListType } from "../App";
-// import useWindowDimensions from "./WindowDimensions";
 
 const SVGBox = styled.svg`
   width: 1100px;
@@ -86,17 +85,6 @@ const MapSVG = forwardRef<SVGSVGElement, MapSVGType>(({ countryList, mapState, h
         }
       });
       //處理visited false end
-
-      // countryList.forEach((country) => {
-      //   if (country.visited) {
-      //     let countryId = country.countryId;
-      //     if (!document.getElementById(countryId)) return;
-      //     document.getElementById(countryId)!.style.fill = "rgb(236,174,72)";
-      //   } else {
-      //     let countryId = country.countryId;
-      //     document.getElementById(countryId)!.style.fill = "rgb(148, 149, 154)";
-      //   }
-      // });
     } else if (mapState === 2) {
       if (countryId) {
         if (!haveFriendList.find((e) => e.countryId === countryId)) {
@@ -122,9 +110,6 @@ const MapSVG = forwardRef<SVGSVGElement, MapSVGType>(({ countryList, mapState, h
       });
     }
   }, [mapState, countryList, haveFriendList]);
-  // const { height, width } = useWindowDimensions();
-  // const [windowWidth, setWindowWidth] = useState<number>(width);
-  // const [windowHeight, setWindowHeight] = useState<number>(height);
 
   return (
     <SVGBox>
@@ -143,20 +128,9 @@ const MapSVG = forwardRef<SVGSVGElement, MapSVGType>(({ countryList, mapState, h
           } else {
             setIsColorHovering2(false);
           }
-          // if (target.style.fill === "" || target.style.fill === "rgb(148, 149, 154)") {
-          //   setTimeout(() => {
-          //     setIsColorHovering(true);
-          //   }, 500);
-          // } else {
-          //   // setTimeout(() => {
-          //   //   setIsColorHovering(false);
-          //   // }, 2000);
-          // }
         }}
-        onMouseLeave={(e) => {
-          // setIsColorHovering2(false);
+        onMouseLeave={() => {
           setIsColorHovering(true);
-
           setTimeout(() => {
             setIsHovering(false);
           }, 200);

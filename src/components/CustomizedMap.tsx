@@ -128,18 +128,7 @@ const NoteFlag = styled(Flag)`
   max-width: 100%;
 `;
 
-// const Block1 = styled.div`
-//   height: 50px;
-//   width: 50px;
-//   background-color: #008b8b;
-//   opacity: 1;
-// `;
-
 const NotesPhotoLabel = styled.label``;
-
-// const UploadBtn = styled.div`
-//   margin-bottom: 20px;
-// `;
 
 export const PointSet = styled.div<{ pointInfo: pointListType; isJumping: boolean }>`
   position: absolute;
@@ -510,17 +499,12 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(({ allCountri
           {isEditing ? (
             <>
               <NotesPhotoLabel htmlFor="NotesPhotoInput">
-                {/* <button>upload images</button> */}
-                {/* <AddFriendProfilePic src={imageList[0]}></AddFriendProfilePic> */}
-                {/* <button></button> */}
                 <NoteImgUploadBtn></NoteImgUploadBtn>
               </NotesPhotoLabel>
               <NotesPhotoInput
                 type="file"
                 id="NotesPhotoInput"
                 accept="image/png, image/gif, image/jpeg"
-                // ref={contentImageUpload}
-
                 onChange={(e) => {
                   setPointPhoto(e.target.files![0]);
                   if (e.target.files![0] || pointList[pointIndex].imgUrl) {
@@ -528,7 +512,6 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(({ allCountri
                   } else {
                     setLargeTipTap(true);
                   }
-                  // setImageUpload(e.target.files![0]);
                 }}></NotesPhotoInput>
               <PointNotesTextArea
                 onClick={(e) => {

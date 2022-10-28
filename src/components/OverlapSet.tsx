@@ -16,9 +16,6 @@ const ShowOverLapBtn = styled.div<{ isShowingPoint: boolean }>`
   cursor: pointer;
   background-image: ${(props) => (props.isShowingPoint ? `url(${eyeOpened})` : `url(${eyeClosed})`)};
   transition: 0.3s;
-  :hover {
-    /* background-image: url(${eyeClosed}); */
-  }
   @media (max-width: 700px) {
     height: 28px;
     width: 28px;
@@ -185,23 +182,20 @@ function OverlapSet({ mapState, setPopUpMsg, uid, setIsShowingPoint, isShowingOv
             {mapNames &&
               mapNames.map((mapName, index) => {
                 return (
-                  <>
-                    <OverlapBtn
-                      mapState={mapState}
-                      isShowingPoint={isShowingPoint}
-                      onClick={() => {
-                        // setPointList([]);
-                        setMapId(mapName.id);
-                        setOverlapName(mapName.name);
-                        setIsShowingPointNotes(false);
-                        setIsShowingOverlapBtn(false);
-                        setIsShowingPoint(true);
-                        setPointIndex(-1);
-                      }}>
-                      {mapName.name}
-                    </OverlapBtn>
-                    {/* <ChangeMapBtn uid={uid} mapNames={mapNames} setMapNames={setMapNames} index={index} mapName={mapName} setIsShowingPointNotes={setIsShowingPointNotes} setPointList={setPointList} setIsChangingMap={setIsChangingMap} setMapId={setMapId} setMapState={setMapState} setIsShowingPoint={setIsShowingPoint} setCurrentMapName={setCurrentMapName} isEditingMap={isEditingMap} setIsEditingMap={setIsEditingMap}></ChangeMapBtn> */}
-                  </>
+                  <OverlapBtn
+                    mapState={mapState}
+                    isShowingPoint={isShowingPoint}
+                    onClick={() => {
+                      // setPointList([]);
+                      setMapId(mapName.id);
+                      setOverlapName(mapName.name);
+                      setIsShowingPointNotes(false);
+                      setIsShowingOverlapBtn(false);
+                      setIsShowingPoint(true);
+                      setPointIndex(-1);
+                    }}>
+                    {mapName.name}
+                  </OverlapBtn>
                 );
               })}
           </OverlapList>
