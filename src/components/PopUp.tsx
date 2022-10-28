@@ -5,10 +5,10 @@ const PopUpBlock = styled.div<{ isShowingPopUp: boolean }>`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  height: ${(props) => (props.isShowingPopUp === true ? 250 : 0)}px;
+  height: ${(props) => (props.isShowingPopUp ? 250 : 0)}px;
   width: 500px;
-  border: ${(props) => (props.isShowingPopUp === true ? 1 : 0)}px solid white;
-  visibility: ${(props) => (props.isShowingPopUp === true ? "visible" : "hidden")};
+  border: ${(props) => (props.isShowingPopUp ? 1 : 0)}px solid white;
+  visibility: ${(props) => (props.isShowingPopUp ? "visible" : "hidden")};
   overflow: hidden;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 10px;
@@ -35,7 +35,7 @@ const PopUpSet = styled.div`
 const PopUpText = styled.div<{ isShowingPopUp: boolean }>`
   font-size: 24px;
   color: #222;
-  opacity: ${(props) => (props.isShowingPopUp === true ? 1 : 0)};
+  opacity: ${(props) => (props.isShowingPopUp ? 1 : 0)};
   transition: 0.3s;
   @media (max-width: 570px) {
     font-size: 18px;
@@ -44,7 +44,7 @@ const PopUpText = styled.div<{ isShowingPopUp: boolean }>`
 
 const PopUpBtn = styled.div<{ isShowingPopUp: boolean }>`
   width: 100px;
-  opacity: ${(props) => (props.isShowingPopUp === true ? 1 : 0)};
+  opacity: ${(props) => (props.isShowingPopUp ? 1 : 0)};
   transition: 0.1s;
   cursor: pointer;
   text-align: center;
@@ -98,26 +98,33 @@ function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatu
             <PopUpBtn
               isShowingPopUp={isShowingPopUp}
               onClick={() => {
-                if (popUpMsg[4] === "signin") {
-                  setLoginStatus("login");
-                  setToLogIn(true);
-                } else if (popUpMsg[4] === "deletepin") {
-                  setIsShowingPointNotes(false);
-                  setPointIndex(-1);
-                  let deletePinFunc = popUpMsg[5] as () => void;
-                  deletePinFunc();
-                } else if (popUpMsg[4] === "deletefriend") {
-                  let deleteFriendFunc = popUpMsg[5] as (index: number) => void;
-                  let i = parseInt(popUpMsg[3] as string);
-                  deleteFriendFunc(i);
-                } else if (popUpMsg[4] === "deletemap") {
-                  let deleteMapFunc = popUpMsg[5] as () => void;
-                  deleteMapFunc();
-                } else if (popUpMsg[4] === "goback") {
-                  setIsEditing(false);
-                } else if (popUpMsg[4] === "closenote") {
-                  setIsShowingPointNotes(false);
-                  setPointIndex(-1);
+                switch (popUpMsg[4]) {
+                  case "signin":
+                    setLoginStatus("login");
+                    setToLogIn(true);
+                    break;
+                  case "deletepin":
+                    setIsShowingPointNotes(false);
+                    setPointIndex(-1);
+                    let deletePinFunc = popUpMsg[5] as () => void;
+                    deletePinFunc();
+                    break;
+                  case "deletefriend":
+                    let deleteFriendFunc = popUpMsg[5] as (index: number) => void;
+                    let i = parseInt(popUpMsg[3] as string);
+                    deleteFriendFunc(i);
+                    break;
+                  case "deletemap":
+                    let deleteMapFunc = popUpMsg[5] as () => void;
+                    deleteMapFunc();
+                    break;
+                  case "goback":
+                    setIsEditing(false);
+                    break;
+                  case "closenote":
+                    setIsShowingPointNotes(false);
+                    setPointIndex(-1);
+                    break;
                 }
                 setIsShowingPopUp(false);
               }}>

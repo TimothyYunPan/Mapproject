@@ -64,7 +64,7 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
         readOnly={isReadOnly}
         onClick={() => {
           setIsShowingPointNotes(false);
-          if (isEditing === true) {
+          if (isEditing) {
             setIsChangingMap(true);
           } else {
             if (mapId !== mapName.id) {
@@ -74,7 +74,6 @@ function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, 
             setMapState(3);
             setCurrentMapName(mapName.name);
             setOverlapName(mapName.name);
-
             setMapId(mapName.id);
           }
           setIsShowingPoint(true);

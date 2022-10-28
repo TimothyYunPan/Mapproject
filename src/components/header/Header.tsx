@@ -579,20 +579,18 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
       </HeaderLeftSet>
       <HeaderRightSet>
         <OverlapSet pointList={pointList} setPointIndex={setPointIndex} setIsShowingSearchResult={setIsShowingSearchResult} setIsShowingSearchBarMB={setIsShowingSearchBarMB} mapState={mapState} isShowingPoint={isShowingPoint} setMapId={setMapId} setOverlapName={setOverlapName} setIsShowingOverlapBtn={setIsShowingOverlapBtn} setIsShowingPoint={setIsShowingPoint} setPopUpMsg={setPopUpMsg} uid={uid} isShowingOverlapBtn={isShowingOverlapBtn} setIsChangingMap={setIsChangingMap} overlapName={overlapName} mapNames={mapNames} setIsShowingPointNotes={setIsShowingPointNotes} setIsShowingPopUp={setIsShowingPopUp} />
-        {(mapState && mapState === -1) || mapState === 4 ? (
-          <></>
-        ) : (
+        {mapState && mapState !== -1 && (
           <>
             <SearchBar checkResult={checkResult} setPointIndex={setPointIndex} isShowingSearchBarMB={isShowingSearchBarMB} ref={searchInputRef} searchNameResult={searchNameResult} setIsShowingSearchResult={setIsShowingSearchResult} setSearchValue={setSearchValue} searchName={searchName} searchCountries={searchCountries} setMapState={setMapState} setCurrentMapName={setCurrentMapName} setCountryId={setCountryId} setIsShowingFriends={setIsShowingFriends} setCountryName={setCountryName} getCountryFriends={getCountryFriends} setIsShowingPointNotes={setIsShowingPointNotes} setSearchNameResult={setSearchNameResult} />
             {isShowSearchResult && <SearchResult setPointIndex={setPointIndex} setIsShowingSearchBarMB={setIsShowingSearchBarMB} inputElement={searchInputRef.current} searchNameResult={searchNameResult} setIsShowingSearchResult={setIsShowingSearchResult} setMapState={setMapState} setCurrentMapName={setCurrentMapName} setCountryId={setCountryId} setIsShowingFriends={setIsShowingFriends} setCountryName={setCountryName} getCountryFriends={getCountryFriends} setIsShowingPointNotes={setIsShowingPointNotes} setSearchNameResult={setSearchNameResult} />}
             <SearchBtn
-              onClick={(e) => {
+              onClick={() => {
                 checkResult();
                 setIsShowingPointNotes(false);
                 setPointIndex(-1);
                 searchCountries(searchValue);
                 showOneResultFriend();
-                if (isShowingSearchBarMB === true && searchValue === "") {
+                if (isShowingSearchBarMB && searchValue === "") {
                   setIsShowingSearchBarMB(false);
                 } else {
                   setIsShowingSearchBarMB(true);
