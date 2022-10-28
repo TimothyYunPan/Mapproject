@@ -1,5 +1,5 @@
 import WorldMap from "./WorldMap";
-import Header from "./components/Header";
+import Header from "./components/header/Header";
 import React, { useState } from "react";
 import { createGlobalStyle } from "styled-components";
 import Notification from "./components/Notafication";
@@ -97,7 +97,6 @@ function App() {
   }
   return (
     <>
-      {/* <Reset /> */}
       <GlobalStyleComponent />
       <Header
         setPointIndex={setPointIndex}
@@ -197,7 +196,7 @@ function App() {
         pointIndex={pointIndex}
         setPointIndex={setPointIndex}
       />
-      <Notification setNotificationInfo={setNotificationInfo} notificationInfo={notificationInfo}></Notification>
+      <Notification setNotificationInfo={setNotificationInfo} notificationInfo={notificationInfo} />
     </>
   );
 }

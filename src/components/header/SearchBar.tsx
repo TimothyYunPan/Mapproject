@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { friendListType } from "../App";
+import { friendListType } from "../../App";
 import React, { forwardRef, MutableRefObject } from "react";
 
 const SearchInput = styled.input<{ isShowingSearchBarMB: boolean }>`
@@ -80,7 +80,8 @@ const SearchBar = forwardRef<HTMLInputElement, SearchBar>(({ searchNameResult, s
           }
           setPointIndex(-1);
         }
-      }}></SearchInput>
+      }}
+    />
   );
 });
 

@@ -41,12 +41,6 @@ type visitedMapType = {
 };
 
 const VisitedMap = forwardRef<SVGSVGElement, visitedMapType>(({ uid, allCountries, setIsHovering, hoverAddCountryName, previewImgUrl, setPointPhoto, isColorHovering, currentPos, setNotePhoto, getPosition, isHovering, setIsColorHovering, mapState, isShowingPoint, countryList, setCountryList, setIsShowingPointNotes, isShowingPointNotes, countryId, setCountryId, countryName, haveFriendList, pointList, setIsShowingPopUp, setIsChangingMap, pointIndex, setPointIndex, writeUserMap1Data }, ref) => {
-  async function deleteUserMap1Data(country: string) {
-    // console.log("delete");
-    await updateDoc(doc(db, "user", uid, "visitedCountries", country), {
-      visited: deleteField(),
-    });
-  }
   async function updateUserMap1Data(country: string) {
     await deleteDoc(doc(db, "user", uid, "visitedCountries", country));
   }
@@ -79,9 +73,6 @@ const VisitedMap = forwardRef<SVGSVGElement, visitedMapType>(({ uid, allCountrie
           target.style.fill = ColorOrigin;
           updateUserMap1Data(target.id);
           setIsColorHovering(false);
-          // const newCountryList = countryList.filter((object) => {
-          //   return object.countryId !== target.id;
-          // });
           const newCountryList = countryList.filter((object) => {
             return object.countryId !== target.id;
           });
@@ -89,14 +80,14 @@ const VisitedMap = forwardRef<SVGSVGElement, visitedMapType>(({ uid, allCountrie
           // console.log("沒去過");
         }
       }}>
-      {isHovering ? <ShowName currentPos={currentPos}>{countryName}</ShowName> : <></>}
+      {isHovering && <ShowName currentPos={currentPos}>{countryName}</ShowName>}
       <div
         onMouseMove={(e) => {
           getPosition(e);
         }}>
         <MapSVG setIsColorHovering={setIsColorHovering} isColorHovering={isColorHovering} countryId={countryId} ref={ref} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
       </div>
-      {isShowingPoint ? <Overlap setNotePhoto={setNotePhoto} setPointPhoto={setPointPhoto} mapState={mapState} pointList={pointList} isShowingPointNotes={isShowingPointNotes} pointIndex={pointIndex} previewImgUrl={previewImgUrl} setPointIndex={setPointIndex} setIsShowingPointNotes={setIsShowingPointNotes} setCountryId={setCountryId}></Overlap> : <></>}
+      {isShowingPoint && <Overlap setNotePhoto={setNotePhoto} setPointPhoto={setPointPhoto} mapState={mapState} pointList={pointList} isShowingPointNotes={isShowingPointNotes} pointIndex={pointIndex} previewImgUrl={previewImgUrl} setPointIndex={setPointIndex} setIsShowingPointNotes={setIsShowingPointNotes} setCountryId={setCountryId} />}
     </Map>
   );
 });

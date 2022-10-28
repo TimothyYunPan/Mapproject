@@ -234,12 +234,13 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
   return (
     <>
       <FriendInsideBox>
-        {isEditingFriend ? <></> : <FriendMask></FriendMask>}
+        {!isEditingFriend && <FriendMask />}
         <DeleteFriendBtn
           onClick={(e) => {
             setIsShowingPopUp(true);
             setPopUpMsg([`Are you sure you want to remove "${friendList[index].name}" from your friend list? 😭`, "Yes", "No", `${index}`, `deletefriend`, deleteFriend]);
-          }}></DeleteFriendBtn>
+          }}
+        />
         {isEditingFriend ? (
           <FriendUpdateBtn
             onClick={() => {
@@ -263,35 +264,38 @@ function FriendBox({ uid, friendList, setFriendList, friendsList, haveFriendList
                   setNotificationInfo({ text: "", status: false });
                 }, 3000);
               }
-            }}></FriendUpdateBtn>
+            }}
+          />
         ) : (
           <EditFriendBtn
             onClick={() => {
               setFrienOriginalPhoto(friend.imgUrl);
               setIsEditingFriend(true);
-            }}></EditFriendBtn>
+            }}
+          />
         )}
-        <AddFriendPicLabel htmlFor={`addFriendPic-${index}`}>{previewFriendNewImgUrl ? <FriendProfilePic src={previewFriendNewImgUrl}></FriendProfilePic> : friend.imgUrl ? <FriendProfilePic src={friend.imgUrl}></FriendProfilePic> : <FriendProfileNoPic></FriendProfileNoPic>}</AddFriendPicLabel>
+        <AddFriendPicLabel htmlFor={`addFriendPic-${index}`}>{previewFriendNewImgUrl ? <FriendProfilePic src={previewFriendNewImgUrl} /> : friend.imgUrl ? <FriendProfilePic src={friend.imgUrl} /> : <FriendProfileNoPic />}</AddFriendPicLabel>
         <AddFriendPicInput
           id={`addFriendPic-${index}`}
           accept="image/png, image/gif, image/jpeg, image/svg"
           type="file"
           onChange={(e) => {
             setImageUpload(e.target.files![0]);
-          }}></AddFriendPicInput>
-        <FriendFormTitle maxLength={15} isEditingFriend={isEditingFriend} ref={NameRef} defaultValue={friend.name}></FriendFormTitle>
+          }}
+        />
+        <FriendFormTitle maxLength={15} isEditingFriend={isEditingFriend} ref={NameRef} defaultValue={friend.name} />
         <FriendSet>
           <FriendFormdiv>
             City: <br />
-            <FriendFormInput maxLength={21} isEditingFriend={isEditingFriend} ref={CityRef} defaultValue={friend.city}></FriendFormInput>
+            <FriendFormInput maxLength={21} isEditingFriend={isEditingFriend} ref={CityRef} defaultValue={friend.city} />
           </FriendFormdiv>
           <FriendFormdiv>
             Instagram: <br />
-            <FriendFormInput maxLength={21} isEditingFriend={isEditingFriend} ref={InstaRef} defaultValue={friend.insta}></FriendFormInput>
+            <FriendFormInput maxLength={21} isEditingFriend={isEditingFriend} ref={InstaRef} defaultValue={friend.insta} />
           </FriendFormdiv>
           <FriendFormdiv>
             Notes: <br />
-            <FriendFormTextarea maxLength={125} isEditingFriend={isEditingFriend} ref={NotesRef} defaultValue={friend.notes}></FriendFormTextarea>
+            <FriendFormTextarea maxLength={125} isEditingFriend={isEditingFriend} ref={NotesRef} defaultValue={friend.notes} />
           </FriendFormdiv>
         </FriendSet>
       </FriendInsideBox>
