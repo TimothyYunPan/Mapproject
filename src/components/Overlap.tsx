@@ -27,7 +27,18 @@ type OverlapType = {
   setPointPhoto: React.Dispatch<React.SetStateAction<File | null>>;
   setNotePhoto: React.Dispatch<React.SetStateAction<string>>;
 };
-function Overlap({ mapState, pointList, isShowingPointNotes, pointIndex, previewImgUrl, setPointIndex, setIsShowingPointNotes, setCountryId, setPointPhoto, setNotePhoto }: OverlapType) {
+function Overlap({
+  mapState,
+  pointList,
+  isShowingPointNotes,
+  pointIndex,
+  previewImgUrl,
+  setPointIndex,
+  setIsShowingPointNotes,
+  setCountryId,
+  setPointPhoto,
+  setNotePhoto,
+}: OverlapType) {
   return (
     <>
       {pointList.map((pointInfo, index) => {

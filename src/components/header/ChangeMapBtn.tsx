@@ -26,7 +26,27 @@ type ChangeMapBtnType = {
   setPointIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
-function ChangeMapBtn({ setIsShowingPointNotes, setPointList, setIsChangingMap, setMapId, setMapState, setIsShowingPoint, setCurrentMapName, mapName, index, uid, mapNames, setMapNames, setOverlapName, mapId, setDeleteMap, setPopUpMsg, setIsShowingPopUp, setNotificationInfo, setPointIndex }: ChangeMapBtnType) {
+function ChangeMapBtn({
+  setIsShowingPointNotes,
+  setPointList,
+  setIsChangingMap,
+  setMapId,
+  setMapState,
+  setIsShowingPoint,
+  setCurrentMapName,
+  mapName,
+  index,
+  uid,
+  mapNames,
+  setMapNames,
+  setOverlapName,
+  mapId,
+  setDeleteMap,
+  setPopUpMsg,
+  setIsShowingPopUp,
+  setNotificationInfo,
+  setPointIndex,
+}: ChangeMapBtnType) {
   const [isReadOnly, setIsReadOnly] = useState<boolean>(true);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const MapNameRef = useRef<HTMLInputElement>(null);

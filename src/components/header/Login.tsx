@@ -319,7 +319,30 @@ type LoginType = {
   setMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
   setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
 };
-function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList, toLogIn, setToLogIn, uid, setMapState, setFriendsList, setHaveFriendList, setFriendList, setPointList, loginStatus, setLoginStatus, userName, setUserName, userImage, originalMapNames, setMapNames, setNotificationInfo, setUserImg }: LoginType) {
+function Login({
+  setUid,
+  isLoggedIn,
+  setIsLoggedIn,
+  countryList,
+  setCountryList,
+  toLogIn,
+  setToLogIn,
+  uid,
+  setMapState,
+  setFriendsList,
+  setHaveFriendList,
+  setFriendList,
+  setPointList,
+  loginStatus,
+  setLoginStatus,
+  userName,
+  setUserName,
+  userImage,
+  originalMapNames,
+  setMapNames,
+  setNotificationInfo,
+  setUserImg,
+}: LoginType) {
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const previewProfileImgUrl = imageUpload ? URL.createObjectURL(imageUpload) : userImage ? userImage : "";
   const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false);
@@ -381,7 +404,10 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
             setErrorMsg(["3", "* password is wrong"]);
           } else if (errorMessage === "Firebase: Error (auth/user-not-found).") {
             setErrorMsg(["4", "* account not found"]);
-          } else if (errorMessage === "Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests).") {
+          } else if (
+            errorMessage ===
+            "Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests)."
+          ) {
             setErrorMsg(["5", "* too many attempts, please try again later"]);
           } else if (errorMessage === "Firebase: Error (auth/invalid-email).") {
             setErrorMsg(["7", "* this is not a valid email"]);
@@ -461,8 +487,20 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
 
           {isLoggedIn && (
             <ProfileUserInfo>
-              {isEditingProfile ? <ProfileTitleInput defaultValue={userName} ref={userNameInputRef} /> : <ProfileTitle toLogIn={toLogIn}>{userName}</ProfileTitle>}
-              <AddProfilePicLabel htmlFor="addProfilePic">{previewProfileImgUrl ? <ProfileUserInfoImg src={previewProfileImgUrl} toLogIn={toLogIn} /> : userImage && userImage ? <ProfileUserInfoImg src={userImage} toLogIn={toLogIn} /> : <ProfileNoPic isEditingProfile={isEditingProfile} toLogIn={toLogIn} />}</AddProfilePicLabel>
+              {isEditingProfile ? (
+                <ProfileTitleInput defaultValue={userName} ref={userNameInputRef} />
+              ) : (
+                <ProfileTitle toLogIn={toLogIn}>{userName}</ProfileTitle>
+              )}
+              <AddProfilePicLabel htmlFor="addProfilePic">
+                {previewProfileImgUrl ? (
+                  <ProfileUserInfoImg src={previewProfileImgUrl} toLogIn={toLogIn} />
+                ) : userImage && userImage ? (
+                  <ProfileUserInfoImg src={userImage} toLogIn={toLogIn} />
+                ) : (
+                  <ProfileNoPic isEditingProfile={isEditingProfile} toLogIn={toLogIn} />
+                )}
+              </AddProfilePicLabel>
 
               {isEditingProfile ? (
                 <>
@@ -504,12 +542,28 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
               <ProfileInputSet>
                 <AccountWord>Email</AccountWord>
                 <ProfileInput value={accountInputValue} onChange={(e) => setAccountInputValue(e.target.value)} />
-                {errorMsg[0] === "2" ? <WarningWord>{errorMsg[1]}</WarningWord> : errorMsg[0] === "4" ? <WarningWord>{errorMsg[1]}</WarningWord> : errorMsg[0] === "7" ? <WarningWord>{errorMsg[1]}</WarningWord> : <></>}
+                {errorMsg[0] === "2" ? (
+                  <WarningWord>{errorMsg[1]}</WarningWord>
+                ) : errorMsg[0] === "4" ? (
+                  <WarningWord>{errorMsg[1]}</WarningWord>
+                ) : errorMsg[0] === "7" ? (
+                  <WarningWord>{errorMsg[1]}</WarningWord>
+                ) : (
+                  <></>
+                )}
               </ProfileInputSet>
               <ProfileInputSet>
                 <AccountWord>Password</AccountWord>
                 <ProfileInput type={"password"} value={passwordInputValue} onChange={(e) => setPasswordInputValue(e.target.value)} />
-                {errorMsg[0] === "3" ? <WarningWord>{errorMsg[1]}</WarningWord> : errorMsg[0] === "5" ? <WarningWord>{errorMsg[1]}</WarningWord> : errorMsg[0] === "6" ? <WarningWord>{errorMsg[1]}</WarningWord> : <></>}
+                {errorMsg[0] === "3" ? (
+                  <WarningWord>{errorMsg[1]}</WarningWord>
+                ) : errorMsg[0] === "5" ? (
+                  <WarningWord>{errorMsg[1]}</WarningWord>
+                ) : errorMsg[0] === "6" ? (
+                  <WarningWord>{errorMsg[1]}</WarningWord>
+                ) : (
+                  <></>
+                )}
               </ProfileInputSet>
 
               <ProfileCheckSet>

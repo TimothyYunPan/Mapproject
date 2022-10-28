@@ -100,7 +100,25 @@ type homePageType = {
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function HomePage({ setIsEditing, setMapState, setIsShowingPoint, toLogIn, setToLogIn, uid, setIsLoggedIn, setIsShowingPointNotes, isShowingPopUp, setIsShowingPopUp, setLoginStatus, popUpMsg, setPopUpMsg, setDeleteMap, setCurrentMapName, setIsChangingMap, setPointIndex }: homePageType) {
+function HomePage({
+  setIsEditing,
+  setMapState,
+  setIsShowingPoint,
+  toLogIn,
+  setToLogIn,
+  uid,
+  setIsLoggedIn,
+  setIsShowingPointNotes,
+  isShowingPopUp,
+  setIsShowingPopUp,
+  setLoginStatus,
+  popUpMsg,
+  setPopUpMsg,
+  setDeleteMap,
+  setCurrentMapName,
+  setIsChangingMap,
+  setPointIndex,
+}: homePageType) {
   return (
     <HomePageCom>
       <MapTitle>ᴍᴀᴘʜᴜʙ</MapTitle>
@@ -180,7 +198,21 @@ function HomePage({ setIsEditing, setMapState, setIsShowingPoint, toLogIn, setTo
           </SelectMapText>
         </WallPaperSet>
       </HomePageContainer>
-      <PopUp setIsChangingMap={setIsChangingMap} setPointIndex={setPointIndex} setIsEditing={setIsEditing} setDeleteMap={setDeleteMap} setIsShowingPointNotes={setIsShowingPointNotes} popUpMsg={popUpMsg} setPopUpMsg={setPopUpMsg} toLogIn={toLogIn} setToLogIn={setToLogIn} setLoginStatus={setLoginStatus} setIsLoggedIn={setIsLoggedIn} isShowingPopUp={isShowingPopUp} setIsShowingPopUp={setIsShowingPopUp} />
+      <PopUp
+        setIsChangingMap={setIsChangingMap}
+        setPointIndex={setPointIndex}
+        setIsEditing={setIsEditing}
+        setDeleteMap={setDeleteMap}
+        setIsShowingPointNotes={setIsShowingPointNotes}
+        popUpMsg={popUpMsg}
+        setPopUpMsg={setPopUpMsg}
+        toLogIn={toLogIn}
+        setToLogIn={setToLogIn}
+        setLoginStatus={setLoginStatus}
+        setIsLoggedIn={setIsLoggedIn}
+        isShowingPopUp={isShowingPopUp}
+        setIsShowingPopUp={setIsShowingPopUp}
+      />
     </HomePageCom>
   );
 }

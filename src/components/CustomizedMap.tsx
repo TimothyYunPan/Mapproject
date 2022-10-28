@@ -290,319 +290,391 @@ type customizedMapType = {
   imageList: string[];
 };
 
-const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(({ allCountries, setIsHovering, hoverAddCountryName, isHovering, isColorHovering, setIsColorHovering, imageList, getPosition, singlePointList, notePhoto, pointPhoto, isEditing, previewImgUrl, setNotePhoto, setIsEditing, currentPos, setPointPhoto, mapState, isShowingPoint, uid, countryList, setIsShowingPointNotes, isShowingPointNotes, countryId, setCountryId, countryName, haveFriendList, pointList, setPointList, setIsShowingPopUp, mapId, setPopUpMsg, setNotificationInfo, setIsChangingMap, pointIndex, setPointIndex }, mouseRef) => {
-  const [mousePos, setMousePos] = useState<mousePosType>({ x: null, y: null });
-  const [largeTipTap, setLargeTipTap] = useState<boolean>(true);
-  const [pointNotes, setPointNotes] = useState<string>("");
-  const [searchTitleList, setSearchTitleList] = useState<(string | undefined)[]>([]);
-  const [X, setX] = useState<number>(0);
-  const [Y, setY] = useState<number>(0);
+const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(
+  (
+    {
+      allCountries,
+      setIsHovering,
+      hoverAddCountryName,
+      isHovering,
+      isColorHovering,
+      setIsColorHovering,
+      imageList,
+      getPosition,
+      singlePointList,
+      notePhoto,
+      pointPhoto,
+      isEditing,
+      previewImgUrl,
+      setNotePhoto,
+      setIsEditing,
+      currentPos,
+      setPointPhoto,
+      mapState,
+      isShowingPoint,
+      uid,
+      countryList,
+      setIsShowingPointNotes,
+      isShowingPointNotes,
+      countryId,
+      setCountryId,
+      countryName,
+      haveFriendList,
+      pointList,
+      setPointList,
+      setIsShowingPopUp,
+      mapId,
+      setPopUpMsg,
+      setNotificationInfo,
+      setIsChangingMap,
+      pointIndex,
+      setPointIndex,
+    },
+    mouseRef
+  ) => {
+    const [mousePos, setMousePos] = useState<mousePosType>({ x: null, y: null });
+    const [largeTipTap, setLargeTipTap] = useState<boolean>(true);
+    const [pointNotes, setPointNotes] = useState<string>("");
+    const [searchTitleList, setSearchTitleList] = useState<(string | undefined)[]>([]);
+    const [X, setX] = useState<number>(0);
+    const [Y, setY] = useState<number>(0);
 
-  const pointTitleInputRef = useRef<HTMLInputElement>(null);
-  async function writeUserMap3Data(country: string, newObj: pointListType, url: string) {
-    // console.log("我準備要write");
+    const pointTitleInputRef = useRef<HTMLInputElement>(null);
+    async function writeUserMap3Data(country: string, newObj: pointListType, url: string) {
+      // console.log("我準備要write");
 
-    await setDoc(doc(db, "user", uid, mapId, country), {
-      List: [
-        {
-          title: newObj.title,
-          countryId: country,
-          y: newObj.y,
-          x: newObj.x,
-          imgUrl: url,
-          notes: newObj.notes,
-        },
-      ],
-      searchTitle: [newObj.title],
-    });
-    // console.log("我有write成功");
-    let newSearchTitleList = [];
-    newSearchTitleList = [...searchTitleList, newObj.title];
-    setSearchTitleList(newSearchTitleList);
-  }
-  async function updateUserMap3Data(countryId: string, newObj: pointListType, url: string) {
-    // console.log("準備更新3");
-    let newSinglePointList = [];
-    const newListObj = {
-      title: newObj.title,
-      countryId: countryId,
-      y: newObj.y,
-      x: newObj.x,
-      imgUrl: url,
-      notes: newObj.notes,
-    };
-
-    newSinglePointList = [...singlePointList];
-    newSinglePointList.forEach((point, index) => {
-      if (point.x === newListObj.x && point.y === newListObj.y) {
-        newSinglePointList[index] = newListObj;
-      }
-    });
-    let newSearchTitleList = [...searchTitleList, newObj.title];
-    setSearchTitleList(newSearchTitleList);
-    await updateDoc(doc(db, "user", uid, mapId, countryId), { List: newSinglePointList, searchTitle: newSearchTitleList });
-
-    // console.log("增加點點");
-  }
-
-  function sendNewNotesInfo(country: string, newObj: pointListType) {
-    if (pointPhoto == null) {
-      const url = notePhoto;
-      if (singlePointList.length <= 1) {
-        // console.log("我是沒照片的write");
-        writeUserMap3Data(country, newObj, url);
-      } else {
-        // console.log("我是沒照片的update");
-
-        updateUserMap3Data(country, newObj, url);
-      }
-      setPointList((pre) => {
-        pre[pointIndex] = {
-          ...pre[pointIndex],
-          title: pointTitleInputRef.current?.value || "",
-          imgUrl: previewImgUrl,
-          notes: pointNotes,
-        };
-        const newArr = [...pre];
-        return newArr;
+      await setDoc(doc(db, "user", uid, mapId, country), {
+        List: [
+          {
+            title: newObj.title,
+            countryId: country,
+            y: newObj.y,
+            x: newObj.x,
+            imgUrl: url,
+            notes: newObj.notes,
+          },
+        ],
+        searchTitle: [newObj.title],
       });
-    } else {
-      let newTitle = pointTitleInputRef.current?.value;
-      const imageRef = ref(storage, `${uid}/myMap/${pointPhoto.name}`);
-      setPointList((pre) => {
-        pre[pointIndex] = {
-          ...pre[pointIndex],
-          title: newTitle,
-          notes: pointNotes,
-        };
-        const newArr = [...pre];
-        return newArr;
-      });
-      uploadBytes(imageRef, pointPhoto).then((snapshot) => {
-        getDownloadURL(snapshot.ref).then((url) => {
-          // writeUserMap2Data(url)
-
-          if (singlePointList.length <= 1) {
-            // console.log("我是有照片的write");
-            writeUserMap3Data(country, newObj, url);
-          } else {
-            // console.log("我是有照片的update");
-            updateUserMap3Data(country, newObj, url);
-          }
-          setPointList((pre) => {
-            pre[pointIndex] = {
-              ...pre[pointIndex],
-              imgUrl: url,
-            };
-            const newArr = [...pre];
-            return newArr;
-          });
-          setNotePhoto(url);
-        });
-      });
+      // console.log("我有write成功");
+      let newSearchTitleList = [];
+      newSearchTitleList = [...searchTitleList, newObj.title];
+      setSearchTitleList(newSearchTitleList);
     }
-  }
+    async function updateUserMap3Data(countryId: string, newObj: pointListType, url: string) {
+      // console.log("準備更新3");
+      let newSinglePointList = [];
+      const newListObj = {
+        title: newObj.title,
+        countryId: countryId,
+        y: newObj.y,
+        x: newObj.x,
+        imgUrl: url,
+        notes: newObj.notes,
+      };
 
-  async function deleteNote() {
-    let newPointList = pointList.filter((obj) => {
-      return obj.x !== X && obj.y !== Y;
-    });
-    setPointList(newPointList);
-    await updateDoc(doc(db, "user", uid, mapId, countryId), {
-      List: arrayRemove(singlePointList[0]),
-    });
+      newSinglePointList = [...singlePointList];
+      newSinglePointList.forEach((point, index) => {
+        if (point.x === newListObj.x && point.y === newListObj.y) {
+          newSinglePointList[index] = newListObj;
+        }
+      });
+      let newSearchTitleList = [...searchTitleList, newObj.title];
+      setSearchTitleList(newSearchTitleList);
+      await updateDoc(doc(db, "user", uid, mapId, countryId), {
+        List: newSinglePointList,
+        searchTitle: newSearchTitleList,
+      });
 
-    setNotificationInfo({ text: "Your pin has been successfully deleted", status: true });
-    setTimeout(() => {
-      setNotificationInfo({ text: "", status: false });
-    }, 3000);
-  }
-  return (
-    <Map
-      onClick={(e) => {
-        setIsChangingMap(false);
-        const target = e.target as HTMLInputElement;
-        if (target.tagName !== "path") {
-          return;
-        }
+      // console.log("增加點點");
+    }
 
-        let ColorChange = "rgb(236, 174, 72)";
-        if (target.style.fill == ColorChange) {
-          target.style.fill = "inherit";
+    function sendNewNotesInfo(country: string, newObj: pointListType) {
+      if (pointPhoto == null) {
+        const url = notePhoto;
+        if (singlePointList.length <= 1) {
+          // console.log("我是沒照片的write");
+          writeUserMap3Data(country, newObj, url);
+        } else {
+          // console.log("我是沒照片的update");
+
+          updateUserMap3Data(country, newObj, url);
         }
-        setCountryId(target.id);
-        setIsShowingPointNotes(false);
-        setPointIndex(-1);
-        let mousePosition = currentPos;
-        setMousePos(mousePosition);
-        let a = mousePosition;
-        let newObj = {
-          title: "",
-          countryId: target.id,
-          imgUrl: "",
-          notes: "",
-          x: (a.x as number) + 50,
-          y: (a.y as number) + 73,
-        };
-        setPointList([...pointList, newObj]);
-        if (pointList.length === 0) {
-          setNotificationInfo({ text: "click on the pin to add some notes!", status: true });
-          setTimeout(() => {
-            setNotificationInfo({ text: "", status: false });
-          }, 4000);
-        }
-      }}>
-      {isShowingPoint && (
-        <>
-          {pointList.map((pointInfo, index) => {
-            return (
-              <PointSet
-                isJumping={index === pointIndex}
-                key={index}
-                pointInfo={pointInfo}
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}>
-                <Point
-                  mapState={mapState}
-                  id={pointInfo.countryId}
+        setPointList((pre) => {
+          pre[pointIndex] = {
+            ...pre[pointIndex],
+            title: pointTitleInputRef.current?.value || "",
+            imgUrl: previewImgUrl,
+            notes: pointNotes,
+          };
+          const newArr = [...pre];
+          return newArr;
+        });
+      } else {
+        let newTitle = pointTitleInputRef.current?.value;
+        const imageRef = ref(storage, `${uid}/myMap/${pointPhoto.name}`);
+        setPointList((pre) => {
+          pre[pointIndex] = {
+            ...pre[pointIndex],
+            title: newTitle,
+            notes: pointNotes,
+          };
+          const newArr = [...pre];
+          return newArr;
+        });
+        uploadBytes(imageRef, pointPhoto).then((snapshot) => {
+          getDownloadURL(snapshot.ref).then((url) => {
+            // writeUserMap2Data(url)
+
+            if (singlePointList.length <= 1) {
+              // console.log("我是有照片的write");
+              writeUserMap3Data(country, newObj, url);
+            } else {
+              // console.log("我是有照片的update");
+              updateUserMap3Data(country, newObj, url);
+            }
+            setPointList((pre) => {
+              pre[pointIndex] = {
+                ...pre[pointIndex],
+                imgUrl: url,
+              };
+              const newArr = [...pre];
+              return newArr;
+            });
+            setNotePhoto(url);
+          });
+        });
+      }
+    }
+
+    async function deleteNote() {
+      let newPointList = pointList.filter((obj) => {
+        return obj.x !== X && obj.y !== Y;
+      });
+      setPointList(newPointList);
+      await updateDoc(doc(db, "user", uid, mapId, countryId), {
+        List: arrayRemove(singlePointList[0]),
+      });
+
+      setNotificationInfo({ text: "Your pin has been successfully deleted", status: true });
+      setTimeout(() => {
+        setNotificationInfo({ text: "", status: false });
+      }, 3000);
+    }
+    return (
+      <Map
+        onClick={(e) => {
+          setIsChangingMap(false);
+          const target = e.target as HTMLInputElement;
+          if (target.tagName !== "path") {
+            return;
+          }
+
+          let ColorChange = "rgb(236, 174, 72)";
+          if (target.style.fill == ColorChange) {
+            target.style.fill = "inherit";
+          }
+          setCountryId(target.id);
+          setIsShowingPointNotes(false);
+          setPointIndex(-1);
+          let mousePosition = currentPos;
+          setMousePos(mousePosition);
+          let a = mousePosition;
+          let newObj = {
+            title: "",
+            countryId: target.id,
+            imgUrl: "",
+            notes: "",
+            x: (a.x as number) + 50,
+            y: (a.y as number) + 73,
+          };
+          setPointList([...pointList, newObj]);
+          if (pointList.length === 0) {
+            setNotificationInfo({ text: "click on the pin to add some notes!", status: true });
+            setTimeout(() => {
+              setNotificationInfo({ text: "", status: false });
+            }, 4000);
+          }
+        }}>
+        {isShowingPoint && (
+          <>
+            {pointList.map((pointInfo, index) => {
+              return (
+                <PointSet
+                  isJumping={index === pointIndex}
+                  key={index}
+                  pointInfo={pointInfo}
                   onClick={(e) => {
-                    setPointPhoto(null);
-                    const target = e.target as HTMLInputElement;
-                    setX(pointInfo.x);
-                    setY(pointInfo.y);
-                    setMousePos({ x: pointInfo.x, y: pointInfo.y });
-                    setPointIndex(index);
                     e.stopPropagation();
-                    setIsShowingPointNotes(true);
-                    setIsEditing(false);
-                    setCountryId(target.id);
-                    setNotePhoto(pointInfo.imgUrl);
-                    setPointNotes("");
-                  }}
-                />
-                <PointSole />
-              </PointSet>
-            );
-          })}
-        </>
-      )}
+                  }}>
+                  <Point
+                    mapState={mapState}
+                    id={pointInfo.countryId}
+                    onClick={(e) => {
+                      setPointPhoto(null);
+                      const target = e.target as HTMLInputElement;
+                      setX(pointInfo.x);
+                      setY(pointInfo.y);
+                      setMousePos({ x: pointInfo.x, y: pointInfo.y });
+                      setPointIndex(index);
+                      e.stopPropagation();
+                      setIsShowingPointNotes(true);
+                      setIsEditing(false);
+                      setCountryId(target.id);
+                      setNotePhoto(pointInfo.imgUrl);
+                      setPointNotes("");
+                    }}
+                  />
+                  <PointSole />
+                </PointSet>
+              );
+            })}
+          </>
+        )}
 
-      {isShowingPointNotes && (
-        <PointNotes>
-          {isEditing ? <PointNotesTitleInput maxLength={20} placeholder="Title" defaultValue={pointList[pointIndex].title} ref={pointTitleInputRef} /> : <>{pointList && pointList[pointIndex].title ? <PointNotesTitle>{pointList[pointIndex].title}</PointNotesTitle> : <PointNoteTip>write something to save the pin</PointNoteTip>}</>}
-          {previewImgUrl ? <PointNotesTextImg src={previewImgUrl} /> : <PointNotesTextImg src={pointList[pointIndex].imgUrl} />}
-
-          {isEditing ? (
-            <>
-              <NotesPhotoLabel htmlFor="NotesPhotoInput">
-                <NoteImgUploadBtn />
-              </NotesPhotoLabel>
-              <NotesPhotoInput
-                type="file"
-                id="NotesPhotoInput"
-                accept="image/png, image/gif, image/jpeg"
-                onChange={(e) => {
-                  setPointPhoto(e.target.files![0]);
-                  if (e.target.files![0] || pointList[pointIndex].imgUrl) {
-                    setLargeTipTap(false);
-                  } else {
-                    setLargeTipTap(true);
-                  }
-                }}
-              />
-              <PointNotesTextArea
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}>
-                <Tiptap largeTipTap={largeTipTap} setPointNotes={setPointNotes} pointList={pointList} pointIndex={pointIndex} />
-              </PointNotesTextArea>
-            </>
-          ) : (
-            <>{previewImgUrl || pointList[pointIndex].imgUrl ? <PointNote>{pointList && parse(pointList[pointIndex].notes)}</PointNote> : <PointNoteLarge>{pointList && parse(pointList[pointIndex].notes)}</PointNoteLarge>}</>
-          )}
-          <NotesFlex>
+        {isShowingPointNotes && (
+          <PointNotes>
             {isEditing ? (
-              <NoteCancelBtn
-                onClick={(e: React.MouseEvent<HTMLInputElement>) => {
-                  e.stopPropagation();
-                  setIsShowingPopUp(true);
-                  setPopUpMsg(["Are you sure you want to leave before saving changes?", "Yes", "No", "", "goback"]);
-                }}
-              />
+              <PointNotesTitleInput maxLength={20} placeholder="Title" defaultValue={pointList[pointIndex].title} ref={pointTitleInputRef} />
             ) : (
               <>
-                <NoteEditBtn
-                  onClick={(e: React.MouseEvent<HTMLInputElement>) => {
-                    if (previewImgUrl || pointList[pointIndex].imgUrl) {
+                {pointList && pointList[pointIndex].title ? (
+                  <PointNotesTitle>{pointList[pointIndex].title}</PointNotesTitle>
+                ) : (
+                  <PointNoteTip>write something to save the pin</PointNoteTip>
+                )}
+              </>
+            )}
+            {previewImgUrl ? <PointNotesTextImg src={previewImgUrl} /> : <PointNotesTextImg src={pointList[pointIndex].imgUrl} />}
+
+            {isEditing ? (
+              <>
+                <NotesPhotoLabel htmlFor="NotesPhotoInput">
+                  <NoteImgUploadBtn />
+                </NotesPhotoLabel>
+                <NotesPhotoInput
+                  type="file"
+                  id="NotesPhotoInput"
+                  accept="image/png, image/gif, image/jpeg"
+                  onChange={(e) => {
+                    setPointPhoto(e.target.files![0]);
+                    if (e.target.files![0] || pointList[pointIndex].imgUrl) {
                       setLargeTipTap(false);
                     } else {
                       setLargeTipTap(true);
                     }
+                  }}
+                />
+                <PointNotesTextArea
+                  onClick={(e) => {
                     e.stopPropagation();
-                    setIsEditing(true);
-                    setPointNotes(pointList[pointIndex].notes);
-                    setNotePhoto(pointList[pointIndex].imgUrl);
-                  }}
-                />
-                <NoteDeleteBtn
-                  onClick={(e: React.MouseEvent<HTMLInputElement>) => {
-                    setIsShowingPopUp(true);
-                    setPopUpMsg(["Are you sure you want to delete the pin?", "Yes", "No", "", "deletepin", deleteNote]);
-                  }}
-                />
+                  }}>
+                  <Tiptap largeTipTap={largeTipTap} setPointNotes={setPointNotes} pointList={pointList} pointIndex={pointIndex} />
+                </PointNotesTextArea>
+              </>
+            ) : (
+              <>
+                {previewImgUrl || pointList[pointIndex].imgUrl ? (
+                  <PointNote>{pointList && parse(pointList[pointIndex].notes)}</PointNote>
+                ) : (
+                  <PointNoteLarge>{pointList && parse(pointList[pointIndex].notes)}</PointNoteLarge>
+                )}
               </>
             )}
-            {isEditing && (
-              <NoteAddBtn
-                onClick={(e: React.MouseEvent<HTMLInputElement>) => {
-                  e.stopPropagation();
-                  let newObj: pointListType = {
-                    title: pointTitleInputRef.current!.value,
-                    countryId: countryId,
-                    x: mousePos.x as number,
-                    y: mousePos.y as number,
-                    imgUrl: imageList[0],
-                    notes: pointNotes,
-                  };
-                  if (pointTitleInputRef.current!.value.trim() !== "") {
-                    sendNewNotesInfo(countryId, newObj);
-                    setIsEditing(false);
-                    setPointPhoto(null);
-                    setPointNotes("");
-                  } else {
-                    setNotificationInfo({ text: `Title cannot be blank`, status: true });
-                    setTimeout(() => {
-                      setNotificationInfo({ text: "", status: false });
-                    }, 3000);
-                  }
-                }}
-              />
-            )}
-          </NotesFlex>
-          <NoteFlag src={`https://countryflagsapi.com/png/${countryId}`} />
-          <LittleCloseBtn
-            onClick={() => {
-              if (isEditing) {
-                setIsShowingPopUp(true);
-                setPopUpMsg(["Are you sure you want to leave before saving changes?", "Yes", "No", "", "closenote"]);
-              } else {
-                setIsShowingPointNotes(false);
-                setPointIndex(-1);
-              }
-            }}
+            <NotesFlex>
+              {isEditing ? (
+                <NoteCancelBtn
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+                    e.stopPropagation();
+                    setIsShowingPopUp(true);
+                    setPopUpMsg(["Are you sure you want to leave before saving changes?", "Yes", "No", "", "goback"]);
+                  }}
+                />
+              ) : (
+                <>
+                  <NoteEditBtn
+                    onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+                      if (previewImgUrl || pointList[pointIndex].imgUrl) {
+                        setLargeTipTap(false);
+                      } else {
+                        setLargeTipTap(true);
+                      }
+                      e.stopPropagation();
+                      setIsEditing(true);
+                      setPointNotes(pointList[pointIndex].notes);
+                      setNotePhoto(pointList[pointIndex].imgUrl);
+                    }}
+                  />
+                  <NoteDeleteBtn
+                    onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+                      setIsShowingPopUp(true);
+                      setPopUpMsg(["Are you sure you want to delete the pin?", "Yes", "No", "", "deletepin", deleteNote]);
+                    }}
+                  />
+                </>
+              )}
+              {isEditing && (
+                <NoteAddBtn
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+                    e.stopPropagation();
+                    let newObj: pointListType = {
+                      title: pointTitleInputRef.current!.value,
+                      countryId: countryId,
+                      x: mousePos.x as number,
+                      y: mousePos.y as number,
+                      imgUrl: imageList[0],
+                      notes: pointNotes,
+                    };
+                    if (pointTitleInputRef.current!.value.trim() !== "") {
+                      sendNewNotesInfo(countryId, newObj);
+                      setIsEditing(false);
+                      setPointPhoto(null);
+                      setPointNotes("");
+                    } else {
+                      setNotificationInfo({ text: `Title cannot be blank`, status: true });
+                      setTimeout(() => {
+                        setNotificationInfo({ text: "", status: false });
+                      }, 3000);
+                    }
+                  }}
+                />
+              )}
+            </NotesFlex>
+            <NoteFlag src={`https://countryflagsapi.com/png/${countryId}`} />
+            <LittleCloseBtn
+              onClick={() => {
+                if (isEditing) {
+                  setIsShowingPopUp(true);
+                  setPopUpMsg(["Are you sure you want to leave before saving changes?", "Yes", "No", "", "closenote"]);
+                } else {
+                  setIsShowingPointNotes(false);
+                  setPointIndex(-1);
+                }
+              }}
+            />
+          </PointNotes>
+        )}
+        <div
+          onMouseMove={(e) => {
+            getPosition(e);
+          }}>
+          <MapSVG
+            setIsColorHovering={setIsColorHovering}
+            isColorHovering={isColorHovering}
+            countryId={countryId}
+            ref={mouseRef}
+            hoverAddCountryName={hoverAddCountryName}
+            setIsHovering={setIsHovering}
+            allCountries={allCountries}
+            countryList={countryList}
+            mapState={mapState}
+            haveFriendList={haveFriendList}
           />
-        </PointNotes>
-      )}
-      <div
-        onMouseMove={(e) => {
-          getPosition(e);
-        }}>
-        <MapSVG setIsColorHovering={setIsColorHovering} isColorHovering={isColorHovering} countryId={countryId} ref={mouseRef} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
-      </div>
-      {isHovering && <ShowName currentPos={currentPos}>{countryName}</ShowName>}
-    </Map>
-  );
-});
+        </div>
+        {isHovering && <ShowName currentPos={currentPos}>{countryName}</ShowName>}
+      </Map>
+    );
+  }
+);
 
 export default CustomizedMap;

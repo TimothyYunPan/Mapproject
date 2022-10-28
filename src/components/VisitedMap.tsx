@@ -40,56 +40,114 @@ type visitedMapType = {
   uid: string;
 };
 
-const VisitedMap = forwardRef<SVGSVGElement, visitedMapType>(({ uid, allCountries, setIsHovering, hoverAddCountryName, previewImgUrl, setPointPhoto, isColorHovering, currentPos, setNotePhoto, getPosition, isHovering, setIsColorHovering, mapState, isShowingPoint, countryList, setCountryList, setIsShowingPointNotes, isShowingPointNotes, countryId, setCountryId, countryName, haveFriendList, pointList, setIsShowingPopUp, setIsChangingMap, pointIndex, setPointIndex, writeUserMap1Data }, ref) => {
-  async function updateUserMap1Data(country: string) {
-    await deleteDoc(doc(db, "user", uid, "visitedCountries", country));
-  }
-  return (
-    <Map
-      onClick={(e: React.MouseEvent<HTMLInputElement>) => {
-        setIsChangingMap(false);
-        const target = e.target as HTMLInputElement;
-        if (target.tagName !== "path") {
-          return;
-        }
-        setIsShowingPopUp(false);
-        let ColorChange = "rgb(236, 174, 72)";
-        let ColorOrigin = "rgb(148, 149, 154)";
-        if (target.style.fill == "") {
-          target.style.fill = ColorChange;
-          writeUserMap1Data(target.id);
-          // console.log("空去過");
-          countryList.push({ countryId: target.id, visited: true });
-          const newCountryList = [...countryList];
-          setCountryList(newCountryList);
-        } else if (target.style.fill === ColorOrigin) {
-          target.style.fill = ColorChange;
-          writeUserMap1Data(target.id);
-          // console.log("去過");
-          countryList.push({ countryId: target.id, visited: true });
-          const newCountryList = [...countryList];
-          setCountryList(newCountryList);
-        } else if (target.style.fill === ColorChange) {
-          target.style.fill = ColorOrigin;
-          updateUserMap1Data(target.id);
-          setIsColorHovering(false);
-          const newCountryList = countryList.filter((object) => {
-            return object.countryId !== target.id;
-          });
-          setCountryList(newCountryList);
-          // console.log("沒去過");
-        }
-      }}>
-      {isHovering && <ShowName currentPos={currentPos}>{countryName}</ShowName>}
-      <div
-        onMouseMove={(e) => {
-          getPosition(e);
+const VisitedMap = forwardRef<SVGSVGElement, visitedMapType>(
+  (
+    {
+      uid,
+      allCountries,
+      setIsHovering,
+      hoverAddCountryName,
+      previewImgUrl,
+      setPointPhoto,
+      isColorHovering,
+      currentPos,
+      setNotePhoto,
+      getPosition,
+      isHovering,
+      setIsColorHovering,
+      mapState,
+      isShowingPoint,
+      countryList,
+      setCountryList,
+      setIsShowingPointNotes,
+      isShowingPointNotes,
+      countryId,
+      setCountryId,
+      countryName,
+      haveFriendList,
+      pointList,
+      setIsShowingPopUp,
+      setIsChangingMap,
+      pointIndex,
+      setPointIndex,
+      writeUserMap1Data,
+    },
+    ref
+  ) => {
+    async function updateUserMap1Data(country: string) {
+      await deleteDoc(doc(db, "user", uid, "visitedCountries", country));
+    }
+    return (
+      <Map
+        onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+          setIsChangingMap(false);
+          const target = e.target as HTMLInputElement;
+          if (target.tagName !== "path") {
+            return;
+          }
+          setIsShowingPopUp(false);
+          let ColorChange = "rgb(236, 174, 72)";
+          let ColorOrigin = "rgb(148, 149, 154)";
+          if (target.style.fill == "") {
+            target.style.fill = ColorChange;
+            writeUserMap1Data(target.id);
+            // console.log("空去過");
+            countryList.push({ countryId: target.id, visited: true });
+            const newCountryList = [...countryList];
+            setCountryList(newCountryList);
+          } else if (target.style.fill === ColorOrigin) {
+            target.style.fill = ColorChange;
+            writeUserMap1Data(target.id);
+            // console.log("去過");
+            countryList.push({ countryId: target.id, visited: true });
+            const newCountryList = [...countryList];
+            setCountryList(newCountryList);
+          } else if (target.style.fill === ColorChange) {
+            target.style.fill = ColorOrigin;
+            updateUserMap1Data(target.id);
+            setIsColorHovering(false);
+            const newCountryList = countryList.filter((object) => {
+              return object.countryId !== target.id;
+            });
+            setCountryList(newCountryList);
+            // console.log("沒去過");
+          }
         }}>
-        <MapSVG setIsColorHovering={setIsColorHovering} isColorHovering={isColorHovering} countryId={countryId} ref={ref} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
-      </div>
-      {isShowingPoint && <Overlap setNotePhoto={setNotePhoto} setPointPhoto={setPointPhoto} mapState={mapState} pointList={pointList} isShowingPointNotes={isShowingPointNotes} pointIndex={pointIndex} previewImgUrl={previewImgUrl} setPointIndex={setPointIndex} setIsShowingPointNotes={setIsShowingPointNotes} setCountryId={setCountryId} />}
-    </Map>
-  );
-});
+        {isHovering && <ShowName currentPos={currentPos}>{countryName}</ShowName>}
+        <div
+          onMouseMove={(e) => {
+            getPosition(e);
+          }}>
+          <MapSVG
+            setIsColorHovering={setIsColorHovering}
+            isColorHovering={isColorHovering}
+            countryId={countryId}
+            ref={ref}
+            hoverAddCountryName={hoverAddCountryName}
+            setIsHovering={setIsHovering}
+            allCountries={allCountries}
+            countryList={countryList}
+            mapState={mapState}
+            haveFriendList={haveFriendList}
+          />
+        </div>
+        {isShowingPoint && (
+          <Overlap
+            setNotePhoto={setNotePhoto}
+            setPointPhoto={setPointPhoto}
+            mapState={mapState}
+            pointList={pointList}
+            isShowingPointNotes={isShowingPointNotes}
+            pointIndex={pointIndex}
+            previewImgUrl={previewImgUrl}
+            setPointIndex={setPointIndex}
+            setIsShowingPointNotes={setIsShowingPointNotes}
+            setCountryId={setCountryId}
+          />
+        )}
+      </Map>
+    );
+  }
+);
 
 export default VisitedMap;

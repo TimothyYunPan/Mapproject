@@ -87,7 +87,21 @@ type PopUpType = {
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   setIsChangingMap: React.Dispatch<React.SetStateAction<boolean>>;
 };
-function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatus, toLogIn, setToLogIn, popUpMsg, setPopUpMsg, setIsShowingPointNotes, setDeleteMap, setIsEditing, setPointIndex, setIsChangingMap }: PopUpType) {
+function PopUp({
+  isShowingPopUp,
+  setIsShowingPopUp,
+  setIsLoggedIn,
+  setLoginStatus,
+  toLogIn,
+  setToLogIn,
+  popUpMsg,
+  setPopUpMsg,
+  setIsShowingPointNotes,
+  setDeleteMap,
+  setIsEditing,
+  setPointIndex,
+  setIsChangingMap,
+}: PopUpType) {
   return (
     <>
       <PopUpBg isShowingPopUp={isShowingPopUp} toLogIn={toLogIn} />

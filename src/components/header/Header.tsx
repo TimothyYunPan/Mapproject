@@ -325,7 +325,55 @@ type HeaderType = {
   setUserImg: React.Dispatch<React.SetStateAction<string>>;
 };
 
-function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid, setUid, toLogIn, setToLogIn, countryList, setCountryList, isLoggedIn, setIsLoggedIn, setIsShowingPointNotes, getCountryFriends, isShowingFriends, setIsShowingFriends, setCountryId, setCountryName, friendsList, setFriendsList, setHaveFriendList, setFriendList, setPointList, isShowingPopUp, setIsShowingPopUp, loginStatus, setLoginStatus, userName, setUserName, userImage, setMapId, mapNames, setMapNames, originalMapNames, setOriginalMapNames, mapId, setPopUpMsg, deleteMap, setDeleteMap, pointList, setNotificationInfo, setCurrentMapName, currentMapName, isChangingMap, setIsChangingMap, setPointIndex, setUserImg }: HeaderType) {
+function Header({
+  mapState,
+  setMapState,
+  isShowingPoint,
+  setIsShowingPoint,
+  uid,
+  setUid,
+  toLogIn,
+  setToLogIn,
+  countryList,
+  setCountryList,
+  isLoggedIn,
+  setIsLoggedIn,
+  setIsShowingPointNotes,
+  getCountryFriends,
+  isShowingFriends,
+  setIsShowingFriends,
+  setCountryId,
+  setCountryName,
+  friendsList,
+  setFriendsList,
+  setHaveFriendList,
+  setFriendList,
+  setPointList,
+  isShowingPopUp,
+  setIsShowingPopUp,
+  loginStatus,
+  setLoginStatus,
+  userName,
+  setUserName,
+  userImage,
+  setMapId,
+  mapNames,
+  setMapNames,
+  originalMapNames,
+  setOriginalMapNames,
+  mapId,
+  setPopUpMsg,
+  deleteMap,
+  setDeleteMap,
+  pointList,
+  setNotificationInfo,
+  setCurrentMapName,
+  currentMapName,
+  isChangingMap,
+  setIsChangingMap,
+  setPointIndex,
+  setUserImg,
+}: HeaderType) {
   const [searchValue, setSearchValue] = useState<string>("");
   const [isEditingMap, setIsEditingMap] = useState<number>(-1);
   const [isShowingOverlapBtn, setIsShowingOverlapBtn] = useState<boolean>(false);
@@ -553,7 +601,29 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                   </ChangeMapBtnSet>
                   {mapNames &&
                     mapNames.map((mapName, index) => {
-                      return <ChangeMapBtn setPointIndex={setPointIndex} setNotificationInfo={setNotificationInfo} setIsShowingPopUp={setIsShowingPopUp} setPopUpMsg={setPopUpMsg} setDeleteMap={setDeleteMap} mapId={mapId} uid={uid} mapNames={mapNames} setMapNames={setMapNames} index={index} mapName={mapName} setIsShowingPointNotes={setIsShowingPointNotes} setPointList={setPointList} setIsChangingMap={setIsChangingMap} setMapId={setMapId} setMapState={setMapState} setIsShowingPoint={setIsShowingPoint} setCurrentMapName={setCurrentMapName} setOverlapName={setOverlapName} />;
+                      return (
+                        <ChangeMapBtn
+                          setPointIndex={setPointIndex}
+                          setNotificationInfo={setNotificationInfo}
+                          setIsShowingPopUp={setIsShowingPopUp}
+                          setPopUpMsg={setPopUpMsg}
+                          setDeleteMap={setDeleteMap}
+                          mapId={mapId}
+                          uid={uid}
+                          mapNames={mapNames}
+                          setMapNames={setMapNames}
+                          index={index}
+                          mapName={mapName}
+                          setIsShowingPointNotes={setIsShowingPointNotes}
+                          setPointList={setPointList}
+                          setIsChangingMap={setIsChangingMap}
+                          setMapId={setMapId}
+                          setMapState={setMapState}
+                          setIsShowingPoint={setIsShowingPoint}
+                          setCurrentMapName={setCurrentMapName}
+                          setOverlapName={setOverlapName}
+                        />
+                      );
                     })}
                 </MapBlockSet>
                 <AddMapBtn
@@ -563,7 +633,10 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
                       setIsShowingPopUp(true);
                       setPopUpMsg(["Sign up to start your map journey 😋 ", "Sign In", "Sign Up", "", "signin"]);
                     } else if (mapNames && mapNames.length > 6) {
-                      setNotificationInfo({ text: `You have maximum of 10 maps only`, status: true });
+                      setNotificationInfo({
+                        text: `You have maximum of 10 maps only`,
+                        status: true,
+                      });
                       setTimeout(() => {
                         setNotificationInfo({ text: "", status: false });
                       }, 3000);
@@ -578,11 +651,63 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
         </MapList>
       </HeaderLeftSet>
       <HeaderRightSet>
-        <OverlapSet pointList={pointList} setPointIndex={setPointIndex} setIsShowingSearchResult={setIsShowingSearchResult} setIsShowingSearchBarMB={setIsShowingSearchBarMB} mapState={mapState} isShowingPoint={isShowingPoint} setMapId={setMapId} setOverlapName={setOverlapName} setIsShowingOverlapBtn={setIsShowingOverlapBtn} setIsShowingPoint={setIsShowingPoint} setPopUpMsg={setPopUpMsg} uid={uid} isShowingOverlapBtn={isShowingOverlapBtn} setIsChangingMap={setIsChangingMap} overlapName={overlapName} mapNames={mapNames} setIsShowingPointNotes={setIsShowingPointNotes} setIsShowingPopUp={setIsShowingPopUp} />
+        <OverlapSet
+          setPointIndex={setPointIndex}
+          setIsShowingSearchResult={setIsShowingSearchResult}
+          setIsShowingSearchBarMB={setIsShowingSearchBarMB}
+          mapState={mapState}
+          isShowingPoint={isShowingPoint}
+          setMapId={setMapId}
+          setOverlapName={setOverlapName}
+          setIsShowingOverlapBtn={setIsShowingOverlapBtn}
+          setIsShowingPoint={setIsShowingPoint}
+          setPopUpMsg={setPopUpMsg}
+          uid={uid}
+          isShowingOverlapBtn={isShowingOverlapBtn}
+          setIsChangingMap={setIsChangingMap}
+          overlapName={overlapName}
+          mapNames={mapNames}
+          setIsShowingPointNotes={setIsShowingPointNotes}
+          setIsShowingPopUp={setIsShowingPopUp}
+        />
         {mapState && mapState !== -1 && (
           <>
-            <SearchBar checkResult={checkResult} setPointIndex={setPointIndex} isShowingSearchBarMB={isShowingSearchBarMB} ref={searchInputRef} searchNameResult={searchNameResult} setIsShowingSearchResult={setIsShowingSearchResult} setSearchValue={setSearchValue} searchName={searchName} searchCountries={searchCountries} setMapState={setMapState} setCurrentMapName={setCurrentMapName} setCountryId={setCountryId} setIsShowingFriends={setIsShowingFriends} setCountryName={setCountryName} getCountryFriends={getCountryFriends} setIsShowingPointNotes={setIsShowingPointNotes} setSearchNameResult={setSearchNameResult} />
-            {isShowSearchResult && <SearchResult setPointIndex={setPointIndex} setIsShowingSearchBarMB={setIsShowingSearchBarMB} inputElement={searchInputRef.current} searchNameResult={searchNameResult} setIsShowingSearchResult={setIsShowingSearchResult} setMapState={setMapState} setCurrentMapName={setCurrentMapName} setCountryId={setCountryId} setIsShowingFriends={setIsShowingFriends} setCountryName={setCountryName} getCountryFriends={getCountryFriends} setIsShowingPointNotes={setIsShowingPointNotes} setSearchNameResult={setSearchNameResult} />}
+            <SearchBar
+              checkResult={checkResult}
+              setPointIndex={setPointIndex}
+              isShowingSearchBarMB={isShowingSearchBarMB}
+              ref={searchInputRef}
+              searchNameResult={searchNameResult}
+              setIsShowingSearchResult={setIsShowingSearchResult}
+              setSearchValue={setSearchValue}
+              searchName={searchName}
+              searchCountries={searchCountries}
+              setMapState={setMapState}
+              setCurrentMapName={setCurrentMapName}
+              setCountryId={setCountryId}
+              setIsShowingFriends={setIsShowingFriends}
+              setCountryName={setCountryName}
+              getCountryFriends={getCountryFriends}
+              setIsShowingPointNotes={setIsShowingPointNotes}
+              setSearchNameResult={setSearchNameResult}
+            />
+            {isShowSearchResult && (
+              <SearchResult
+                setPointIndex={setPointIndex}
+                setIsShowingSearchBarMB={setIsShowingSearchBarMB}
+                inputElement={searchInputRef.current}
+                searchNameResult={searchNameResult}
+                setIsShowingSearchResult={setIsShowingSearchResult}
+                setMapState={setMapState}
+                setCurrentMapName={setCurrentMapName}
+                setCountryId={setCountryId}
+                setIsShowingFriends={setIsShowingFriends}
+                setCountryName={setCountryName}
+                getCountryFriends={getCountryFriends}
+                setIsShowingPointNotes={setIsShowingPointNotes}
+                setSearchNameResult={setSearchNameResult}
+              />
+            )}
             <SearchBtn
               onClick={() => {
                 checkResult();
@@ -616,7 +741,30 @@ function Header({ mapState, setMapState, isShowingPoint, setIsShowingPoint, uid,
           />
         )}
       </HeaderRightSet>
-      <Login setUserImg={setUserImg} setNotificationInfo={setNotificationInfo} setFriendsList={setFriendsList} setMapState={setMapState} uid={uid} toLogIn={toLogIn} setToLogIn={setToLogIn} countryList={countryList} setCountryList={setCountryList} setUid={setUid} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setHaveFriendList={setHaveFriendList} setFriendList={setFriendList} setPointList={setPointList} loginStatus={loginStatus} setLoginStatus={setLoginStatus} userName={userName} setUserName={setUserName} userImage={userImage} originalMapNames={originalMapNames} setMapNames={setMapNames} />
+      <Login
+        setUserImg={setUserImg}
+        setNotificationInfo={setNotificationInfo}
+        setFriendsList={setFriendsList}
+        setMapState={setMapState}
+        uid={uid}
+        toLogIn={toLogIn}
+        setToLogIn={setToLogIn}
+        countryList={countryList}
+        setCountryList={setCountryList}
+        setUid={setUid}
+        isLoggedIn={isLoggedIn}
+        setIsLoggedIn={setIsLoggedIn}
+        setHaveFriendList={setHaveFriendList}
+        setFriendList={setFriendList}
+        setPointList={setPointList}
+        loginStatus={loginStatus}
+        setLoginStatus={setLoginStatus}
+        userName={userName}
+        setUserName={setUserName}
+        userImage={userImage}
+        originalMapNames={originalMapNames}
+        setMapNames={setMapNames}
+      />
     </Wrapper>
   );
 }
