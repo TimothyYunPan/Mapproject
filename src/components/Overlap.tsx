@@ -32,46 +32,43 @@ function Overlap({ mapState, pointList, isShowingPointNotes, pointIndex, preview
     <>
       {pointList.map((pointInfo, index) => {
         return (
-          <>
-            <PointSet
-              isJumping={index === pointIndex}
-              key={index}
-              pointInfo={pointInfo}
+          <PointSet
+            isJumping={index === pointIndex}
+            key={index}
+            pointInfo={pointInfo}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}>
+            <Point
+              mapState={mapState}
+              id={pointInfo.countryId}
               onClick={(e) => {
+                const target = e.target as HTMLInputElement;
+                setPointPhoto(null);
+                setPointIndex(index);
+                setNotePhoto(pointInfo.imgUrl);
                 e.stopPropagation();
-              }}>
-              <Point
-                mapState={mapState}
-                id={pointInfo.countryId}
-                onClick={(e) => {
-                  const target = e.target as HTMLInputElement;
-                  setPointPhoto(null);
-                  setPointIndex(index);
-                  setNotePhoto(pointInfo.imgUrl);
-                  e.stopPropagation();
-                  setIsShowingPointNotes(true);
-                  setCountryId(target.id);
-                }}></Point>
-              <PointSole></PointSole>
-            </PointSet>
-          </>
+                setIsShowingPointNotes(true);
+                setCountryId(target.id);
+              }}
+            />
+            <PointSole />
+          </PointSet>
         );
       })}
-      {isShowingPointNotes && isShowingPointNotes ? (
+      {isShowingPointNotes && (
         <PointNotes>
           <PointNotesTitle>{pointList[pointIndex]?.title}</PointNotesTitle>
           {previewImgUrl && previewImgUrl ? <PointNotesTextImg src={previewImgUrl} /> : <PointNotesTextImg src={pointList[pointIndex]?.imgUrl} />}
-
           <PointNote>{pointList && parse(pointList[pointIndex]?.notes)}</PointNote>
           <LittleCloseBtn
             onClick={() => {
               setIsShowingPointNotes(false);
               setPointIndex(-1);
-            }}></LittleCloseBtn>
+            }}
+          />
           <ViewModeMsg>View mode</ViewModeMsg>
         </PointNotes>
-      ) : (
-        <></>
       )}
     </>
   );

@@ -1,17 +1,17 @@
 import { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "../utils/firebaseConfig";
-import app from "../utils/firebaseConfig";
-import userProfileGrey from "./icon/userProfileGrey.png";
+import { db } from "../../utils/firebaseConfig";
+import app from "../../utils/firebaseConfig";
+import userProfileGrey from "../icon/userProfileGrey.png";
 import styled from "styled-components";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { countryListType, friendListType, haveFriendListType, pointListType, mapNameType, notificationInfoType } from "../App";
-import { PointNotesTitleInput } from "./CustomizedMap";
-import closeGrey from "./icon/closeGrey.png";
-import okGrey from "./icon/okGrey.png";
-import editGrey from "./icon/editGrey.png";
-import editGreyHover from "./icon/editGreyHover.png";
+import { countryListType, friendListType, haveFriendListType, pointListType, mapNameType, notificationInfoType } from "../../App";
+import { PointNotesTitleInput } from "../CustomizedMap";
+import closeGrey from "../icon/closeGrey.png";
+import okGrey from "../icon/okGrey.png";
+import editGrey from "../icon/editGrey.png";
+import editGreyHover from "../icon/editGreyHover.png";
 
 const storage = getStorage(app);
 const auth = getAuth(app);
@@ -459,36 +459,37 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
           {isLoggedIn === false && loginStatus === "login" && <ProfileTitle toLogIn={toLogIn}>Welcome Back</ProfileTitle>}
           {isLoggedIn === false && loginStatus === "register" && <ProfileTitle toLogIn={toLogIn}>Let's Map the World</ProfileTitle>}
 
-          {isLoggedIn === true && (
-            <>
-              <ProfileUserInfo>
-                {isEditingProfile ? <ProfileTitleInput defaultValue={userName} ref={userNameInputRef} /> : <ProfileTitle toLogIn={toLogIn}>{userName}</ProfileTitle>}
-                <AddProfilePicLabel htmlFor="addProfilePic">{previewProfileImgUrl && previewProfileImgUrl ? <ProfileUserInfoImg src={previewProfileImgUrl} toLogIn={toLogIn}></ProfileUserInfoImg> : userImage && userImage ? <ProfileUserInfoImg src={userImage} toLogIn={toLogIn}></ProfileUserInfoImg> : <ProfileNoPic isEditingProfile={isEditingProfile} toLogIn={toLogIn}></ProfileNoPic>}</AddProfilePicLabel>
+          {isLoggedIn && (
+            <ProfileUserInfo>
+              {isEditingProfile ? <ProfileTitleInput defaultValue={userName} ref={userNameInputRef} /> : <ProfileTitle toLogIn={toLogIn}>{userName}</ProfileTitle>}
+              <AddProfilePicLabel htmlFor="addProfilePic">{previewProfileImgUrl ? <ProfileUserInfoImg src={previewProfileImgUrl} toLogIn={toLogIn} /> : userImage && userImage ? <ProfileUserInfoImg src={userImage} toLogIn={toLogIn} /> : <ProfileNoPic isEditingProfile={isEditingProfile} toLogIn={toLogIn} />}</AddProfilePicLabel>
 
-                {isEditingProfile ? (
-                  <>
-                    <AddProfilePicInput
-                      id="addProfilePic"
-                      type="file"
-                      accept="image/png, image/gif, image/jpeg, image/svg"
-                      onChange={(e) => {
-                        setImageUpload(e.target.files![0]);
-                      }}></AddProfilePicInput>
-                    <UpdateProfileBtn
-                      onClick={() => {
-                        updateProfileInfo(uid);
-
-                        setUserName(userNameInputRef.current !== null ? userNameInputRef.current!.value : userName);
-                      }}></UpdateProfileBtn>
-                  </>
-                ) : (
-                  <EditProfileBtn
+              {isEditingProfile ? (
+                <>
+                  <AddProfilePicInput
+                    id="addProfilePic"
+                    type="file"
+                    accept="image/png, image/gif, image/jpeg, image/svg"
+                    onChange={(e) => {
+                      setImageUpload(e.target.files![0]);
+                    }}
+                  />
+                  <UpdateProfileBtn
                     onClick={() => {
-                      setIsEditingProfile(true);
-                    }}></EditProfileBtn>
-                )}
-              </ProfileUserInfo>
-            </>
+                      updateProfileInfo(uid);
+
+                      setUserName(userNameInputRef.current !== null ? userNameInputRef.current!.value : userName);
+                    }}
+                  />
+                </>
+              ) : (
+                <EditProfileBtn
+                  onClick={() => {
+                    setIsEditingProfile(true);
+                  }}
+                />
+              )}
+            </ProfileUserInfo>
           )}
 
           {isLoggedIn === false && (
@@ -497,7 +498,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
                 <ProfileInputSet>
                   <AccountWord>Name</AccountWord>
                   <ProfileInput value={nameInputValue} onChange={(e) => setNameInputValue(e.target.value)} />
-                  {errorMsg[0] === "1" ? <WarningWord>{errorMsg[1]}</WarningWord> : <></>}
+                  {errorMsg[0] === "1" && <WarningWord>{errorMsg[1]}</WarningWord>}
                 </ProfileInputSet>
               )}
               <ProfileInputSet>
@@ -512,7 +513,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
               </ProfileInputSet>
 
               <ProfileCheckSet>
-                <ProfileCheckboxSet></ProfileCheckboxSet>
+                <ProfileCheckboxSet />
                 {loginStatus === "login" && (
                   <ProfileNoAcount
                     onClick={() => {
@@ -559,7 +560,7 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
             </ProfileLogInSet>
           )}
 
-          {isLoggedIn === true && (
+          {isLoggedIn && (
             <ProfileLogoutBtn
               toLogIn={toLogIn}
               onClick={() => {
@@ -586,8 +587,9 @@ function Login({ setUid, isLoggedIn, setIsLoggedIn, countryList, setCountryList,
             onClick={() => {
               setToLogIn(false);
               setIsEditingProfile(false);
-            }}></Back>
-        </ProfilePanel>{" "}
+            }}
+          />
+        </ProfilePanel>
       </LogginPopUp>
     </Wrapper>
   );

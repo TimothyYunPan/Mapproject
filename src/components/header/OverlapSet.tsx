@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import { mapNameType, pointListType } from "../App";
-import sortDown from "./icon/sortDown.png";
-import eyeOpened from "./icon/eyeOpened.png";
-import eyeClosed from "./icon/eyeClosed.png";
+import { mapNameType, pointListType } from "../../App";
+import sortDown from "../icon/sortDown.png";
+import eyeOpened from "../icon/eyeOpened.png";
+import eyeClosed from "../icon/eyeClosed.png";
 
 const ShowOverLapBtn = styled.div<{ isShowingPoint: boolean }>`
   height: 20px;
@@ -139,7 +139,8 @@ function OverlapSet({ mapState, setPopUpMsg, uid, setIsShowingPoint, isShowingOv
                 setIsShowingSearchBarMB(false);
                 setIsShowingSearchResult(false);
               }
-            }}></ShowOverLapBtn>
+            }}
+          />
           <CurrentOverlap
             isShowingPoint={isShowingPoint}
             onClick={() => {
@@ -177,7 +178,6 @@ function OverlapSet({ mapState, setPopUpMsg, uid, setIsShowingPoint, isShowingOv
                 }
               }}>
               My Bucket List
-              {/* {Map1NameRef.current.value} */}
             </OverlapBtn>
             {mapNames &&
               mapNames.map((mapName, index) => {
@@ -215,7 +215,8 @@ function OverlapSet({ mapState, setPopUpMsg, uid, setIsShowingPoint, isShowingOv
                 setIsShowingSearchBarMB(false);
                 setIsShowingSearchResult(false);
               }
-            }}></CheckOverLapBtn>
+            }}
+          />
         </>
       )}
     </OverlapSetBox>

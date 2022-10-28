@@ -90,7 +90,7 @@ type PopUpType = {
 function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatus, toLogIn, setToLogIn, popUpMsg, setPopUpMsg, setIsShowingPointNotes, setDeleteMap, setIsEditing, setPointIndex, setIsChangingMap }: PopUpType) {
   return (
     <>
-      <PopUpBg isShowingPopUp={isShowingPopUp} toLogIn={toLogIn}></PopUpBg>
+      <PopUpBg isShowingPopUp={isShowingPopUp} toLogIn={toLogIn} />
       <PopUpBlock isShowingPopUp={isShowingPopUp}>
         <PopUpSet>
           <PopUpText isShowingPopUp={isShowingPopUp}>{popUpMsg[0] as string}</PopUpText>
@@ -109,9 +109,7 @@ function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatu
                 } else if (popUpMsg[4] === "deletefriend") {
                   let deleteFriendFunc = popUpMsg[5] as (index: number) => void;
                   let i = parseInt(popUpMsg[3] as string);
-                  // i = i.parseInt()
                   deleteFriendFunc(i);
-                  // deleteFriend(Number(popUpMsg[3]));
                 } else if (popUpMsg[4] === "deletemap") {
                   let deleteMapFunc = popUpMsg[5] as () => void;
                   deleteMapFunc();
@@ -121,7 +119,6 @@ function PopUp({ isShowingPopUp, setIsShowingPopUp, setIsLoggedIn, setLoginStatu
                   setIsShowingPointNotes(false);
                   setPointIndex(-1);
                 }
-
                 setIsShowingPopUp(false);
               }}>
               {popUpMsg[1] as string}

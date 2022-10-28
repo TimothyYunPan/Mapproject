@@ -452,54 +452,51 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(({ allCountri
           }, 4000);
         }
       }}>
-      {isShowingPoint ? (
+      {isShowingPoint && (
         <>
           {pointList.map((pointInfo, index) => {
             return (
-              <>
-                <PointSet
-                  isJumping={index === pointIndex}
-                  key={index}
-                  pointInfo={pointInfo}
+              <PointSet
+                isJumping={index === pointIndex}
+                key={index}
+                pointInfo={pointInfo}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}>
+                <Point
+                  mapState={mapState}
+                  id={pointInfo.countryId}
                   onClick={(e) => {
+                    setPointPhoto(null);
+                    const target = e.target as HTMLInputElement;
+                    setX(pointInfo.x);
+                    setY(pointInfo.y);
+                    setMousePos({ x: pointInfo.x, y: pointInfo.y });
+                    setPointIndex(index);
                     e.stopPropagation();
-                  }}>
-                  <Point
-                    mapState={mapState}
-                    id={pointInfo.countryId}
-                    onClick={(e) => {
-                      setPointPhoto(null);
-                      const target = e.target as HTMLInputElement;
-                      setX(pointInfo.x);
-                      setY(pointInfo.y);
-                      setMousePos({ x: pointInfo.x, y: pointInfo.y });
-                      setPointIndex(index);
-                      e.stopPropagation();
-                      setIsShowingPointNotes(true);
-                      setIsEditing(false);
-                      setCountryId(target.id);
-                      setNotePhoto(pointInfo.imgUrl);
-                      setPointNotes("");
-                    }}></Point>
-                  <PointSole></PointSole>
-                </PointSet>
-              </>
+                    setIsShowingPointNotes(true);
+                    setIsEditing(false);
+                    setCountryId(target.id);
+                    setNotePhoto(pointInfo.imgUrl);
+                    setPointNotes("");
+                  }}
+                />
+                <PointSole />
+              </PointSet>
             );
           })}
         </>
-      ) : (
-        <></>
       )}
 
-      {isShowingPointNotes ? (
+      {isShowingPointNotes && (
         <PointNotes>
-          {isEditing ? <PointNotesTitleInput maxLength={20} placeholder="Title" defaultValue={pointList[pointIndex].title} ref={pointTitleInputRef}></PointNotesTitleInput> : <>{pointList && pointList[pointIndex].title ? <PointNotesTitle>{pointList[pointIndex].title}</PointNotesTitle> : <PointNoteTip>write something to save the pin</PointNoteTip>}</>}
+          {isEditing ? <PointNotesTitleInput maxLength={20} placeholder="Title" defaultValue={pointList[pointIndex].title} ref={pointTitleInputRef} /> : <>{pointList && pointList[pointIndex].title ? <PointNotesTitle>{pointList[pointIndex].title}</PointNotesTitle> : <PointNoteTip>write something to save the pin</PointNoteTip>}</>}
           {previewImgUrl ? <PointNotesTextImg src={previewImgUrl} /> : <PointNotesTextImg src={pointList[pointIndex].imgUrl} />}
 
           {isEditing ? (
             <>
               <NotesPhotoLabel htmlFor="NotesPhotoInput">
-                <NoteImgUploadBtn></NoteImgUploadBtn>
+                <NoteImgUploadBtn />
               </NotesPhotoLabel>
               <NotesPhotoInput
                 type="file"
@@ -512,7 +509,8 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(({ allCountri
                   } else {
                     setLargeTipTap(true);
                   }
-                }}></NotesPhotoInput>
+                }}
+              />
               <PointNotesTextArea
                 onClick={(e) => {
                   e.stopPropagation();
@@ -523,7 +521,6 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(({ allCountri
           ) : (
             <>{previewImgUrl || pointList[pointIndex].imgUrl ? <PointNote>{pointList && parse(pointList[pointIndex].notes)}</PointNote> : <PointNoteLarge>{pointList && parse(pointList[pointIndex].notes)}</PointNoteLarge>}</>
           )}
-
           <NotesFlex>
             {isEditing ? (
               <NoteCancelBtn
@@ -531,7 +528,8 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(({ allCountri
                   e.stopPropagation();
                   setIsShowingPopUp(true);
                   setPopUpMsg(["Are you sure you want to leave before saving changes?", "Yes", "No", "", "goback"]);
-                }}></NoteCancelBtn>
+                }}
+              />
             ) : (
               <>
                 <NoteEditBtn
@@ -545,45 +543,44 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(({ allCountri
                     setIsEditing(true);
                     setPointNotes(pointList[pointIndex].notes);
                     setNotePhoto(pointList[pointIndex].imgUrl);
-                  }}></NoteEditBtn>
+                  }}
+                />
                 <NoteDeleteBtn
                   onClick={(e: React.MouseEvent<HTMLInputElement>) => {
                     setIsShowingPopUp(true);
                     setPopUpMsg(["Are you sure you want to delete the pin?", "Yes", "No", "", "deletepin", deleteNote]);
-                  }}></NoteDeleteBtn>
+                  }}
+                />
               </>
             )}
-            {isEditing ? (
-              <>
-                <NoteAddBtn
-                  onClick={(e: React.MouseEvent<HTMLInputElement>) => {
-                    e.stopPropagation();
-                    let newObj: pointListType = {
-                      title: pointTitleInputRef.current!.value,
-                      countryId: countryId,
-                      x: mousePos.x as number,
-                      y: mousePos.y as number,
-                      imgUrl: imageList[0],
-                      notes: pointNotes,
-                    };
-                    if (pointTitleInputRef.current!.value.trim() !== "") {
-                      sendNewNotesInfo(countryId, newObj);
-                      setIsEditing(false);
-                      setPointPhoto(null);
-                      setPointNotes("");
-                    } else {
-                      setNotificationInfo({ text: `Title cannot be blank`, status: true });
-                      setTimeout(() => {
-                        setNotificationInfo({ text: "", status: false });
-                      }, 3000);
-                    }
-                  }}></NoteAddBtn>
-              </>
-            ) : (
-              <></>
+            {isEditing && (
+              <NoteAddBtn
+                onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+                  e.stopPropagation();
+                  let newObj: pointListType = {
+                    title: pointTitleInputRef.current!.value,
+                    countryId: countryId,
+                    x: mousePos.x as number,
+                    y: mousePos.y as number,
+                    imgUrl: imageList[0],
+                    notes: pointNotes,
+                  };
+                  if (pointTitleInputRef.current!.value.trim() !== "") {
+                    sendNewNotesInfo(countryId, newObj);
+                    setIsEditing(false);
+                    setPointPhoto(null);
+                    setPointNotes("");
+                  } else {
+                    setNotificationInfo({ text: `Title cannot be blank`, status: true });
+                    setTimeout(() => {
+                      setNotificationInfo({ text: "", status: false });
+                    }, 3000);
+                  }
+                }}
+              />
             )}
           </NotesFlex>
-          <NoteFlag src={`https://countryflagsapi.com/png/${countryId}`}></NoteFlag>
+          <NoteFlag src={`https://countryflagsapi.com/png/${countryId}`} />
           <LittleCloseBtn
             onClick={() => {
               if (isEditing) {
@@ -593,10 +590,9 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(({ allCountri
                 setIsShowingPointNotes(false);
                 setPointIndex(-1);
               }
-            }}></LittleCloseBtn>
+            }}
+          />
         </PointNotes>
-      ) : (
-        <></>
       )}
       <div
         onMouseMove={(e) => {
@@ -604,7 +600,7 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(({ allCountri
         }}>
         <MapSVG setIsColorHovering={setIsColorHovering} isColorHovering={isColorHovering} countryId={countryId} ref={mouseRef} hoverAddCountryName={hoverAddCountryName} setIsHovering={setIsHovering} allCountries={allCountries} countryList={countryList} mapState={mapState} haveFriendList={haveFriendList} />
       </div>
-      {isHovering ? <ShowName currentPos={currentPos}>{countryName}</ShowName> : <></>}
+      {isHovering && <ShowName currentPos={currentPos}>{countryName}</ShowName>}
     </Map>
   );
 });
