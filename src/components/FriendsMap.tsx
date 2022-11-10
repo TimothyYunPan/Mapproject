@@ -463,7 +463,7 @@ const FriednsMap = forwardRef<SVGSVGElement, friendsMapType>(
                 }}>
                 +
               </AddFriendBtn>
-              <Flag src={`https://countryflagsapi.com/png/${countryId}`} />
+              <Flag src={`/flags/${countryId.toLowerCase()}.svg`} />
               <FriendsCountry>{countryName}</FriendsCountry>
               {isAddingFriend && (
                 <AddFriendBox>

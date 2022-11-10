@@ -386,7 +386,7 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(
         searchTitle: newSearchTitleList,
       });
 
-      // console.log("增加點點");
+      // console.log("增加pin");
     }
 
     function sendNewNotesInfo(country: string, newObj: pointListType) {
@@ -424,8 +424,6 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(
         });
         uploadBytes(imageRef, pointPhoto).then((snapshot) => {
           getDownloadURL(snapshot.ref).then((url) => {
-            // writeUserMap2Data(url)
-
             if (singlePointList.length <= 1) {
               // console.log("我是有照片的write");
               writeUserMap3Data(country, newObj, url);
@@ -640,7 +638,7 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(
                 />
               )}
             </NotesFlex>
-            <NoteFlag src={`https://countryflagsapi.com/png/${countryId}`} />
+            <NoteFlag src={`/flags/${countryId.toLowerCase()}.svg`} />
             <LittleCloseBtn
               onClick={() => {
                 if (isEditing) {

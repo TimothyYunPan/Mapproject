@@ -16,7 +16,7 @@ import FriendsMap from "./components/FriendsMap";
 import CustomizedMap from "./components/CustomizedMap";
 const storage = getStorage(app);
 
-const Wrapper = styled.div<{ mapState: number }>`
+const Wrapper = styled.div`
   height: 100vh;
   width: 100%;
   display: flex;
@@ -117,7 +117,6 @@ type WorldMapType = {
   setUid: React.Dispatch<React.SetStateAction<string>>;
   countryList: countryListType[];
   setCountryList: React.Dispatch<React.SetStateAction<countryListType[]>>;
-  isLoggedIn: boolean;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   isShowingPointNotes: boolean;
   setIsShowingPointNotes: React.Dispatch<React.SetStateAction<boolean>>;
@@ -138,14 +137,11 @@ type WorldMapType = {
   setPointList: React.Dispatch<React.SetStateAction<pointListType[]>>;
   isShowingPopUp: boolean;
   setIsShowingPopUp: React.Dispatch<React.SetStateAction<boolean>>;
-  loginStatus: string;
   setLoginStatus: React.Dispatch<React.SetStateAction<string>>;
   setUserName: React.Dispatch<React.SetStateAction<string>>;
   setUserImg: React.Dispatch<React.SetStateAction<string>>;
   mapId: string;
-  mapNames: mapNameType[];
   setMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
-  setOriginalMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
   popUpMsg: (string | { (): void } | { (index: number): void })[];
   setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void } | { (index: number): void })[]>>;
   setDeleteMap: React.Dispatch<React.SetStateAction<string>>;
@@ -167,7 +163,6 @@ function WorldMap({
   setUid,
   countryList,
   setCountryList,
-  isLoggedIn,
   setIsLoggedIn,
   setIsShowingPointNotes,
   isShowingPointNotes,
@@ -188,14 +183,11 @@ function WorldMap({
   setPointList,
   isShowingPopUp,
   setIsShowingPopUp,
-  loginStatus,
   setLoginStatus,
   setUserName,
   setUserImg,
   mapId,
   setMapNames,
-  mapNames,
-  setOriginalMapNames,
   popUpMsg,
   setPopUpMsg,
   setDeleteMap,
@@ -275,7 +267,7 @@ function WorldMap({
     if (docSnap.exists()) {
       setMapNames(docSnap.data().names);
     } else {
-      // console.log("No such document!");
+      console.log("No such document!");
     }
   }
 
@@ -374,7 +366,7 @@ function WorldMap({
   });
 
   return (
-    <Wrapper mapState={mapState}>
+    <Wrapper>
       {mapState && mapState === -1 ? (
         <HomePage
           setIsEditing={setIsEditing}
@@ -505,69 +497,69 @@ function WorldMap({
             setIsShowingPopUp={setIsShowingPopUp}
           />
           <NumberCount>
-            You already have {friendsList.length} {friendsList && friendsList.length <= 1 ? `friend` : `friends`} from {haveFriendList.length}
-            {haveFriendList && haveFriendList.length <= 1 ? `country` : `countries`}
+            You already have {friendsList.length} {friendsList && friendsList.length <= 1 ? "friend" : "friends"} from {haveFriendList.length}
+            {haveFriendList && haveFriendList.length <= 1 ? " country" : " countries"}
           </NumberCount>
         </>
-      ) : mapState === 3 ? (
-        <>
-          <CustomizedMap
-            ref={mouseRef}
-            allCountries={allCountries}
-            setIsHovering={setIsHovering}
-            hoverAddCountryName={hoverAddCountryName}
-            isHovering={isHovering}
-            isColorHovering={isColorHovering}
-            setIsColorHovering={setIsColorHovering}
-            imageList={imageList}
-            getPosition={getPosition}
-            singlePointList={singlePointList}
-            notePhoto={notePhoto}
-            pointPhoto={pointPhoto}
-            isEditing={isEditing}
-            previewImgUrl={previewImgUrl}
-            setNotePhoto={setNotePhoto}
-            setIsEditing={setIsEditing}
-            currentPos={currentPos}
-            setPointPhoto={setPointPhoto}
-            mapState={mapState}
-            isShowingPoint={isShowingPoint}
-            uid={uid}
-            countryList={countryList}
-            setIsShowingPointNotes={setIsShowingPointNotes}
-            isShowingPointNotes={isShowingPointNotes}
-            countryId={countryId}
-            setCountryId={setCountryId}
-            countryName={countryName}
-            haveFriendList={haveFriendList}
-            pointList={pointList}
-            setPointList={setPointList}
-            setIsShowingPopUp={setIsShowingPopUp}
-            mapId={mapId}
-            setPopUpMsg={setPopUpMsg}
-            setNotificationInfo={setNotificationInfo}
-            setIsChangingMap={setIsChangingMap}
-            pointIndex={pointIndex}
-            setPointIndex={setPointIndex}
-          />
-          <PopUp
-            setIsChangingMap={setIsChangingMap}
-            setPointIndex={setPointIndex}
-            setIsEditing={setIsEditing}
-            setDeleteMap={setDeleteMap}
-            setIsShowingPointNotes={setIsShowingPointNotes}
-            popUpMsg={popUpMsg}
-            setPopUpMsg={setPopUpMsg}
-            toLogIn={toLogIn}
-            setToLogIn={setToLogIn}
-            setLoginStatus={setLoginStatus}
-            setIsLoggedIn={setIsLoggedIn}
-            isShowingPopUp={isShowingPopUp}
-            setIsShowingPopUp={setIsShowingPopUp}
-          />
-        </>
       ) : (
-        <></>
+        mapState === 3 && (
+          <>
+            <CustomizedMap
+              ref={mouseRef}
+              allCountries={allCountries}
+              setIsHovering={setIsHovering}
+              hoverAddCountryName={hoverAddCountryName}
+              isHovering={isHovering}
+              isColorHovering={isColorHovering}
+              setIsColorHovering={setIsColorHovering}
+              imageList={imageList}
+              getPosition={getPosition}
+              singlePointList={singlePointList}
+              notePhoto={notePhoto}
+              pointPhoto={pointPhoto}
+              isEditing={isEditing}
+              previewImgUrl={previewImgUrl}
+              setNotePhoto={setNotePhoto}
+              setIsEditing={setIsEditing}
+              currentPos={currentPos}
+              setPointPhoto={setPointPhoto}
+              mapState={mapState}
+              isShowingPoint={isShowingPoint}
+              uid={uid}
+              countryList={countryList}
+              setIsShowingPointNotes={setIsShowingPointNotes}
+              isShowingPointNotes={isShowingPointNotes}
+              countryId={countryId}
+              setCountryId={setCountryId}
+              countryName={countryName}
+              haveFriendList={haveFriendList}
+              pointList={pointList}
+              setPointList={setPointList}
+              setIsShowingPopUp={setIsShowingPopUp}
+              mapId={mapId}
+              setPopUpMsg={setPopUpMsg}
+              setNotificationInfo={setNotificationInfo}
+              setIsChangingMap={setIsChangingMap}
+              pointIndex={pointIndex}
+              setPointIndex={setPointIndex}
+            />
+            <PopUp
+              setIsChangingMap={setIsChangingMap}
+              setPointIndex={setPointIndex}
+              setIsEditing={setIsEditing}
+              setDeleteMap={setDeleteMap}
+              setIsShowingPointNotes={setIsShowingPointNotes}
+              popUpMsg={popUpMsg}
+              setPopUpMsg={setPopUpMsg}
+              toLogIn={toLogIn}
+              setToLogIn={setToLogIn}
+              setLoginStatus={setLoginStatus}
+              setIsLoggedIn={setIsLoggedIn}
+              isShowingPopUp={isShowingPopUp}
+              setIsShowingPopUp={setIsShowingPopUp}
+            />
+          </>
+        )
       )}
     </Wrapper>
   );

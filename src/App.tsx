@@ -114,7 +114,6 @@ function App() {
         setIsShowingPoint={setIsShowingPoint}
         setIsShowingPointNotes={setIsShowingPointNotes}
         getCountryFriends={getCountryFriends}
-        isShowingFriends={isShowingFriends}
         setIsShowingFriends={setIsShowingFriends}
         setCountryId={setCountryId}
         setCountryName={setCountryName}
@@ -124,7 +123,6 @@ function App() {
         setFriendList={setFriendList}
         setPointList={setPointList}
         setIsShowingPopUp={setIsShowingPopUp}
-        isShowingPopUp={isShowingPopUp}
         loginStatus={loginStatus}
         setLoginStatus={setLoginStatus}
         userName={userName}
@@ -137,9 +135,7 @@ function App() {
         originalMapNames={originalMapNames}
         setOriginalMapNames={setOriginalMapNames}
         setPopUpMsg={setPopUpMsg}
-        deleteMap={deleteMap}
         setDeleteMap={setDeleteMap}
-        pointList={pointList}
         setNotificationInfo={setNotificationInfo}
         setCurrentMapName={setCurrentMapName}
         currentMapName={currentMapName}
@@ -148,7 +144,6 @@ function App() {
         setUserImg={setUserImg}
       />
       <WorldMap
-        isLoggedIn={isLoggedIn}
         setIsLoggedIn={setIsLoggedIn}
         countryList={countryList}
         setCountryList={setCountryList}
@@ -179,14 +174,11 @@ function App() {
         setPointList={setPointList}
         isShowingPopUp={isShowingPopUp}
         setIsShowingPopUp={setIsShowingPopUp}
-        loginStatus={loginStatus}
         setLoginStatus={setLoginStatus}
         setUserName={setUserName}
         setUserImg={setUserImg}
         mapId={mapId}
         setMapNames={setMapNames}
-        mapNames={mapNames}
-        setOriginalMapNames={setOriginalMapNames}
         popUpMsg={popUpMsg}
         setPopUpMsg={setPopUpMsg}
         setDeleteMap={setDeleteMap}

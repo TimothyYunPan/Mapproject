@@ -290,7 +290,6 @@ type HeaderType = {
   isLoggedIn: boolean;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   getCountryFriends: (id: string) => void;
-  isShowingFriends: boolean;
   setIsShowingFriends: React.Dispatch<React.SetStateAction<boolean>>;
   setCountryId: React.Dispatch<React.SetStateAction<string>>;
   setCountryName: React.Dispatch<React.SetStateAction<string>>;
@@ -298,9 +297,7 @@ type HeaderType = {
   setFriendsList: React.Dispatch<React.SetStateAction<friendListType[]>>;
   setHaveFriendList: React.Dispatch<React.SetStateAction<haveFriendListType[]>>;
   setFriendList: React.Dispatch<React.SetStateAction<friendListType[]>>;
-  pointList: pointListType[];
   setPointList: React.Dispatch<React.SetStateAction<pointListType[]>>;
-  isShowingPopUp: boolean;
   setIsShowingPopUp: React.Dispatch<React.SetStateAction<boolean>>;
   loginStatus: string;
   setLoginStatus: React.Dispatch<React.SetStateAction<string>>;
@@ -314,7 +311,6 @@ type HeaderType = {
   originalMapNames: mapNameType[];
   setOriginalMapNames: React.Dispatch<React.SetStateAction<mapNameType[]>>;
   setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void } | { (index: number): void })[]>>;
-  deleteMap: string;
   setDeleteMap: React.Dispatch<React.SetStateAction<string>>;
   setNotificationInfo: React.Dispatch<React.SetStateAction<notificationInfoType>>;
   setCurrentMapName: React.Dispatch<React.SetStateAction<string>>;
@@ -340,7 +336,6 @@ function Header({
   setIsLoggedIn,
   setIsShowingPointNotes,
   getCountryFriends,
-  isShowingFriends,
   setIsShowingFriends,
   setCountryId,
   setCountryName,
@@ -349,7 +344,6 @@ function Header({
   setHaveFriendList,
   setFriendList,
   setPointList,
-  isShowingPopUp,
   setIsShowingPopUp,
   loginStatus,
   setLoginStatus,
@@ -363,9 +357,7 @@ function Header({
   setOriginalMapNames,
   mapId,
   setPopUpMsg,
-  deleteMap,
   setDeleteMap,
-  pointList,
   setNotificationInfo,
   setCurrentMapName,
   currentMapName,

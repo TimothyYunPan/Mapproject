@@ -1530,7 +1530,7 @@ const countries = [
     flag: "https://restcountries.eu/data/hmd.svg",
   },
   {
-    name: "Holy See",
+    name: "Vatican City",
     code: "VA",
     capital: "Rome",
     region: "EU",
