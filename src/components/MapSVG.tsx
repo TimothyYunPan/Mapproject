@@ -123,7 +123,6 @@ const MapSVG = forwardRef<SVGSVGElement, MapSVGType>(
         <SVG
           ref={ref}
           mapState={mapState}
-          id="CtySVG"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1000 650"
           onMouseMove={(e) => {

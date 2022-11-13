@@ -374,7 +374,6 @@ function Login({
           setErrorMsg([]);
         })
         .catch((error) => {
-          const errorCode = error.code;
           const errorMessage = error.message;
           if (errorMessage === "Firebase: Error (auth/email-already-in-use).") {
             setErrorMsg(["2", "* email is already registered"]);
@@ -495,7 +494,7 @@ function Login({
               <AddProfilePicLabel htmlFor="addProfilePic">
                 {previewProfileImgUrl ? (
                   <ProfileUserInfoImg src={previewProfileImgUrl} toLogIn={toLogIn} />
-                ) : userImage && userImage ? (
+                ) : userImage ? (
                   <ProfileUserInfoImg src={userImage} toLogIn={toLogIn} />
                 ) : (
                   <ProfileNoPic isEditingProfile={isEditingProfile} toLogIn={toLogIn} />
@@ -515,7 +514,6 @@ function Login({
                   <UpdateProfileBtn
                     onClick={() => {
                       updateProfileInfo(uid);
-
                       setUserName(userNameInputRef.current !== null ? userNameInputRef.current!.value : userName);
                     }}
                   />

@@ -19,9 +19,7 @@ import imageHover from "./icon/imageHover.png";
 import trashCan from "./icon/trashCan.png";
 import trashCanHover from "./icon/trashCanHover.png";
 const storage = getStorage(app);
-
 const NotesFlex = styled.div``;
-
 const NoteEditBtn = styled.div`
   width: 20px;
   height: 20px;
@@ -286,7 +284,6 @@ type customizedMapType = {
   isEditing: boolean;
   pointPhoto: File | null;
   notePhoto: string;
-  singlePointList: pointListType[];
   imageList: string[];
 };
 
@@ -301,7 +298,6 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(
       setIsColorHovering,
       imageList,
       getPosition,
-      singlePointList,
       notePhoto,
       pointPhoto,
       isEditing,
@@ -335,14 +331,11 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(
     const [mousePos, setMousePos] = useState<mousePosType>({ x: null, y: null });
     const [largeTipTap, setLargeTipTap] = useState<boolean>(true);
     const [pointNotes, setPointNotes] = useState<string>("");
-    const [searchTitleList, setSearchTitleList] = useState<(string | undefined)[]>([]);
     const [X, setX] = useState<number>(0);
     const [Y, setY] = useState<number>(0);
-
     const pointTitleInputRef = useRef<HTMLInputElement>(null);
     async function writeUserMap3Data(country: string, newObj: pointListType, url: string) {
       // console.log("我準備要write");
-
       await setDoc(doc(db, "user", uid, mapId, country), {
         List: [
           {
@@ -357,9 +350,6 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(
         searchTitle: [newObj.title],
       });
       // console.log("我有write成功");
-      let newSearchTitleList = [];
-      newSearchTitleList = [...searchTitleList, newObj.title];
-      setSearchTitleList(newSearchTitleList);
     }
     async function updateUserMap3Data(countryId: string, newObj: pointListType, url: string) {
       // console.log("準備更新3");
@@ -379,14 +369,7 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(
           newSinglePointList[index] = newListObj;
         }
       });
-      let newSearchTitleList = [...searchTitleList, newObj.title];
-      setSearchTitleList(newSearchTitleList);
-      await updateDoc(doc(db, "user", uid, mapId, countryId), {
-        List: newSinglePointList,
-        searchTitle: newSearchTitleList,
-      });
-
-      // console.log("增加點點");
+      // console.log("增加pin");
     }
 
     function sendNewNotesInfo(country: string, newObj: pointListType) {
@@ -424,8 +407,6 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(
         });
         uploadBytes(imageRef, pointPhoto).then((snapshot) => {
           getDownloadURL(snapshot.ref).then((url) => {
-            // writeUserMap2Data(url)
-
             if (singlePointList.length <= 1) {
               // console.log("我是有照片的write");
               writeUserMap3Data(country, newObj, url);
@@ -461,6 +442,13 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(
         setNotificationInfo({ text: "", status: false });
       }, 3000);
     }
+
+    const singlePointList: pointListType[] = [];
+    pointList.forEach((pointInfo) => {
+      if (pointInfo.countryId === countryId) {
+        singlePointList.push(pointInfo);
+      }
+    });
     return (
       <Map
         onClick={(e) => {
@@ -606,7 +594,7 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(
                     }}
                   />
                   <NoteDeleteBtn
-                    onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+                    onClick={() => {
                       setIsShowingPopUp(true);
                       setPopUpMsg(["Are you sure you want to delete the pin?", "Yes", "No", "", "deletepin", deleteNote]);
                     }}
@@ -640,7 +628,7 @@ const CustomizedMap = forwardRef<SVGSVGElement, customizedMapType>(
                 />
               )}
             </NotesFlex>
-            <NoteFlag src={`https://countryflagsapi.com/png/${countryId}`} />
+            <NoteFlag src={`/flags/${countryId.toLowerCase()}.svg`} />
             <LittleCloseBtn
               onClick={() => {
                 if (isEditing) {

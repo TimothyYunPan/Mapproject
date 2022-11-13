@@ -2,7 +2,7 @@ import React, { MouseEvent, forwardRef } from "react";
 import MapSVG from "./MapSVG";
 import { Map } from "../WorldMap";
 import { ShowName } from "../WorldMap";
-import { doc, deleteField, updateDoc, deleteDoc } from "firebase/firestore";
+import { doc, deleteDoc } from "firebase/firestore";
 import { countryListType, haveFriendListType, pointListType } from "../App";
 import { mousePosType } from "../WorldMap";
 import Overlap from "./Overlap";
