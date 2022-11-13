@@ -178,7 +178,6 @@ function FriendBox({
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const previewFriendNewImgUrl = imageUpload ? URL.createObjectURL(imageUpload) : "";
   const [friendOriginalPhoto, setFrienOriginalPhoto] = useState<string>("");
-  const imageListRef = ref(storage, "images/");
 
   async function updateFriendInfo(index: number, newObj: friendListType) {
     friendList[index] = newObj;

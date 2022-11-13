@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { mapNameType, pointListType } from "../../App";
+import { mapNameType } from "../../App";
 import sortDown from "../icon/sortDown.png";
 import eyeOpened from "../icon/eyeOpened.png";
 import eyeClosed from "../icon/eyeClosed.png";

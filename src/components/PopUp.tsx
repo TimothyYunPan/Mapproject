@@ -75,14 +75,11 @@ const PopupBtnSet = styled.div`
 type PopUpType = {
   isShowingPopUp: boolean;
   setIsShowingPopUp: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   setLoginStatus: React.Dispatch<React.SetStateAction<string>>;
   toLogIn: boolean;
   setToLogIn: React.Dispatch<React.SetStateAction<boolean>>;
   popUpMsg: (string | { (): void } | { (index: number): void })[];
-  setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void } | { (index: number): void })[]>>;
   setIsShowingPointNotes: React.Dispatch<React.SetStateAction<boolean>>;
-  setDeleteMap: React.Dispatch<React.SetStateAction<string>>;
   setPointIndex: React.Dispatch<React.SetStateAction<number>>;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   setIsChangingMap: React.Dispatch<React.SetStateAction<boolean>>;
@@ -90,14 +87,11 @@ type PopUpType = {
 function PopUp({
   isShowingPopUp,
   setIsShowingPopUp,
-  setIsLoggedIn,
   setLoginStatus,
   toLogIn,
   setToLogIn,
   popUpMsg,
-  setPopUpMsg,
   setIsShowingPointNotes,
-  setDeleteMap,
   setIsEditing,
   setPointIndex,
   setIsChangingMap,

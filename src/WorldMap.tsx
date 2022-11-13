@@ -358,13 +358,6 @@ function WorldMap({
     }
   }
 
-  const singlePointList: pointListType[] = [];
-  pointList.forEach((pointInfo) => {
-    if (pointInfo.countryId === countryId) {
-      singlePointList.push(pointInfo);
-    }
-  });
-
   return (
     <Wrapper>
       {mapState && mapState === -1 ? (
@@ -375,14 +368,12 @@ function WorldMap({
           toLogIn={toLogIn}
           setToLogIn={setToLogIn}
           uid={uid}
-          setIsLoggedIn={setIsLoggedIn}
           setIsShowingPointNotes={setIsShowingPointNotes}
           isShowingPopUp={isShowingPopUp}
           setIsShowingPopUp={setIsShowingPopUp}
           setLoginStatus={setLoginStatus}
           popUpMsg={popUpMsg}
           setPopUpMsg={setPopUpMsg}
-          setDeleteMap={setDeleteMap}
           setCurrentMapName={setCurrentMapName}
           setIsChangingMap={setIsChangingMap}
           setPointIndex={setPointIndex}
@@ -424,14 +415,11 @@ function WorldMap({
             setIsChangingMap={setIsChangingMap}
             setPointIndex={setPointIndex}
             setIsEditing={setIsEditing}
-            setDeleteMap={setDeleteMap}
             setIsShowingPointNotes={setIsShowingPointNotes}
             popUpMsg={popUpMsg}
-            setPopUpMsg={setPopUpMsg}
             toLogIn={toLogIn}
             setToLogIn={setToLogIn}
             setLoginStatus={setLoginStatus}
-            setIsLoggedIn={setIsLoggedIn}
             isShowingPopUp={isShowingPopUp}
             setIsShowingPopUp={setIsShowingPopUp}
           />
@@ -485,14 +473,11 @@ function WorldMap({
             setIsChangingMap={setIsChangingMap}
             setPointIndex={setPointIndex}
             setIsEditing={setIsEditing}
-            setDeleteMap={setDeleteMap}
             setIsShowingPointNotes={setIsShowingPointNotes}
             popUpMsg={popUpMsg}
-            setPopUpMsg={setPopUpMsg}
             toLogIn={toLogIn}
             setToLogIn={setToLogIn}
             setLoginStatus={setLoginStatus}
-            setIsLoggedIn={setIsLoggedIn}
             isShowingPopUp={isShowingPopUp}
             setIsShowingPopUp={setIsShowingPopUp}
           />
@@ -514,7 +499,6 @@ function WorldMap({
               setIsColorHovering={setIsColorHovering}
               imageList={imageList}
               getPosition={getPosition}
-              singlePointList={singlePointList}
               notePhoto={notePhoto}
               pointPhoto={pointPhoto}
               isEditing={isEditing}
@@ -547,14 +531,11 @@ function WorldMap({
               setIsChangingMap={setIsChangingMap}
               setPointIndex={setPointIndex}
               setIsEditing={setIsEditing}
-              setDeleteMap={setDeleteMap}
               setIsShowingPointNotes={setIsShowingPointNotes}
               popUpMsg={popUpMsg}
-              setPopUpMsg={setPopUpMsg}
               toLogIn={toLogIn}
               setToLogIn={setToLogIn}
               setLoginStatus={setLoginStatus}
-              setIsLoggedIn={setIsLoggedIn}
               isShowingPopUp={isShowingPopUp}
               setIsShowingPopUp={setIsShowingPopUp}
             />

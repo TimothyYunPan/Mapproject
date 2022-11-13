@@ -20,6 +20,7 @@ import OverlapSet from "./OverlapSet";
 import SearchBar from "./SearchBar";
 import SearchResult from "./SearchResult";
 import userProfile from "../icon/userProfile.png";
+
 const Logo = styled.div<{ mapState: number }>`
   margin-top: ${(props) => (props.mapState === -1 ? "20px" : "0px")};
   width: ${(props) => (props.mapState === -1 ? "100px" : "70px")};
