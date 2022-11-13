@@ -306,7 +306,7 @@ const FriednsMap = forwardRef<SVGSVGElement, friendsMapType>(
       }
     };
 
-    function writeUserMap2Data(url: string) {
+    async function writeUserMap2Data(url: string) {
       const key = uuidv4();
       const newFriendList = [];
       const newFriend = {
@@ -320,12 +320,12 @@ const FriednsMap = forwardRef<SVGSVGElement, friendsMapType>(
         key,
       };
       newFriendList.push(newFriend);
-      setFriendList(newFriendList);
       const newHaveFriendList = [...haveFriendList, { countryId, haveFriend: 1 }];
-      setHaveFriendList(newHaveFriendList);
       const newFriendsList = [...friendsList, newFriend];
+      await setDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), { friends: newFriendList, haveFriend: 1 });
+      setFriendList(newFriendList);
+      setHaveFriendList(newHaveFriendList);
       setFriendsList(newFriendsList);
-      setDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), { friends: newFriendList, haveFriend: 1 });
       setNotificationInfo({ text: `Congrats for making your first friend in ${countryName}! 😍 `, status: true });
       setTimeout(() => {
         setNotificationInfo({ text: "", status: false });
@@ -355,9 +355,7 @@ const FriednsMap = forwardRef<SVGSVGElement, friendsMapType>(
         return countryFriend;
       });
       setHaveFriendList(newHaveFriendList);
-      let newFriendsList = [];
-      newFriendsList = [...friendsList, newFriend];
-      setFriendsList(newFriendsList);
+      setFriendsList([...friendsList, newFriend]);
       setNotificationInfo({ text: "Congrats for making another new friend! 😃 ", status: true });
       setTimeout(() => {
         setNotificationInfo({ text: "", status: false });
