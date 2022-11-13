@@ -5,6 +5,7 @@ import countries from "../utils/countries";
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../utils/firebaseConfig";
 import { countryListType } from "../App";
+
 const CountrySelection = styled.div`
   position: absolute;
   bottom: 8px;

@@ -178,7 +178,6 @@ function FriendBox({
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const previewFriendNewImgUrl = imageUpload ? URL.createObjectURL(imageUpload) : "";
   const [friendOriginalPhoto, setFrienOriginalPhoto] = useState<string>("");
-  const imageListRef = ref(storage, "images/");
 
   async function updateFriendInfo(index: number, newObj: friendListType) {
     friendList[index] = newObj;
@@ -209,11 +208,11 @@ function FriendBox({
     }
   }
   async function deleteFriend(index: number) {
-    let newFriendsList = friendsList.filter((friend) => {
+    const newFriendsList = friendsList.filter((friend) => {
       return friend.key !== friendList[index].key;
     });
     setFriendsList(newFriendsList);
-    let newFriendList = friendList.filter((friend, i) => {
+    let newFriendList = friendList.filter((_, i) => {
       return i !== index;
     });
     setFriendList(newFriendList);
@@ -249,7 +248,7 @@ function FriendBox({
     <FriendInsideBox>
       {!isEditingFriend && <FriendMask />}
       <DeleteFriendBtn
-        onClick={(e) => {
+        onClick={() => {
           setIsShowingPopUp(true);
           setPopUpMsg([
             `Are you sure you want to remove "${friendList[index].name}" from your friend list? 😭`,

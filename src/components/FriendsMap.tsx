@@ -305,26 +305,11 @@ const FriednsMap = forwardRef<SVGSVGElement, friendsMapType>(
         });
       }
     };
-    function writeUserMap2Data(url: string) {
+
+    async function writeUserMap2Data(url: string) {
       const key = uuidv4();
-      let newFriendList = [];
-      const data = {
-        friends: [
-          {
-            name: addFriendState.name,
-            // country: "",
-            city: addFriendState.city,
-            country: countryName,
-            insta: addFriendState.insta,
-            imgUrl: url,
-            notes: addFriendState.notes,
-            key,
-          },
-        ],
-        haveFriend: 1,
-      };
-      setDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), data);
-      const data2 = {
+      const newFriendList = [];
+      const newFriend = {
         countryId: countryId,
         name: addFriendState.name,
         city: addFriendState.city,
@@ -334,15 +319,13 @@ const FriednsMap = forwardRef<SVGSVGElement, friendsMapType>(
         notes: addFriendState.notes,
         key,
       };
-      newFriendList.push(data2);
+      newFriendList.push(newFriend);
+      const newHaveFriendList = [...haveFriendList, { countryId, haveFriend: 1 }];
+      const newFriendsList = [...friendsList, newFriend];
+      await setDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), { friends: newFriendList, haveFriend: 1 });
       setFriendList(newFriendList);
-      let newHaveFriendList = [];
-      let newHaveFriendObj = { countryId: countryId, haveFriend: 1 };
-      newHaveFriendList = [...haveFriendList, newHaveFriendObj];
-      let newFriendsList = [];
-      newFriendsList = [...friendsList, data2];
-      setFriendsList(newFriendsList);
       setHaveFriendList(newHaveFriendList);
+      setFriendsList(newFriendsList);
       setNotificationInfo({ text: `Congrats for making your first friend in ${countryName}! 😍 `, status: true });
       setTimeout(() => {
         setNotificationInfo({ text: "", status: false });
@@ -353,7 +336,6 @@ const FriednsMap = forwardRef<SVGSVGElement, friendsMapType>(
       const newFriend = {
         countryId: countryId,
         name: addFriendState.name,
-        // country: "",
         city: addFriendState.city,
         country: countryName,
         insta: addFriendState.insta,
@@ -363,7 +345,6 @@ const FriednsMap = forwardRef<SVGSVGElement, friendsMapType>(
       };
       newFriendList = [...friendList, newFriend];
       let newHaveFriendNum = friendList.length + 1;
-
       await updateDoc(doc(db, "user", uid, "friendsLocatedCountries", countryId), { friends: newFriendList, haveFriend: newHaveFriendNum });
       setFriendList(newFriendList);
       const newHaveFriendList = haveFriendList.map((countryFriend) => {
@@ -374,9 +355,7 @@ const FriednsMap = forwardRef<SVGSVGElement, friendsMapType>(
         return countryFriend;
       });
       setHaveFriendList(newHaveFriendList);
-      let newFriendsList = [];
-      newFriendsList = [...friendsList, newFriend];
-      setFriendsList(newFriendsList);
+      setFriendsList([...friendsList, newFriend]);
       setNotificationInfo({ text: "Congrats for making another new friend! 😃 ", status: true });
       setTimeout(() => {
         setNotificationInfo({ text: "", status: false });
@@ -397,24 +376,22 @@ const FriednsMap = forwardRef<SVGSVGElement, friendsMapType>(
           setIsShowingPointNotes(false);
           setPointIndex(-1);
         }}>
-        <MapCover>
-          <div
-            onMouseMove={(e) => {
-              getPosition(e);
-            }}>
-            <MapSVG
-              setIsColorHovering={setIsColorHovering}
-              isColorHovering={isColorHovering}
-              countryId={countryId}
-              ref={mouseRef}
-              hoverAddCountryName={hoverAddCountryName}
-              setIsHovering={setIsHovering}
-              allCountries={allCountries}
-              countryList={countryList}
-              mapState={mapState}
-              haveFriendList={haveFriendList}
-            />
-          </div>
+        <MapCover
+          onMouseMove={(e) => {
+            getPosition(e);
+          }}>
+          <MapSVG
+            setIsColorHovering={setIsColorHovering}
+            isColorHovering={isColorHovering}
+            countryId={countryId}
+            ref={mouseRef}
+            hoverAddCountryName={hoverAddCountryName}
+            setIsHovering={setIsHovering}
+            allCountries={allCountries}
+            countryList={countryList}
+            mapState={mapState}
+            haveFriendList={haveFriendList}
+          />
         </MapCover>
         {isShowingFriends && (
           <FriendBg>
@@ -463,7 +440,7 @@ const FriednsMap = forwardRef<SVGSVGElement, friendsMapType>(
                 }}>
                 +
               </AddFriendBtn>
-              <Flag src={`https://countryflagsapi.com/png/${countryId}`} />
+              <Flag src={`/flags/${countryId.toLowerCase()}.svg`} />
               <FriendsCountry>{countryName}</FriendsCountry>
               {isAddingFriend && (
                 <AddFriendBox>

@@ -86,14 +86,12 @@ type homePageType = {
   toLogIn: boolean;
   setToLogIn: React.Dispatch<React.SetStateAction<boolean>>;
   uid: string;
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   setIsShowingPointNotes: React.Dispatch<React.SetStateAction<boolean>>;
   isShowingPopUp: boolean;
   setIsShowingPopUp: React.Dispatch<React.SetStateAction<boolean>>;
   setLoginStatus: React.Dispatch<React.SetStateAction<string>>;
   popUpMsg: (string | { (): void } | { (index: number): void })[];
   setPopUpMsg: React.Dispatch<React.SetStateAction<(string | { (): void } | { (index: number): void })[]>>;
-  setDeleteMap: React.Dispatch<React.SetStateAction<string>>;
   setCurrentMapName: React.Dispatch<React.SetStateAction<string>>;
   setIsChangingMap: React.Dispatch<React.SetStateAction<boolean>>;
   setPointIndex: React.Dispatch<React.SetStateAction<number>>;
@@ -107,14 +105,12 @@ function HomePage({
   toLogIn,
   setToLogIn,
   uid,
-  setIsLoggedIn,
   setIsShowingPointNotes,
   isShowingPopUp,
   setIsShowingPopUp,
   setLoginStatus,
   popUpMsg,
   setPopUpMsg,
-  setDeleteMap,
   setCurrentMapName,
   setIsChangingMap,
   setPointIndex,
@@ -202,14 +198,11 @@ function HomePage({
         setIsChangingMap={setIsChangingMap}
         setPointIndex={setPointIndex}
         setIsEditing={setIsEditing}
-        setDeleteMap={setDeleteMap}
         setIsShowingPointNotes={setIsShowingPointNotes}
         popUpMsg={popUpMsg}
-        setPopUpMsg={setPopUpMsg}
         toLogIn={toLogIn}
         setToLogIn={setToLogIn}
         setLoginStatus={setLoginStatus}
-        setIsLoggedIn={setIsLoggedIn}
         isShowingPopUp={isShowingPopUp}
         setIsShowingPopUp={setIsShowingPopUp}
       />
